@@ -24,6 +24,8 @@ namespace CaseMaker
     {
         bool validData;
         Thread getImageThread;
+        UploadMIRCDialog uploadDialog = new UploadMIRCDialog();
+        
         string lastFilename = String.Empty;
         List<Image> images = new List<Image>();
         int currentImage = 0;
@@ -37,6 +39,7 @@ namespace CaseMaker
             updateCountLabel();
             saveXMLDialog.InitialDirectory = Application.StartupPath;
             openXMLDialog.InitialDirectory = Application.StartupPath;
+            uploadDialog.urlMIRC = @"http://127.0.0.1:8080/storage/submit/doc";
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseWheel);
 
         }
@@ -596,24 +599,26 @@ namespace CaseMaker
                 }
                 else
                 {
-
-                    Uri uri = new Uri(@"http://127.0.0.1:8080/storage/submit/doc");
-                    WebRequest webRequest = WebRequest.Create(uri);
-                    CredentialCache myCache = new CredentialCache();
-                    myCache.Add(uri, "Basic", new NetworkCredential("pmc", "pmc"));
-                    webRequest.Credentials = myCache;
-
-                    webRequest.ContentType = "application/x-zip-compressed";
-                    webRequest.Method = "POST";
-                    Stream requestStream = webRequest.GetRequestStream();
-                    zip.Save(requestStream);
-                    requestStream.Close();
-
-                    WebResponse webResponse = webRequest.GetResponse();
-                    if (webResponse != null)
+                    if (uploadDialog.ShowDialog() == DialogResult.OK)
                     {
-                        StreamReader sr = new StreamReader(webResponse.GetResponseStream());
-                        Debug.Write(sr.ReadToEnd());
+                        Uri uri = new Uri(uploadDialog.urlMIRC);
+                        WebRequest webRequest = WebRequest.Create(uri);
+                        CredentialCache myCache = new CredentialCache();
+                        myCache.Add(uri, "Basic", new NetworkCredential(uploadDialog.username, uploadDialog.password));
+                        webRequest.Credentials = myCache;
+
+                        webRequest.ContentType = "application/x-zip-compressed";
+                        webRequest.Method = "POST";
+                        Stream requestStream = webRequest.GetRequestStream();
+                        zip.Save(requestStream);
+                        requestStream.Close();
+
+                        WebResponse webResponse = webRequest.GetResponse();
+                        if (webResponse != null)
+                        {
+                            StreamReader sr = new StreamReader(webResponse.GetResponseStream());
+                            Debug.Write(sr.ReadToEnd());
+                        }
                     }
                 }
             }
