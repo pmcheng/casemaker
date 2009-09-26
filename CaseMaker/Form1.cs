@@ -71,15 +71,6 @@ namespace CaseMaker
             updateCountLabel();
         }
 
-        private void btnClear_Click(object sender, EventArgs e)
-        {
-            clearBoxes(this);
-            images.Clear();
-            pb.Image = null;
-            updateCountLabel();
-
-        }
-
         private void imagePanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Delta > 0) btnLeft_Click(sender, e);
