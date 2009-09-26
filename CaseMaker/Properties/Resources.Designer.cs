@@ -67,6 +67,13 @@ namespace CaseMaker.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Help {
+            get {
+                object obj = ResourceManager.GetObject("Help", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;iso-8859-1&quot;?&gt;
         ///&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; version=&quot;1.1&quot;&gt;
@@ -87,6 +94,34 @@ namespace CaseMaker.Properties {
         internal static string MIRCdocument {
             get {
                 return ResourceManager.GetString("MIRCdocument", resourceCulture);
+            }
+        }
+        
+        internal static System.Drawing.Bitmap NewDocumentHS {
+            get {
+                object obj = ResourceManager.GetObject("NewDocumentHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap OpenSelectedItemHS {
+            get {
+                object obj = ResourceManager.GetObject("OpenSelectedItemHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap PublishToWebHS {
+            get {
+                object obj = ResourceManager.GetObject("PublishToWebHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap saveHS {
+            get {
+                object obj = ResourceManager.GetObject("saveHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
             }
         }
     }

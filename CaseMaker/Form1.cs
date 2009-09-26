@@ -62,6 +62,15 @@ namespace CaseMaker
             }
         }
 
+
+        private void newCaseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            clearBoxes(this);
+            images.Clear();
+            pb.Image = null;
+            updateCountLabel();
+        }
+
         private void btnClear_Click(object sender, EventArgs e)
         {
             clearBoxes(this);
@@ -73,9 +82,8 @@ namespace CaseMaker
 
         private void imagePanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            int movement = e.Delta * SystemInformation.MouseWheelScrollLines / 120;
-            if (movement > 0) btnLeft_Click(sender, e);
-            if (movement < 0) btnRight_Click(sender, e);
+            if (e.Delta > 0) btnLeft_Click(sender, e);
+            if (e.Delta < 0) btnRight_Click(sender, e);
         }
 
         private void imagePanel_DragDrop(object sender, DragEventArgs e)
@@ -305,11 +313,6 @@ namespace CaseMaker
 
         }
 
-        private void buttonImport_Click(object sender, EventArgs e)
-        {
-            getCacheDemographics();
-        }
-
         void getCacheDemographics()
         {
             ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d\.");
@@ -423,7 +426,7 @@ namespace CaseMaker
             updateCountLabel();
         }
 
-        private void btnOpen_Click(object sender, EventArgs e)
+        private void openCaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             DialogResult result = openXMLDialog.ShowDialog();
             if (result == DialogResult.OK)
@@ -628,6 +631,13 @@ namespace CaseMaker
         {
             AdjustView();
         }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox aboutBox = new AboutBox();
+            aboutBox.ShowDialog();
+        }
+
 
     }
 }

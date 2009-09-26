@@ -31,7 +31,6 @@
             this.imagePanel = new System.Windows.Forms.Panel();
             this.thumbnail = new System.Windows.Forms.PictureBox();
             this.pb = new System.Windows.Forms.PictureBox();
-            this.buttonImport = new System.Windows.Forms.Button();
             this.textName = new System.Windows.Forms.TextBox();
             this.textMRN = new System.Windows.Forms.TextBox();
             this.textDOB = new System.Windows.Forms.TextBox();
@@ -63,16 +62,19 @@
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnRight = new System.Windows.Forms.Button();
             this.countLabel = new System.Windows.Forms.Label();
-            this.btnClear = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.btnOpen = new System.Windows.Forms.Button();
             this.openXMLDialog = new System.Windows.Forms.OpenFileDialog();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.newCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.openCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             this.tabControl1.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // imagePanel
@@ -84,7 +86,7 @@
             this.imagePanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.imagePanel.Controls.Add(this.thumbnail);
             this.imagePanel.Controls.Add(this.pb);
-            this.imagePanel.Location = new System.Drawing.Point(317, 15);
+            this.imagePanel.Location = new System.Drawing.Point(317, 31);
             this.imagePanel.Name = "imagePanel";
             this.imagePanel.Size = new System.Drawing.Size(384, 384);
             this.imagePanel.TabIndex = 0;
@@ -106,47 +108,37 @@
             // 
             // pb
             // 
-            this.pb.Location = new System.Drawing.Point(3, 3);
+            this.pb.Location = new System.Drawing.Point(-2, -2);
             this.pb.Name = "pb";
             this.pb.Size = new System.Drawing.Size(304, 316);
             this.pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pb.TabIndex = 0;
             this.pb.TabStop = false;
             // 
-            // buttonImport
-            // 
-            this.buttonImport.Location = new System.Drawing.Point(190, 12);
-            this.buttonImport.Name = "buttonImport";
-            this.buttonImport.Size = new System.Drawing.Size(82, 23);
-            this.buttonImport.TabIndex = 3;
-            this.buttonImport.Text = "Import Pt Info";
-            this.buttonImport.UseVisualStyleBackColor = true;
-            this.buttonImport.Click += new System.EventHandler(this.buttonImport_Click);
-            // 
             // textName
             // 
-            this.textName.Location = new System.Drawing.Point(63, 48);
+            this.textName.Location = new System.Drawing.Point(63, 32);
             this.textName.Name = "textName";
             this.textName.Size = new System.Drawing.Size(209, 20);
             this.textName.TabIndex = 4;
             // 
             // textMRN
             // 
-            this.textMRN.Location = new System.Drawing.Point(176, 75);
+            this.textMRN.Location = new System.Drawing.Point(176, 59);
             this.textMRN.Name = "textMRN";
             this.textMRN.Size = new System.Drawing.Size(96, 20);
             this.textMRN.TabIndex = 6;
             // 
             // textDOB
             // 
-            this.textDOB.Location = new System.Drawing.Point(63, 75);
+            this.textDOB.Location = new System.Drawing.Point(63, 59);
             this.textDOB.Name = "textDOB";
             this.textDOB.Size = new System.Drawing.Size(69, 20);
             this.textDOB.TabIndex = 5;
             // 
             // textGender
             // 
-            this.textGender.Location = new System.Drawing.Point(63, 104);
+            this.textGender.Location = new System.Drawing.Point(63, 88);
             this.textGender.MaxLength = 2;
             this.textGender.Name = "textGender";
             this.textGender.Size = new System.Drawing.Size(23, 20);
@@ -155,7 +147,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 55);
+            this.label1.Location = new System.Drawing.Point(20, 39);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(35, 13);
             this.label1.TabIndex = 6;
@@ -164,7 +156,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(138, 78);
+            this.label2.Location = new System.Drawing.Point(138, 62);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(32, 13);
             this.label2.TabIndex = 7;
@@ -173,7 +165,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(27, 78);
+            this.label3.Location = new System.Drawing.Point(27, 62);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(30, 13);
             this.label3.TabIndex = 8;
@@ -182,7 +174,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 107);
+            this.label4.Location = new System.Drawing.Point(13, 91);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(42, 13);
             this.label4.TabIndex = 9;
@@ -190,21 +182,27 @@
             // 
             // btnXML
             // 
-            this.btnXML.Location = new System.Drawing.Point(48, 432);
+            this.btnXML.Image = global::CaseMaker.Properties.Resources.saveHS;
+            this.btnXML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnXML.Location = new System.Drawing.Point(40, 432);
             this.btnXML.Name = "btnXML";
-            this.btnXML.Size = new System.Drawing.Size(96, 23);
+            this.btnXML.Size = new System.Drawing.Size(105, 23);
             this.btnXML.TabIndex = 10;
             this.btnXML.Text = "Save to Disk";
+            this.btnXML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnXML.UseVisualStyleBackColor = true;
             this.btnXML.Click += new System.EventHandler(this.btnXML_Click);
             // 
             // btnMIRC
             // 
-            this.btnMIRC.Location = new System.Drawing.Point(166, 432);
+            this.btnMIRC.Image = global::CaseMaker.Properties.Resources.PublishToWebHS;
+            this.btnMIRC.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnMIRC.Location = new System.Drawing.Point(159, 432);
             this.btnMIRC.Name = "btnMIRC";
-            this.btnMIRC.Size = new System.Drawing.Size(96, 23);
+            this.btnMIRC.Size = new System.Drawing.Size(105, 23);
             this.btnMIRC.TabIndex = 11;
             this.btnMIRC.Text = "Send to MIRC";
+            this.btnMIRC.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnMIRC.UseVisualStyleBackColor = true;
             this.btnMIRC.Click += new System.EventHandler(this.btnMIRC_Click);
             // 
@@ -346,7 +344,7 @@
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(7, 130);
+            this.tabControl1.Location = new System.Drawing.Point(7, 114);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(291, 285);
@@ -354,7 +352,7 @@
             // 
             // textLoc
             // 
-            this.textLoc.Location = new System.Drawing.Point(141, 104);
+            this.textLoc.Location = new System.Drawing.Point(141, 88);
             this.textLoc.Name = "textLoc";
             this.textLoc.Size = new System.Drawing.Size(131, 20);
             this.textLoc.TabIndex = 8;
@@ -362,7 +360,7 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(110, 107);
+            this.label8.Location = new System.Drawing.Point(110, 91);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(25, 13);
             this.label8.TabIndex = 20;
@@ -377,7 +375,7 @@
             // btnLeft
             // 
             this.btnLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLeft.Location = new System.Drawing.Point(396, 432);
+            this.btnLeft.Location = new System.Drawing.Point(396, 433);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(75, 23);
             this.btnLeft.TabIndex = 14;
@@ -388,7 +386,7 @@
             // btnRight
             // 
             this.btnRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRight.Location = new System.Drawing.Point(551, 432);
+            this.btnRight.Location = new System.Drawing.Point(551, 433);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(75, 23);
             this.btnRight.TabIndex = 15;
@@ -400,56 +398,72 @@
             // 
             this.countLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.countLabel.AutoSize = true;
-            this.countLabel.Location = new System.Drawing.Point(497, 437);
+            this.countLabel.Location = new System.Drawing.Point(497, 438);
             this.countLabel.Name = "countLabel";
             this.countLabel.Size = new System.Drawing.Size(30, 13);
             this.countLabel.TabIndex = 23;
             this.countLabel.Text = "0 / 0";
             // 
-            // btnClear
-            // 
-            this.btnClear.Location = new System.Drawing.Point(23, 12);
-            this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(84, 23);
-            this.btnClear.TabIndex = 1;
-            this.btnClear.Text = "New Case";
-            this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
-            // 
             // btnDelete
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDelete.Image = global::CaseMaker.Properties.Resources.Delete;
-            this.btnDelete.Location = new System.Drawing.Point(473, 461);
+            this.btnDelete.Location = new System.Drawing.Point(473, 462);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(75, 23);
             this.btnDelete.TabIndex = 24;
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // btnOpen
-            // 
-            this.btnOpen.Location = new System.Drawing.Point(113, 12);
-            this.btnOpen.Name = "btnOpen";
-            this.btnOpen.Size = new System.Drawing.Size(71, 23);
-            this.btnOpen.TabIndex = 2;
-            this.btnOpen.Text = "Open Case";
-            this.btnOpen.UseVisualStyleBackColor = true;
-            this.btnOpen.Click += new System.EventHandler(this.btnOpen_Click);
-            // 
             // openXMLDialog
             // 
             this.openXMLDialog.DefaultExt = "xml";
             this.openXMLDialog.Filter = "XML files|*.xml";
+            // 
+            // menuStrip1
+            // 
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.MenuBar;
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.newCaseToolStripMenuItem,
+            this.openCaseToolStripMenuItem,
+            this.aboutToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(713, 24);
+            this.menuStrip1.TabIndex = 25;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // newCaseToolStripMenuItem
+            // 
+            this.newCaseToolStripMenuItem.Image = global::CaseMaker.Properties.Resources.NewDocumentHS;
+            this.newCaseToolStripMenuItem.Name = "newCaseToolStripMenuItem";
+            this.newCaseToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
+            this.newCaseToolStripMenuItem.Text = "New Case";
+            this.newCaseToolStripMenuItem.Click += new System.EventHandler(this.newCaseToolStripMenuItem_Click);
+            // 
+            // openCaseToolStripMenuItem
+            // 
+            this.openCaseToolStripMenuItem.Image = global::CaseMaker.Properties.Resources.OpenSelectedItemHS;
+            this.openCaseToolStripMenuItem.Name = "openCaseToolStripMenuItem";
+            this.openCaseToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.openCaseToolStripMenuItem.Text = "Open Case";
+            this.openCaseToolStripMenuItem.Click += new System.EventHandler(this.openCaseToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.aboutToolStripMenuItem.Image = global::CaseMaker.Properties.Resources.Help;
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.aboutToolStripMenuItem.Text = "About";
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(713, 496);
-            this.Controls.Add(this.btnOpen);
             this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.btnClear);
             this.Controls.Add(this.countLabel);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
@@ -465,9 +479,9 @@
             this.Controls.Add(this.textDOB);
             this.Controls.Add(this.textMRN);
             this.Controls.Add(this.textName);
-            this.Controls.Add(this.buttonImport);
             this.Controls.Add(this.imagePanel);
             this.Controls.Add(this.tabControl1);
+            this.Controls.Add(this.menuStrip1);
             this.MinimumSize = new System.Drawing.Size(721, 523);
             this.Name = "MainForm";
             this.Text = "CaseMaker";
@@ -479,6 +493,8 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             this.tabControl1.ResumeLayout(false);
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -489,7 +505,6 @@
         private System.Windows.Forms.Panel imagePanel;
         private System.Windows.Forms.PictureBox pb;
         private System.Windows.Forms.PictureBox thumbnail;
-        private System.Windows.Forms.Button buttonImport;
         private System.Windows.Forms.TextBox textName;
         private System.Windows.Forms.TextBox textMRN;
         private System.Windows.Forms.TextBox textDOB;
@@ -515,7 +530,6 @@
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Label countLabel;
-        private System.Windows.Forms.Button btnClear;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textKeywords;
@@ -523,8 +537,11 @@
         private System.Windows.Forms.TextBox textDiscussion;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox textDdx;
-        private System.Windows.Forms.Button btnOpen;
         private System.Windows.Forms.OpenFileDialog openXMLDialog;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem newCaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem openCaseToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
     }
 }
 
