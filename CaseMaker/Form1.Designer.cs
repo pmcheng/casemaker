@@ -69,6 +69,7 @@
             this.newCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.textCaption = new System.Windows.Forms.TextBox();
             this.imagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
@@ -115,6 +116,7 @@
             this.pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pb.TabIndex = 0;
             this.pb.TabStop = false;
+            this.pb.Click += new System.EventHandler(this.pb_Click);
             // 
             // textName
             // 
@@ -376,7 +378,7 @@
             // btnLeft
             // 
             this.btnLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLeft.Location = new System.Drawing.Point(396, 433);
+            this.btnLeft.Location = new System.Drawing.Point(396, 460);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(75, 23);
             this.btnLeft.TabIndex = 14;
@@ -387,7 +389,7 @@
             // btnRight
             // 
             this.btnRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRight.Location = new System.Drawing.Point(551, 433);
+            this.btnRight.Location = new System.Drawing.Point(551, 460);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(75, 23);
             this.btnRight.TabIndex = 15;
@@ -399,7 +401,7 @@
             // 
             this.countLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.countLabel.AutoSize = true;
-            this.countLabel.Location = new System.Drawing.Point(497, 438);
+            this.countLabel.Location = new System.Drawing.Point(497, 465);
             this.countLabel.Name = "countLabel";
             this.countLabel.Size = new System.Drawing.Size(30, 13);
             this.countLabel.TabIndex = 23;
@@ -409,7 +411,7 @@
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDelete.Image = global::CaseMaker.Properties.Resources.Delete;
-            this.btnDelete.Location = new System.Drawing.Point(473, 462);
+            this.btnDelete.Location = new System.Drawing.Point(473, 489);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(75, 23);
             this.btnDelete.TabIndex = 24;
@@ -459,11 +461,24 @@
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
+            // textCaption
+            // 
+            this.textCaption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textCaption.Enabled = false;
+            this.textCaption.Location = new System.Drawing.Point(317, 424);
+            this.textCaption.Multiline = true;
+            this.textCaption.Name = "textCaption";
+            this.textCaption.Size = new System.Drawing.Size(384, 24);
+            this.textCaption.TabIndex = 27;
+            this.textCaption.TextChanged += new System.EventHandler(this.textCaption_TextChanged);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(713, 496);
+            this.ClientSize = new System.Drawing.Size(713, 527);
+            this.Controls.Add(this.textCaption);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.countLabel);
             this.Controls.Add(this.btnRight);
@@ -484,7 +499,7 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(721, 523);
+            this.MinimumSize = new System.Drawing.Size(721, 554);
             this.Name = "MainForm";
             this.Text = "CaseMaker";
             this.imagePanel.ResumeLayout(false);
@@ -544,6 +559,7 @@
         private System.Windows.Forms.ToolStripMenuItem newCaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openCaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
+        private System.Windows.Forms.TextBox textCaption;
     }
 }
 

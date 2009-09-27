@@ -27,7 +27,7 @@ namespace CaseMaker
         UploadMIRCDialog uploadDialog = new UploadMIRCDialog();
 
         string lastFilename = String.Empty;
-        List<Image> images = new List<Image>();
+        List<CaseImage> caseImages = new List<CaseImage>();
         int currentImage = 0;
         Image nextImage;
         int lastX = 0;
@@ -36,12 +36,11 @@ namespace CaseMaker
         public MainForm()
         {
             InitializeComponent();
-            updateCountLabel();
+            updateImageLabels();
             saveXMLDialog.InitialDirectory = Application.StartupPath;
             openXMLDialog.InitialDirectory = Application.StartupPath;
             uploadDialog.urlMIRC = @"http://127.0.0.1:8080/storage/submit/doc";
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseWheel);
-
         }
 
         void clearBoxes(Control parent)
@@ -66,9 +65,9 @@ namespace CaseMaker
         private void newCaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
             clearBoxes(this);
-            images.Clear();
+            caseImages.Clear();
             pb.Image = null;
-            updateCountLabel();
+            updateImageLabels();
         }
 
         private void imagePanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -94,9 +93,9 @@ namespace CaseMaker
                 {
                     pb.Image = nextImage;
                     AdjustView();
-                    images.Add(nextImage);
-                    currentImage = images.Count;
-                    updateCountLabel();
+                    caseImages.Add(new CaseImage(nextImage));
+                    currentImage = caseImages.Count;
+                    updateImageLabels();
 
                     //string filename = "";
                     //GetFilename(out filename, e);
@@ -126,12 +125,22 @@ namespace CaseMaker
             }
         }
 
-        void updateCountLabel()
+        void updateImageLabels()
         {
-            countLabel.Text = currentImage + " / " + images.Count;
+            countLabel.Text = currentImage + " / " + caseImages.Count;
             btnDelete.Enabled = (currentImage > 0);
             btnLeft.Enabled = (currentImage > 1);
-            btnRight.Enabled = (currentImage < images.Count);
+            btnRight.Enabled = (currentImage < caseImages.Count);
+            if (pb.Image == null)
+            {
+                textCaption.Text = "";
+                textCaption.Enabled = false;
+            }
+            else
+            {
+                textCaption.Text = caseImages[currentImage - 1].caption;
+                textCaption.Enabled = true;
+            }
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
@@ -139,40 +148,40 @@ namespace CaseMaker
             if (currentImage > 1)
             {
                 currentImage--;
-                pb.Image = images[currentImage - 1];
+                pb.Image = caseImages[currentImage - 1].image;
                 AdjustView();
-                updateCountLabel();
+                updateImageLabels();
             }
         }
 
         private void btnRight_Click(object sender, EventArgs e)
         {
-            if (currentImage < images.Count)
+            if (currentImage < caseImages.Count)
             {
                 currentImage++;
-                pb.Image = images[currentImage - 1];
+                pb.Image = caseImages[currentImage - 1].image;
                 AdjustView();
-                updateCountLabel();
+                updateImageLabels();
             }
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            images.RemoveAt(currentImage - 1);
-            if (currentImage > images.Count)
+            caseImages.RemoveAt(currentImage - 1);
+            if (currentImage > caseImages.Count)
             {
                 currentImage--;
             }
-            if (images.Count > 0)
+            if (caseImages.Count > 0)
             {
-                pb.Image = images[currentImage - 1];
+                pb.Image = caseImages[currentImage - 1].image;
                 AdjustView();
             }
             else
             {
                 pb.Image = null;
             }
-            updateCountLabel();
+            updateImageLabels();
         }
 
         private void imagePanel_DragEnter(object sender, DragEventArgs e)
@@ -405,11 +414,11 @@ namespace CaseMaker
         {
             XmlNode node = doc.SelectSingleNode("//" + tag);
 
-            if (node != null)
+            try
             {
                 return node.ChildNodes[0].Value;
             }
-            else
+            catch (NullReferenceException)
             {
                 return "";
             }
@@ -423,12 +432,18 @@ namespace CaseMaker
                 string src = node.Attributes.GetNamedItem("src").Value;
                 string imgsource = Path.Combine(sourcedir, src);
                 nextImage = LoadUnlockImage(imgsource);
-                images.Add(nextImage);
+                CaseImage caseImage=new CaseImage(nextImage);
+                XmlNode captionNode = node.SelectSingleNode("./image-caption");
+                if (captionNode != null)
+                {
+                    caseImage.caption = captionNode.InnerText;
+                }
+                caseImages.Add(caseImage);
             }
             pb.Image = nextImage;
-            currentImage = images.Count;
+            currentImage = caseImages.Count;
             AdjustView();
-            updateCountLabel();
+            updateImageLabels();
         }
 
         private void openCaseToolStripMenuItem_Click(object sender, EventArgs e)
@@ -443,7 +458,7 @@ namespace CaseMaker
                 doc.Load(fname);
 
                 clearBoxes(this);
-                images.Clear();
+                caseImages.Clear();
                 pb.Image = null;
 
                 textKeywords.Text = getElement(doc, "keywords");
@@ -463,7 +478,7 @@ namespace CaseMaker
             }
         }
 
-        private void saveXML(string fname, List<string> imgNames)
+        private void saveXML(string fname)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
@@ -516,11 +531,16 @@ namespace CaseMaker
                 }
 
                 writer.WriteStartElement("image-section");
-                foreach (string imgname in imgNames)
+                foreach (CaseImage caseImage in caseImages)
                 {
                     writer.WriteStartElement("image");
-                    writer.WriteAttributeString("src", imgname);
+                    writer.WriteAttributeString("src", caseImage.filename);
                     writer.WriteElementString("format", "png");
+                  
+                    writer.WriteStartElement("image-caption");
+                    writer.WriteAttributeString("display", "always");
+                    writer.WriteString(caseImage.caption);
+                    writer.WriteEndElement();
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
@@ -572,17 +592,17 @@ namespace CaseMaker
 
             using (ZipFile zip = new ZipFile())
             {
-                for (int i = 0; i < images.Count; i++)
+                for (int i = 0; i < caseImages.Count; i++)
                 {
                     fname = Path.ChangeExtension(prefix + "_" + i, ".png");
-                    imgNames.Add(fname);
+                    caseImages[i].filename=fname;
                     imgpath = Path.Combine(targetdir, fname);
-                    images[i].Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
+                    caseImages[i].image.Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
                     zip.AddFile(imgpath, "");
                 }
 
                 string xmlPath = Path.Combine(targetdir, xmlfname);
-                saveXML(xmlPath, imgNames);
+                saveXML(xmlPath);
                 zip.AddFile(xmlPath, "");
 
                 if (!sendNet)
@@ -641,6 +661,17 @@ namespace CaseMaker
         {
             AboutBox aboutBox = new AboutBox();
             aboutBox.ShowDialog();
+        }
+
+        private void textCaption_TextChanged(object sender, EventArgs e)
+        {
+            caseImages[currentImage - 1].caption = textCaption.Text;
+        }
+
+        private void pb_Click(object sender, EventArgs e)
+        {
+            if (pb.Image!=null)
+                btnDelete.Select();
         }
 
 
