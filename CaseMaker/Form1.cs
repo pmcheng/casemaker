@@ -25,7 +25,7 @@ namespace CaseMaker
         bool validData;
         Thread getImageThread;
         UploadMIRCDialog uploadDialog = new UploadMIRCDialog();
-        
+
         string lastFilename = String.Empty;
         List<Image> images = new List<Image>();
         int currentImage = 0;
@@ -79,7 +79,7 @@ namespace CaseMaker
 
         private void imagePanel_DragDrop(object sender, DragEventArgs e)
         {
-            string filename = "";
+
             if (validData)
             {
                 while (getImageThread.IsAlive)
@@ -98,12 +98,29 @@ namespace CaseMaker
                     currentImage = images.Count;
                     updateCountLabel();
 
-                    GetFilename(out filename, e);
-                    filename = Path.GetFileName(filename);
+                    //string filename = "";
+                    //GetFilename(out filename, e);
+                    //filename = Path.GetFileName(filename);
+                    //if (Regex.IsMatch(filename, @"^\d\.\d\."))
 
-                    if (Regex.IsMatch(filename, @"^\d\.\d\."))
+                    MemoryStream ms = e.Data.GetData("Synapse.FujiOffset") as MemoryStream;
+                    if (ms != null)
                     {
+                        StreamReader sr = new StreamReader(ms, Encoding.Unicode);
+                        string mrn = sr.ReadToEnd();
+                        mrn = mrn.Substring(0, mrn.Length - 1);
+
+                        ms = e.Data.GetData("UniformResourceLocator") as MemoryStream;
+                        if (ms != null)
+                        {
+                            sr = new StreamReader(ms);
+                            string url = sr.ReadToEnd();
+                            if (url.StartsWith("https://external.synapse.uscuh.com")) textLoc.Text="USC Norris";
+                            if (url.StartsWith("https://fujipacs.hsc.usc.edu")) textLoc.Text = "HCC2";
+                            if (url.StartsWith("http://lacsynapse")) textLoc.Text = "LACUSC";
+                        }
                         getCacheDemographics();
+                        Debug.WriteLine(mrn == this.textMRN.Text);
                     }
                 }
             }
@@ -112,9 +129,9 @@ namespace CaseMaker
         void updateCountLabel()
         {
             countLabel.Text = currentImage + " / " + images.Count;
-            btnDelete.Enabled = (currentImage>0);
-            btnLeft.Enabled= (currentImage > 1);
-            btnRight.Enabled= (currentImage < images.Count);
+            btnDelete.Enabled = (currentImage > 0);
+            btnLeft.Enabled = (currentImage > 1);
+            btnRight.Enabled = (currentImage < images.Count);
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
@@ -141,7 +158,7 @@ namespace CaseMaker
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            images.RemoveAt(currentImage-1);
+            images.RemoveAt(currentImage - 1);
             if (currentImage > images.Count)
             {
                 currentImage--;
@@ -191,7 +208,7 @@ namespace CaseMaker
 
             if ((e.AllowedEffect & DragDropEffects.Copy) == DragDropEffects.Copy)
             {
-                Array data = ((IDataObject)e.Data).GetData("FileDrop") as Array;
+                Array data = e.Data.GetData("FileDrop") as Array;
                 if (data != null)
                 {
                     if ((data.Length == 1) && (data.GetValue(0) is String))
@@ -235,10 +252,7 @@ namespace CaseMaker
         void AssignImage()
         {
             thumbnail.Width = 100;
-            // 100    iWidth
-            // ---- = ------
-            // tHeight  iHeight
-            thumbnail.Height = nextImage.Height * 100 / nextImage.Width;
+            thumbnail.Height = thumbnail.Width * nextImage.Height / nextImage.Width;
             SetThumbnailLocation(imagePanel.PointToClient(new Point(lastX, lastY)));
             thumbnail.Image = nextImage;
         }
@@ -263,8 +277,8 @@ namespace CaseMaker
             if (pb.Image != null)
             {
 
-                float fw = imagePanel.Width - 2;
-                float fh = imagePanel.Height - 2;
+                float fw = imagePanel.Width;
+                float fh = imagePanel.Height;
                 float iw = pb.Image.Width;
                 float ih = pb.Image.Height;
 
@@ -331,7 +345,7 @@ namespace CaseMaker
             byte[] mrn = { 0x10, 0x00, 0x20, 0x00, 0x4c, 0x4f };
             byte[] dob = { 0x10, 0x00, 0x30, 0x00, 0x44, 0x41 };
             byte[] mf = { 0x10, 0x00, 0x40, 0x00, 0x43, 0x53 };
-            byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
+            //byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
             string rawText = getDicomString(readBuffer, pn, bytesRead);
             textName.Text = rawText.Replace("^", " ");
             textMRN.Text = getDicomString(readBuffer, mrn, bytesRead);
@@ -346,7 +360,7 @@ namespace CaseMaker
             }
             textDOB.Text = rawText;
             textGender.Text = getDicomString(readBuffer, mf, bytesRead);
-            textLoc.Text = getDicomString(readBuffer, loc, bytesRead);
+            //textLoc.Text = getDicomString(readBuffer, loc, bytesRead);
         }
 
         string getDicomString(byte[] readBuffer, byte[] target, int bytes)
@@ -376,7 +390,7 @@ namespace CaseMaker
 
         string getSectionElement(XmlDocument doc, string tag)
         {
-            XmlNode node = doc.SelectSingleNode(@"//section[@heading='"+tag+@"']");
+            XmlNode node = doc.SelectSingleNode(@"//section[@heading='" + tag + @"']");
             try
             {
                 return node.ChildNodes[0].ChildNodes[0].Value;
@@ -389,9 +403,9 @@ namespace CaseMaker
 
         string getElement(XmlDocument doc, string tag)
         {
-            XmlNode node = doc.SelectSingleNode("//"+tag);
-            
-            if (node!=null)
+            XmlNode node = doc.SelectSingleNode("//" + tag);
+
+            if (node != null)
             {
                 return node.ChildNodes[0].Value;
             }
@@ -432,7 +446,7 @@ namespace CaseMaker
                 images.Clear();
                 pb.Image = null;
 
-                textKeywords.Text = getElement(doc,"keywords");
+                textKeywords.Text = getElement(doc, "keywords");
                 textName.Text = getElement(doc, "pt-name");
                 textMRN.Text = getElement(doc, "pt-mrn");
                 textGender.Text = getElement(doc, "pt-sex");
@@ -459,7 +473,7 @@ namespace CaseMaker
                 writer.WriteStartElement("MIRCdocument");
                 writer.WriteAttributeString("display", "mstf");
 
-                writer.WriteElementString("title",DateTime.Now.ToString());
+                writer.WriteElementString("title", DateTime.Now.ToString());
 
                 writer.WriteStartElement("abstract");
                 writer.WriteElementString("p", textHistory.Text);
@@ -566,8 +580,8 @@ namespace CaseMaker
                     images[i].Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
                     zip.AddFile(imgpath, "");
                 }
-                
-                string xmlPath=Path.Combine(targetdir, xmlfname);
+
+                string xmlPath = Path.Combine(targetdir, xmlfname);
                 saveXML(xmlPath, imgNames);
                 zip.AddFile(xmlPath, "");
 
