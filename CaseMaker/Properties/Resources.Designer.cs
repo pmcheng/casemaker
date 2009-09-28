@@ -60,6 +60,13 @@ namespace CaseMaker.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap casemaker {
+            get {
+                object obj = ResourceManager.GetObject("casemaker", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Delete {
             get {
                 object obj = ResourceManager.GetObject("Delete", resourceCulture);
