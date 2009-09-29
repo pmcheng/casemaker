@@ -91,12 +91,7 @@ namespace CaseMaker
 
                 if (pb.Image != nextImage)
                 {
-                    pb.Image = nextImage;
-                    AdjustView();
-                    caseImages.Add(new CaseImage(nextImage));
-                    currentImage = caseImages.Count;
-                    updateImageLabels();
-
+                    string url = "";
                     MemoryStream ms = e.Data.GetData("Synapse.FujiOffset") as MemoryStream;
                     if (ms != null)
                     {
@@ -108,14 +103,23 @@ namespace CaseMaker
                         if (ms != null)
                         {
                             sr = new StreamReader(ms);
-                            string url = sr.ReadToEnd();
+                            url = sr.ReadToEnd();
 
                             if (url.StartsWith("https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fexternal.synapse.uscuh.com")) textLoc.Text = "USC Norris";
                             if (url.StartsWith("https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu")) textLoc.Text = "HCC2";
                             if (url.StartsWith("http://lacsynapse")) textLoc.Text = "LACUSC";
+
                         }
                         getCacheDemographics(mrn);
                     }
+                    CaseImage caseImage = new CaseImage(nextImage);
+                    caseImage.url = url;
+                    caseImages.Add(caseImage);
+                    pb.Image = nextImage;
+                    AdjustView();
+                    currentImage = caseImages.Count;
+                    updateImageLabels();
+
                 }
             }
         }
@@ -702,6 +706,13 @@ namespace CaseMaker
             // events are captured by the form
             if (pb.Image != null)
                 btnDelete.Select();
+        }
+
+        private void pb_DoubleClick(object sender, EventArgs e)
+        {
+            string url = caseImages[currentImage - 1].url;
+            if (url != "")
+                Process.Start("IExplore.exe", url);
         }
 
 
