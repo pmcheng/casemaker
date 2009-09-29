@@ -97,11 +97,6 @@ namespace CaseMaker
                     currentImage = caseImages.Count;
                     updateImageLabels();
 
-                    //string filename = "";
-                    //GetFilename(out filename, e);
-                    //filename = Path.GetFileName(filename);
-                    //if (Regex.IsMatch(filename, @"^\d\.\d\."))
-
                     MemoryStream ms = e.Data.GetData("Synapse.FujiOffset") as MemoryStream;
                     if (ms != null)
                     {
@@ -114,12 +109,12 @@ namespace CaseMaker
                         {
                             sr = new StreamReader(ms);
                             string url = sr.ReadToEnd();
-                            if (url.StartsWith("https://external.synapse.uscuh.com")) textLoc.Text="USC Norris";
-                            if (url.StartsWith("https://fujipacs.hsc.usc.edu")) textLoc.Text = "HCC2";
+
+                            if (url.StartsWith("https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fexternal.synapse.uscuh.com")) textLoc.Text = "USC Norris";
+                            if (url.StartsWith("https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu")) textLoc.Text = "HCC2";
                             if (url.StartsWith("http://lacsynapse")) textLoc.Text = "LACUSC";
                         }
-                        getCacheDemographics();
-                        Debug.WriteLine(mrn == this.textMRN.Text);
+                        getCacheDemographics(mrn);
                     }
                 }
             }
@@ -327,9 +322,10 @@ namespace CaseMaker
 
         }
 
-        void getCacheDemographics()
+        void getCacheDemographics(string medrecnum)
         {
-            ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d\.");
+            // search for file patterns of "/1.2...)"
+            ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d\..*\)$");
             DateTime latest = DateTime.MinValue;
             DateTime current = DateTime.MinValue;
             string fname = string.Empty;
@@ -345,19 +341,28 @@ namespace CaseMaker
             }
             if (fname == string.Empty)
                 return;
-
+            
             Stream s = new FileStream(fname, FileMode.Open, FileAccess.Read);
 
             byte[] readBuffer = new byte[4096];
             int bytesRead = s.Read(readBuffer, 0, readBuffer.Length);
-            byte[] pn = { 0x10, 0x00, 0x10, 0x00, 0x50, 0x4e };
             byte[] mrn = { 0x10, 0x00, 0x20, 0x00, 0x4c, 0x4f };
+            byte[] pn = { 0x10, 0x00, 0x10, 0x00, 0x50, 0x4e };
             byte[] dob = { 0x10, 0x00, 0x30, 0x00, 0x44, 0x41 };
             byte[] mf = { 0x10, 0x00, 0x40, 0x00, 0x43, 0x53 };
             //byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
+
+            if (getDicomString(readBuffer, mrn, bytesRead) == medrecnum)
+            {
+                textMRN.Text = medrecnum;
+            }
+            else
+            {
+                return;  // we've got the wrong file...
+            }
+
             string rawText = getDicomString(readBuffer, pn, bytesRead);
             textName.Text = rawText.Replace("^", " ");
-            textMRN.Text = getDicomString(readBuffer, mrn, bytesRead);
 
             rawText = getDicomString(readBuffer, dob, bytesRead);
             if (rawText.Length == 8)
@@ -391,10 +396,22 @@ namespace CaseMaker
                     fieldLength = 255 * readBuffer[i + target.Length + 1] + readBuffer[i + target.Length];
                     byte[] temp = new byte[fieldLength];
                     Array.Copy(readBuffer, i + target.Length + 2, temp, 0, fieldLength);
-                    return enc.GetString(temp);
+                    return enc.GetString(temp).Trim();
                 }
             }
             return string.Empty;
+        }
+
+        string stripTags(string text)
+        {
+            if (text != null)
+            {
+                return Regex.Replace(text, @"<(.|\n)*?>", string.Empty);
+            }
+            else
+            {
+                return "";
+            }
         }
 
         string getSectionElement(XmlDocument doc, string tag)
@@ -402,7 +419,8 @@ namespace CaseMaker
             XmlNode node = doc.SelectSingleNode(@"//section[@heading='" + tag + @"']");
             try
             {
-                return node.ChildNodes[0].ChildNodes[0].Value;
+                //return Strip(node.ChildNodes[0].Value);
+                return stripTags(node.InnerText);
             }
             catch (NullReferenceException)
             {
@@ -416,7 +434,8 @@ namespace CaseMaker
 
             try
             {
-                return node.ChildNodes[0].Value;
+                //return Strip(node.ChildNodes[0].Value);
+                return stripTags(node.InnerText);
             }
             catch (NullReferenceException)
             {
@@ -432,7 +451,7 @@ namespace CaseMaker
                 string src = node.Attributes.GetNamedItem("src").Value;
                 string imgsource = Path.Combine(sourcedir, src);
                 nextImage = LoadUnlockImage(imgsource);
-                CaseImage caseImage=new CaseImage(nextImage);
+                CaseImage caseImage = new CaseImage(nextImage);
                 XmlNode captionNode = node.SelectSingleNode("./image-caption");
                 if (captionNode != null)
                 {
@@ -440,9 +459,17 @@ namespace CaseMaker
                 }
                 caseImages.Add(caseImage);
             }
-            pb.Image = nextImage;
-            currentImage = caseImages.Count;
-            AdjustView();
+            if (caseImages.Count > 0)
+            {
+                pb.Image = caseImages[0].image;
+                currentImage = 1;
+                AdjustView();
+            }
+            else
+            {
+                pb.Image = null;
+                currentImage = 0;
+            }
             updateImageLabels();
         }
 
@@ -536,7 +563,7 @@ namespace CaseMaker
                     writer.WriteStartElement("image");
                     writer.WriteAttributeString("src", caseImage.filename);
                     writer.WriteElementString("format", "png");
-                  
+
                     writer.WriteStartElement("image-caption");
                     writer.WriteAttributeString("display", "always");
                     writer.WriteString(caseImage.caption);
@@ -595,7 +622,7 @@ namespace CaseMaker
                 for (int i = 0; i < caseImages.Count; i++)
                 {
                     fname = Path.ChangeExtension(prefix + "_" + i, ".png");
-                    caseImages[i].filename=fname;
+                    caseImages[i].filename = fname;
                     imgpath = Path.Combine(targetdir, fname);
                     caseImages[i].image.Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
                     zip.AddFile(imgpath, "");
@@ -670,7 +697,10 @@ namespace CaseMaker
 
         private void pb_Click(object sender, EventArgs e)
         {
-            if (pb.Image!=null)
+            // this handler is a workaround to allow the picturebox to redirect
+            // focus away from the multiline text fields, so that mouse scrollwheel
+            // events are captured by the form
+            if (pb.Image != null)
                 btnDelete.Select();
         }
 
