@@ -104,9 +104,15 @@ namespace CaseMaker
                             sr = new StreamReader(ms);
                             url = sr.ReadToEnd();
 
-                            if (url.StartsWith("https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fexternal.synapse.uscuh.com")) textLoc.Text = "UH/Norris";
-                            if (url.StartsWith("https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu")) textLoc.Text = "HCC2";
-                            if (url.StartsWith("http://lacsynapse")) textLoc.Text = "LACUSC";
+                            textDebug.Text = url;
+
+                            if ((url.Contains("datasource=https%253A%252F%252Fexternal.synapse.uscuh.com")) ||
+                                (url.Contains("datasource=http%253A%252F%252Fsynapse.uscuh.com")))
+                                textLoc.Text = "UH/Norris";
+                            if ((url.Contains("datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu")) ||
+                                (url.Contains("datasource=http%253A%252F%252Fhcc2synvweb")))
+                                textLoc.Text = "HCC2";
+                            if (url.Contains("http://lacsynapse")) textLoc.Text = "LACUSC";
 
                         }
                         getCacheDemographics(mrn);

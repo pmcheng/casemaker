@@ -50,8 +50,6 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.label11 = new System.Windows.Forms.Label();
-            this.textKeywords = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.textDiscussion = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -70,6 +68,10 @@
             this.openCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textCaption = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.textKeywords = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
+            this.textDebug = new System.Windows.Forms.TextBox();
             this.imagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
@@ -188,7 +190,7 @@
             // 
             this.btnXML.Image = global::CaseMaker.Properties.Resources.saveHS;
             this.btnXML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnXML.Location = new System.Drawing.Point(40, 432);
+            this.btnXML.Location = new System.Drawing.Point(41, 465);
             this.btnXML.Name = "btnXML";
             this.btnXML.Size = new System.Drawing.Size(105, 23);
             this.btnXML.TabIndex = 10;
@@ -201,7 +203,7 @@
             // 
             this.btnMIRC.Image = global::CaseMaker.Properties.Resources.PublishToWebHS;
             this.btnMIRC.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMIRC.Location = new System.Drawing.Point(159, 432);
+            this.btnMIRC.Location = new System.Drawing.Point(167, 465);
             this.btnMIRC.Name = "btnMIRC";
             this.btnMIRC.Size = new System.Drawing.Size(105, 23);
             this.btnMIRC.TabIndex = 11;
@@ -212,6 +214,8 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.textKeywords);
+            this.tabPage1.Controls.Add(this.label11);
             this.tabPage1.Controls.Add(this.textHistory);
             this.tabPage1.Controls.Add(this.textDiagnosis);
             this.tabPage1.Controls.Add(this.textFindings);
@@ -221,7 +225,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(283, 259);
+            this.tabPage1.Size = new System.Drawing.Size(283, 308);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basic";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -236,7 +240,7 @@
             // 
             // textDiagnosis
             // 
-            this.textDiagnosis.Location = new System.Drawing.Point(61, 208);
+            this.textDiagnosis.Location = new System.Drawing.Point(61, 199);
             this.textDiagnosis.Multiline = true;
             this.textDiagnosis.Name = "textDiagnosis";
             this.textDiagnosis.Size = new System.Drawing.Size(209, 36);
@@ -262,7 +266,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(1, 211);
+            this.label7.Location = new System.Drawing.Point(1, 202);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 13);
             this.label7.TabIndex = 15;
@@ -279,8 +283,8 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.label11);
-            this.tabPage2.Controls.Add(this.textKeywords);
+            this.tabPage2.Controls.Add(this.textDebug);
+            this.tabPage2.Controls.Add(this.label12);
             this.tabPage2.Controls.Add(this.label10);
             this.tabPage2.Controls.Add(this.textDiscussion);
             this.tabPage2.Controls.Add(this.label9);
@@ -288,27 +292,10 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(283, 259);
+            this.tabPage2.Size = new System.Drawing.Size(283, 308);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Extra";
             this.tabPage2.UseVisualStyleBackColor = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 204);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 13);
-            this.label11.TabIndex = 5;
-            this.label11.Text = "Keywords";
-            // 
-            // textKeywords
-            // 
-            this.textKeywords.Location = new System.Drawing.Point(61, 201);
-            this.textKeywords.Multiline = true;
-            this.textKeywords.Name = "textKeywords";
-            this.textKeywords.Size = new System.Drawing.Size(209, 46);
-            this.textKeywords.TabIndex = 14;
             // 
             // label10
             // 
@@ -351,7 +338,7 @@
             this.tabControl1.Location = new System.Drawing.Point(7, 114);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(291, 285);
+            this.tabControl1.Size = new System.Drawing.Size(291, 334);
             this.tabControl1.TabIndex = 9;
             // 
             // textLoc
@@ -474,6 +461,40 @@
             this.textCaption.TabIndex = 27;
             this.textCaption.TextChanged += new System.EventHandler(this.textCaption_TextChanged);
             // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(2, 259);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 13);
+            this.label11.TabIndex = 16;
+            this.label11.Text = "Keywords";
+            // 
+            // textKeywords
+            // 
+            this.textKeywords.Location = new System.Drawing.Point(61, 256);
+            this.textKeywords.Multiline = true;
+            this.textKeywords.Name = "textKeywords";
+            this.textKeywords.Size = new System.Drawing.Size(209, 34);
+            this.textKeywords.TabIndex = 17;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(9, 198);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(135, 13);
+            this.label12.TabIndex = 14;
+            this.label12.Text = "Debugging Output (for Phil)";
+            // 
+            // textDebug
+            // 
+            this.textDebug.Location = new System.Drawing.Point(12, 214);
+            this.textDebug.Multiline = true;
+            this.textDebug.Name = "textDebug";
+            this.textDebug.Size = new System.Drawing.Size(258, 78);
+            this.textDebug.TabIndex = 15;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -549,8 +570,6 @@
         private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Label countLabel;
         private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textKeywords;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TextBox textDiscussion;
         private System.Windows.Forms.Label label9;
@@ -561,6 +580,10 @@
         private System.Windows.Forms.ToolStripMenuItem openCaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.TextBox textCaption;
+        private System.Windows.Forms.TextBox textKeywords;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox textDebug;
+        private System.Windows.Forms.Label label12;
     }
 }
 
