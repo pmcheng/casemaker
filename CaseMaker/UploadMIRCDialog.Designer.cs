@@ -29,13 +29,13 @@
         private void InitializeComponent()
         {
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxURL = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
             this.textBoxUsername = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxPassword = new System.Windows.Forms.TextBox();
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
+            this.comboBoxURL = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label1
@@ -46,13 +46,6 @@
             this.label1.Size = new System.Drawing.Size(80, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "MIRC Site URL";
-            // 
-            // textBoxURL
-            // 
-            this.textBoxURL.Location = new System.Drawing.Point(16, 29);
-            this.textBoxURL.Name = "textBoxURL";
-            this.textBoxURL.Size = new System.Drawing.Size(264, 20);
-            this.textBoxURL.TabIndex = 4;
             // 
             // label2
             // 
@@ -99,6 +92,7 @@
             // 
             // buttonCancel
             // 
+            this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.buttonCancel.Location = new System.Drawing.Point(150, 188);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
@@ -106,6 +100,14 @@
             this.buttonCancel.Text = "Cancel";
             this.buttonCancel.UseVisualStyleBackColor = true;
             this.buttonCancel.Click += new System.EventHandler(this.buttonCancel_Click);
+            // 
+            // comboBoxURL
+            // 
+            this.comboBoxURL.FormattingEnabled = true;
+            this.comboBoxURL.Location = new System.Drawing.Point(16, 29);
+            this.comboBoxURL.Name = "comboBoxURL";
+            this.comboBoxURL.Size = new System.Drawing.Size(264, 21);
+            this.comboBoxURL.TabIndex = 5;
             // 
             // UploadMIRCDialog
             // 
@@ -115,13 +117,13 @@
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(292, 230);
             this.ControlBox = false;
+            this.Controls.Add(this.comboBoxURL);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
             this.Controls.Add(this.textBoxPassword);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxUsername);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.textBoxURL);
             this.Controls.Add(this.label1);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -138,12 +140,12 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxURL;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBoxUsername;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxPassword;
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
+        private System.Windows.Forms.ComboBox comboBoxURL;
     }
 }

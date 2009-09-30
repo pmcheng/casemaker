@@ -39,7 +39,6 @@ namespace CaseMaker
             updateImageLabels();
             saveXMLDialog.InitialDirectory = Application.StartupPath;
             openXMLDialog.InitialDirectory = Application.StartupPath;
-            uploadDialog.urlMIRC = @"http://127.0.0.1:8080/storage/submit/doc";
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseWheel);
         }
 
@@ -345,7 +344,7 @@ namespace CaseMaker
             }
             if (fname == string.Empty)
                 return;
-            
+
             Stream s = new FileStream(fname, FileMode.Open, FileAccess.Read);
 
             byte[] readBuffer = new byte[4096];
@@ -660,6 +659,7 @@ namespace CaseMaker
                 {
                     if (uploadDialog.ShowDialog() == DialogResult.OK)
                     {
+                        ServicePointManager.Expect100Continue = false;
                         Uri uri = new Uri(uploadDialog.urlMIRC);
                         WebRequest webRequest = WebRequest.Create(uri);
                         CredentialCache myCache = new CredentialCache();
@@ -671,12 +671,15 @@ namespace CaseMaker
                         Stream requestStream = webRequest.GetRequestStream();
                         zip.Save(requestStream);
                         requestStream.Close();
-
-                        WebResponse webResponse = webRequest.GetResponse();
-                        if (webResponse != null)
+                        try
                         {
+                            WebResponse webResponse = webRequest.GetResponse();
                             StreamReader sr = new StreamReader(webResponse.GetResponseStream());
                             Debug.Write(sr.ReadToEnd());
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.Write(e.Message);
                         }
                     }
                 }

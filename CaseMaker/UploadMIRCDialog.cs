@@ -18,7 +18,7 @@ namespace CaseMaker
             set
             {
                 strURLMIRC = value;
-                textBoxURL.Text = value;
+                comboBoxURL.Text = value;
             }
         }
 
@@ -50,11 +50,14 @@ namespace CaseMaker
         public UploadMIRCDialog()
         {
             InitializeComponent();
+            comboBoxURL.Items.Add(@"http://127.0.0.1:8080/storage/submit/doc");
+            comboBoxURL.Items.Add(@"http://mirc.usc.edu/USCRadStorage/submit/doc");
+            comboBoxURL.SelectedIndex = 0;
         }
 
         private void buttonOK_Click(object sender, EventArgs e)
         {
-            urlMIRC = textBoxURL.Text;
+            urlMIRC = comboBoxURL.Text;
             username = textBoxUsername.Text;
             password = textBoxPassword.Text;
             this.DialogResult = DialogResult.OK;
