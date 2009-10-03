@@ -162,6 +162,7 @@ namespace CaseMaker
 
         void updateImageLabels()
         {
+            bool tempDirty = isDirty;
             countLabel.Text = currentImage + " / " + caseImages.Count;
             btnDelete.Enabled = (currentImage > 0);
             btnLeft.Enabled = (currentImage > 1);
@@ -176,6 +177,7 @@ namespace CaseMaker
                 textCaption.Text = caseImages[currentImage - 1].caption;
                 textCaption.Enabled = true;
             }
+            isDirty = tempDirty; // updating labels should not change the dirty bit
         }
 
         private void btnLeft_Click(object sender, EventArgs e)
