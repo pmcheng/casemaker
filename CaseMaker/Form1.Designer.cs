@@ -43,6 +43,8 @@
             this.btnXML = new System.Windows.Forms.Button();
             this.btnMIRC = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.textKeywords = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
             this.textHistory = new System.Windows.Forms.TextBox();
             this.textDiagnosis = new System.Windows.Forms.TextBox();
             this.textFindings = new System.Windows.Forms.TextBox();
@@ -50,6 +52,8 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textDebug = new System.Windows.Forms.TextBox();
+            this.label12 = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.textDiscussion = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -68,10 +72,9 @@
             this.openCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textCaption = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.textKeywords = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.textDebug = new System.Windows.Forms.TextBox();
+            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.imagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
@@ -79,6 +82,7 @@
             this.tabPage2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // imagePanel
@@ -190,7 +194,7 @@
             // 
             this.btnXML.Image = global::CaseMaker.Properties.Resources.saveHS;
             this.btnXML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnXML.Location = new System.Drawing.Point(41, 465);
+            this.btnXML.Location = new System.Drawing.Point(37, 473);
             this.btnXML.Name = "btnXML";
             this.btnXML.Size = new System.Drawing.Size(105, 23);
             this.btnXML.TabIndex = 10;
@@ -203,7 +207,7 @@
             // 
             this.btnMIRC.Image = global::CaseMaker.Properties.Resources.PublishToWebHS;
             this.btnMIRC.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnMIRC.Location = new System.Drawing.Point(167, 465);
+            this.btnMIRC.Location = new System.Drawing.Point(165, 473);
             this.btnMIRC.Name = "btnMIRC";
             this.btnMIRC.Size = new System.Drawing.Size(105, 23);
             this.btnMIRC.TabIndex = 11;
@@ -228,7 +232,23 @@
             this.tabPage1.Size = new System.Drawing.Size(283, 308);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basic";
-            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // textKeywords
+            // 
+            this.textKeywords.Location = new System.Drawing.Point(61, 256);
+            this.textKeywords.Multiline = true;
+            this.textKeywords.Name = "textKeywords";
+            this.textKeywords.Size = new System.Drawing.Size(209, 34);
+            this.textKeywords.TabIndex = 17;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(2, 259);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(53, 13);
+            this.label11.TabIndex = 16;
+            this.label11.Text = "Keywords";
             // 
             // textHistory
             // 
@@ -295,7 +315,23 @@
             this.tabPage2.Size = new System.Drawing.Size(283, 308);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Extra";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // textDebug
+            // 
+            this.textDebug.Location = new System.Drawing.Point(12, 214);
+            this.textDebug.Multiline = true;
+            this.textDebug.Name = "textDebug";
+            this.textDebug.Size = new System.Drawing.Size(258, 78);
+            this.textDebug.TabIndex = 15;
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(9, 198);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(135, 13);
+            this.label12.TabIndex = 14;
+            this.label12.Text = "Debugging Output (for Phil)";
             // 
             // label10
             // 
@@ -366,7 +402,7 @@
             // btnLeft
             // 
             this.btnLeft.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnLeft.Location = new System.Drawing.Point(396, 460);
+            this.btnLeft.Location = new System.Drawing.Point(396, 458);
             this.btnLeft.Name = "btnLeft";
             this.btnLeft.Size = new System.Drawing.Size(75, 23);
             this.btnLeft.TabIndex = 14;
@@ -377,7 +413,7 @@
             // btnRight
             // 
             this.btnRight.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btnRight.Location = new System.Drawing.Point(551, 460);
+            this.btnRight.Location = new System.Drawing.Point(551, 458);
             this.btnRight.Name = "btnRight";
             this.btnRight.Size = new System.Drawing.Size(75, 23);
             this.btnRight.TabIndex = 15;
@@ -389,7 +425,7 @@
             // 
             this.countLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.countLabel.AutoSize = true;
-            this.countLabel.Location = new System.Drawing.Point(497, 465);
+            this.countLabel.Location = new System.Drawing.Point(497, 463);
             this.countLabel.Name = "countLabel";
             this.countLabel.Size = new System.Drawing.Size(30, 13);
             this.countLabel.TabIndex = 23;
@@ -399,7 +435,7 @@
             // 
             this.btnDelete.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnDelete.Image = global::CaseMaker.Properties.Resources.Delete;
-            this.btnDelete.Location = new System.Drawing.Point(473, 489);
+            this.btnDelete.Location = new System.Drawing.Point(473, 487);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(75, 23);
             this.btnDelete.TabIndex = 24;
@@ -413,7 +449,7 @@
             // 
             // menuStrip1
             // 
-            this.menuStrip1.BackColor = System.Drawing.SystemColors.MenuBar;
+            this.menuStrip1.BackColor = System.Drawing.SystemColors.Control;
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newCaseToolStripMenuItem,
             this.openCaseToolStripMenuItem,
@@ -454,52 +490,43 @@
             this.textCaption.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textCaption.Enabled = false;
-            this.textCaption.Location = new System.Drawing.Point(317, 424);
+            this.textCaption.Location = new System.Drawing.Point(317, 422);
             this.textCaption.Multiline = true;
             this.textCaption.Name = "textCaption";
             this.textCaption.Size = new System.Drawing.Size(384, 24);
             this.textCaption.TabIndex = 27;
             this.textCaption.TextChanged += new System.EventHandler(this.textCaption_TextChanged);
             // 
-            // label11
+            // statusStrip1
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(2, 259);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(53, 13);
-            this.label11.TabIndex = 16;
-            this.label11.Text = "Keywords";
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel1,
+            this.toolStripProgressBar1});
+            this.statusStrip1.Location = new System.Drawing.Point(0, 518);
+            this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.Size = new System.Drawing.Size(713, 22);
+            this.statusStrip1.TabIndex = 28;
+            this.statusStrip1.Text = "statusStrip1";
             // 
-            // textKeywords
+            // toolStripStatusLabel1
             // 
-            this.textKeywords.Location = new System.Drawing.Point(61, 256);
-            this.textKeywords.Multiline = true;
-            this.textKeywords.Name = "textKeywords";
-            this.textKeywords.Size = new System.Drawing.Size(209, 34);
-            this.textKeywords.TabIndex = 17;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(698, 17);
+            this.toolStripStatusLabel1.Spring = true;
+            this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // label12
+            // toolStripProgressBar1
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(9, 198);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(135, 13);
-            this.label12.TabIndex = 14;
-            this.label12.Text = "Debugging Output (for Phil)";
-            // 
-            // textDebug
-            // 
-            this.textDebug.Location = new System.Drawing.Point(12, 214);
-            this.textDebug.Multiline = true;
-            this.textDebug.Name = "textDebug";
-            this.textDebug.Size = new System.Drawing.Size(258, 78);
-            this.textDebug.TabIndex = 15;
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
+            this.toolStripProgressBar1.Visible = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(713, 527);
+            this.ClientSize = new System.Drawing.Size(713, 540);
+            this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.textCaption);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.countLabel);
@@ -521,7 +548,7 @@
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MinimumSize = new System.Drawing.Size(721, 554);
+            this.MinimumSize = new System.Drawing.Size(721, 567);
             this.Name = "MainForm";
             this.Text = "CaseMaker";
             this.imagePanel.ResumeLayout(false);
@@ -534,6 +561,8 @@
             this.tabControl1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -584,6 +613,9 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox textDebug;
         private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
     }
 }
 

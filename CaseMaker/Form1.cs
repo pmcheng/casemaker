@@ -32,6 +32,7 @@ namespace CaseMaker
         Image nextImage;
         int lastX = 0;
         int lastY = 0;
+        bool isDirty = false;
 
         public MainForm()
         {
@@ -40,6 +41,7 @@ namespace CaseMaker
             saveXMLDialog.InitialDirectory = Application.StartupPath;
             openXMLDialog.InitialDirectory = Application.StartupPath;
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseWheel);
+            assignHandlers(this);
         }
 
         void clearBoxes(Control parent)
@@ -50,23 +52,52 @@ namespace CaseMaker
                 {
                     ((TextBox)(ctrl)).Text = "";
                 }
-                else
+                if (ctrl.HasChildren)
                 {
-                    if (ctrl.Controls.Count > 0)
-                    {
-                        clearBoxes(ctrl);
-                    }
+                    clearBoxes(ctrl);
                 }
             }
+        }
+
+        void assignHandlers(Control parent)
+        {
+            foreach (Control ctrl in parent.Controls)
+            {
+                if (ctrl is TextBox)
+                {
+                    (ctrl as TextBox).TextChanged += new EventHandler(textChanged);
+                }
+                if (ctrl.HasChildren)
+                {
+                    assignHandlers(ctrl);
+                }
+            }
+        }
+
+        void textChanged(object sender, EventArgs e)
+        {
+            setDirty(true);
+        }
+
+        void setDirty(bool isDirty)
+        {
+            this.isDirty = isDirty;
+            if (isDirty)
+                this.Text = "CaseMaker*";
+            else
+                this.Text = "CaseMaker";
+
         }
 
 
         private void newCaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!manageDirtyCase()) return;
             clearBoxes(this);
             caseImages.Clear();
             pb.Image = null;
             updateImageLabels();
+            setDirty(false);
         }
 
         private void imagePanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
@@ -124,7 +155,7 @@ namespace CaseMaker
                     AdjustView();
                     currentImage = caseImages.Count;
                     updateImageLabels();
-
+                    setDirty(true);
                 }
             }
         }
@@ -186,6 +217,7 @@ namespace CaseMaker
                 pb.Image = null;
             }
             updateImageLabels();
+            setDirty(true);
         }
 
         private void imagePanel_DragEnter(object sender, DragEventArgs e)
@@ -482,8 +514,27 @@ namespace CaseMaker
             updateImageLabels();
         }
 
+        bool manageDirtyCase()
+        {
+            if (!isDirty) return true;
+            switch (MessageBox.Show("You have made changes to the current case.  Do you want to save it?", "CaseMaker", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning))
+            {
+                case DialogResult.Yes:
+                    if (!saveCase()) return false;
+                    break;
+                case DialogResult.No:
+                    break;
+                case DialogResult.Cancel:
+                    return false;
+            }
+            return true;
+
+        }
+
         private void openCaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            if (!manageDirtyCase()) return;
+
             DialogResult result = openXMLDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
@@ -511,7 +562,9 @@ namespace CaseMaker
 
                 getImages(doc, sourcedir);
                 saveXMLDialog.InitialDirectory = sourcedir;
+                setDirty(false);
             }
+
         }
 
         private void saveXML(string fname)
@@ -602,6 +655,11 @@ namespace CaseMaker
 
         private void btnXML_Click(object sender, EventArgs e)
         {
+            saveCase();
+        }
+
+        bool saveCase()
+        {
             DialogResult result = saveXMLDialog.ShowDialog();
 
             if (result == DialogResult.OK)
@@ -611,12 +669,19 @@ namespace CaseMaker
                 string targetdir = Path.GetDirectoryName(fname);
                 saveAll(prefix, targetdir, false);
                 openXMLDialog.InitialDirectory = targetdir;
+                setDirty(false);
+                return true;
             }
+            else return false;
         }
 
         private void btnMIRC_Click(object sender, EventArgs e)
         {
-            saveAll("case", Path.GetTempPath(), true);
+            if (uploadDialog.ShowDialog() == DialogResult.OK)
+            {
+                saveAll("case", Path.GetTempPath(), true);
+                setDirty(false);
+            }
         }
 
         void saveAll(string prefix, string targetdir, bool sendNet)
@@ -663,30 +728,27 @@ namespace CaseMaker
                 }
                 else
                 {
-                    if (uploadDialog.ShowDialog() == DialogResult.OK)
-                    {
-                        ServicePointManager.Expect100Continue = false;
-                        Uri uri = new Uri(uploadDialog.urlMIRC);
-                        WebRequest webRequest = WebRequest.Create(uri);
-                        CredentialCache myCache = new CredentialCache();
-                        myCache.Add(uri, "Basic", new NetworkCredential(uploadDialog.username, uploadDialog.password));
-                        webRequest.Credentials = myCache;
+                    ServicePointManager.Expect100Continue = false;
+                    Uri uri = new Uri(uploadDialog.urlMIRC);
+                    WebRequest webRequest = WebRequest.Create(uri);
+                    CredentialCache myCache = new CredentialCache();
+                    myCache.Add(uri, "Basic", new NetworkCredential(uploadDialog.username, uploadDialog.password));
+                    webRequest.Credentials = myCache;
 
-                        webRequest.ContentType = "application/x-zip-compressed";
-                        webRequest.Method = "POST";
-                        Stream requestStream = webRequest.GetRequestStream();
-                        zip.Save(requestStream);
-                        requestStream.Close();
-                        try
-                        {
-                            WebResponse webResponse = webRequest.GetResponse();
-                            StreamReader sr = new StreamReader(webResponse.GetResponseStream());
-                            Debug.Write(sr.ReadToEnd());
-                        }
-                        catch (Exception e)
-                        {
-                            Debug.Write(e.Message);
-                        }
+                    webRequest.ContentType = "application/x-zip-compressed";
+                    webRequest.Method = "POST";
+                    Stream requestStream = webRequest.GetRequestStream();
+                    zip.Save(requestStream);
+                    requestStream.Close();
+                    try
+                    {
+                        WebResponse webResponse = webRequest.GetResponse();
+                        StreamReader sr = new StreamReader(webResponse.GetResponseStream());
+                        Debug.Write(sr.ReadToEnd());
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.Write(e.Message);
                     }
                 }
             }
