@@ -10,13 +10,14 @@ namespace CaseMaker
     {
         public Image image;
         public string caption;
-        public string url;
+        public string imageURL;
+        public string studyURL;
         public string filename;
 
         public CaseImage(Image image)
         {
             this.image = image;
-            this.url = string.Empty;
+            this.imageURL = string.Empty;
         }
     }
 }

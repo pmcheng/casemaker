@@ -121,7 +121,9 @@ namespace CaseMaker
 
                 if (pb.Image != nextImage)
                 {
-                    string url = "";
+                    string imageURL = "";
+                    string studyURL = "";
+                    string studyUID = "";
                     MemoryStream ms = e.Data.GetData("Synapse.FujiOffset") as MemoryStream;
                     if (ms != null)
                     {
@@ -133,23 +135,36 @@ namespace CaseMaker
                         if (ms != null)
                         {
                             sr = new StreamReader(ms);
-                            url = sr.ReadToEnd();
+                            imageURL = sr.ReadToEnd();
+                            imageURL = imageURL.Substring(0, imageURL.Length - 1);
 
-                            textDebug.Text = url;
+                            studyUID = Regex.Match(imageURL, @"studyuid=(\d*)").Groups[1].Value;
+                            textDebug.Text = imageURL+studyUID;
 
-                            if ((url.Contains("datasource=https%253A%252F%252Fexternal.synapse.uscuh.com")) ||
-                                (url.Contains("datasource=http%253A%252F%252Fsynapse.uscuh.com")))
+                            if ((imageURL.Contains("datasource=https%253A%252F%252Fexternal.synapse.uscuh.com")) ||
+                                (imageURL.Contains("datasource=http%253A%252F%252Fsynapse.uscuh.com")))
+                            {
                                 textLoc.Text = "UH/Norris";
-                            if ((url.Contains("datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu")) ||
-                                (url.Contains("datasource=http%253A%252F%252Fhcc2synvweb")))
+                                studyURL = "https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fexternal.synapse.uscuh.com%26/commandclassname=StudyListTemplateFolder%26folderuid=33%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
+                            }
+                            if ((imageURL.Contains("datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu")) ||
+                                (imageURL.Contains("datasource=http%253A%252F%252Fhcc2synvweb")))
+                            {
                                 textLoc.Text = "HCC2";
-                            if (url.Contains("http://lacsynapse")) textLoc.Text = "LACUSC";
+                                studyUID = "https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu%26/commandclassname=StudyListTemplateFolder%26folderuid=1000002%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
+                            }
+                            if (imageURL.Contains("datasource=http%253A%252F%252Flacsynapse"))
+                            {
+                                textLoc.Text = "LACUSC";
+                                studyUID = "http://lacsynapse/synapse.asp?path=//commandclassname=Synapse%26datasource=http%253A%252F%252Flacsynapse%26/commandclassname=StudyListTemplateFolder%26folderuid=29%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
+                            }
 
                         }
                         getCacheDemographics(mrn);
                     }
                     CaseImage caseImage = new CaseImage(nextImage);
-                    caseImage.url = url;
+                    caseImage.imageURL = imageURL;
+                    caseImage.studyURL = studyURL;
                     caseImages.Add(caseImage);
                     pb.Image = nextImage;
                     AdjustView();
@@ -500,6 +515,16 @@ namespace CaseMaker
                 {
                     caseImage.caption = captionNode.InnerText;
                 }
+                XmlNode urlNode = node.SelectSingleNode("./pacs-image");
+                if (urlNode != null)
+                {
+                    caseImage.imageURL = urlNode.Attributes.GetNamedItem("src").Value;
+                }
+                urlNode = node.SelectSingleNode("./pacs-study");
+                if (urlNode != null)
+                {
+                    caseImage.studyURL = urlNode.Attributes.GetNamedItem("src").Value;
+                }
                 caseImages.Add(caseImage);
             }
             if (caseImages.Count > 0)
@@ -626,12 +651,27 @@ namespace CaseMaker
                 {
                     writer.WriteStartElement("image");
                     writer.WriteAttributeString("src", caseImage.filename);
+
                     writer.WriteElementString("format", "png");
 
                     writer.WriteStartElement("image-caption");
                     writer.WriteAttributeString("display", "always");
                     writer.WriteString(caseImage.caption);
                     writer.WriteEndElement();
+
+                    if (caseImage.imageURL != "")
+                    {
+                        writer.WriteStartElement("pacs-image");
+                        writer.WriteAttributeString("src", caseImage.imageURL);
+                        writer.WriteEndElement();
+                    }
+                    if (caseImage.studyURL != "")
+                    {
+                        writer.WriteStartElement("pacs-study");
+                        writer.WriteAttributeString("src", caseImage.studyURL);
+                        writer.WriteEndElement();
+                    }
+
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
@@ -783,7 +823,7 @@ namespace CaseMaker
 
         private void pb_DoubleClick(object sender, EventArgs e)
         {
-            string url = caseImages[currentImage - 1].url;
+            string url = caseImages[currentImage - 1].studyURL;
             if (url != "")
                 Process.Start("IExplore.exe", url);
         }
