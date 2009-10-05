@@ -828,6 +828,11 @@ namespace CaseMaker
                 Process.Start("IExplore.exe", url);
         }
 
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = !(manageDirtyCase());
+        }
+
 
     }
 }

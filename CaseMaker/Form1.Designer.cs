@@ -551,6 +551,7 @@
             this.MinimumSize = new System.Drawing.Size(721, 567);
             this.Name = "MainForm";
             this.Text = "CaseMaker";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.imagePanel.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).EndInit();
