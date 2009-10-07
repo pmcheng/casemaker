@@ -11,7 +11,8 @@ namespace CaseMaker
         public Image image;
         public string caption;
         public string imageURL;
-        public string studyURL;
+        public string studyUID;
+        public string imageUID;
         public string filename;
 
         public CaseImage(Image image)

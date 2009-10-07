@@ -34,6 +34,15 @@ namespace CaseMaker
         int lastY = 0;
         bool isDirty = false;
 
+        Dictionary<string, string> locationDict = new Dictionary<string, string>()
+        {
+            {"datasource=https%253A%252F%252Fexternal.synapse.uscuh.com", "UH/Norris"},
+            {"datasource=http%253A%252F%252Fsynapse.uscuh.com", "UH/Norris"},
+            {"datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu","HCC2"},
+            {"datasource=http%253A%252F%252Fhcc2synvweb","HCC2"},
+            {"datasource=http%253A%252F%252Flacsynapse","LACUSC"}
+        };
+
         public MainForm()
         {
             InitializeComponent();
@@ -42,6 +51,7 @@ namespace CaseMaker
             openXMLDialog.InitialDirectory = Application.StartupPath;
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseWheel);
             assignHandlers(this);
+
         }
 
         void clearBoxes(Control parent)
@@ -122,49 +132,33 @@ namespace CaseMaker
                 if (pb.Image != nextImage)
                 {
                     string imageURL = "";
-                    string studyURL = "";
+                    string imageUID = "";
                     string studyUID = "";
                     MemoryStream ms = e.Data.GetData("Synapse.FujiOffset") as MemoryStream;
                     if (ms != null)
                     {
                         StreamReader sr = new StreamReader(ms, Encoding.Unicode);
-                        string mrn = sr.ReadToEnd();
-                        mrn = mrn.Substring(0, mrn.Length - 1);
+                        string mrn = sr.ReadToEnd().TrimEnd('\0');
 
                         ms = e.Data.GetData("UniformResourceLocator") as MemoryStream;
                         if (ms != null)
                         {
                             sr = new StreamReader(ms);
-                            imageURL = sr.ReadToEnd();
-                            imageURL = imageURL.Substring(0, imageURL.Length - 1);
+                            imageURL = sr.ReadToEnd().TrimEnd('\0');
+                            textDebug.Text = imageURL;
 
                             studyUID = Regex.Match(imageURL, @"studyuid=(\d*)").Groups[1].Value;
-                            textDebug.Text = imageURL+studyUID;
+                            imageUID = Regex.Match(imageURL, @"imageuid=(\d*)").Groups[1].Value;
 
-                            if ((imageURL.Contains("datasource=https%253A%252F%252Fexternal.synapse.uscuh.com")) ||
-                                (imageURL.Contains("datasource=http%253A%252F%252Fsynapse.uscuh.com")))
-                            {
-                                textLoc.Text = "UH/Norris";
-                                studyURL = "https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fexternal.synapse.uscuh.com%26/commandclassname=StudyListTemplateFolder%26folderuid=33%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
-                            }
-                            if ((imageURL.Contains("datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu")) ||
-                                (imageURL.Contains("datasource=http%253A%252F%252Fhcc2synvweb")))
-                            {
-                                textLoc.Text = "HCC2";
-                                studyURL = "https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu%26/commandclassname=StudyListTemplateFolder%26folderuid=1000002%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
-                            }
-                            if (imageURL.Contains("datasource=http%253A%252F%252Flacsynapse"))
-                            {
-                                textLoc.Text = "LACUSC";
-                                studyURL = "http://lacsynapse/synapse.asp?path=//commandclassname=Synapse%26datasource=http%253A%252F%252Flacsynapse%26/commandclassname=StudyListTemplateFolder%26folderuid=29%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
-                            }
+                            textLoc.Text = mapToLocation(imageURL);
 
                         }
                         getCacheDemographics(mrn);
                     }
                     CaseImage caseImage = new CaseImage(nextImage);
                     caseImage.imageURL = imageURL;
-                    caseImage.studyURL = studyURL;
+                    caseImage.studyUID = studyUID;
+                    caseImage.imageUID = imageUID;
                     caseImages.Add(caseImage);
                     pb.Image = nextImage;
                     AdjustView();
@@ -173,6 +167,16 @@ namespace CaseMaker
                     setDirty(true);
                 }
             }
+        }
+
+        string mapToLocation(string URL)
+        // map URL to physical location
+        {
+            foreach (string key in locationDict.Keys)
+            {
+                if (URL.Contains(key)) return locationDict[key];
+            }
+            return "";
         }
 
         void updateImageLabels()
@@ -519,11 +523,8 @@ namespace CaseMaker
                 if (urlNode != null)
                 {
                     caseImage.imageURL = urlNode.Attributes.GetNamedItem("src").Value;
-                }
-                urlNode = node.SelectSingleNode("./pacs-study");
-                if (urlNode != null)
-                {
-                    caseImage.studyURL = urlNode.Attributes.GetNamedItem("src").Value;
+                    caseImage.studyUID = urlNode.Attributes.GetNamedItem("studyUID").Value;
+                    caseImage.imageUID = urlNode.Attributes.GetNamedItem("imageUID").Value;
                 }
                 caseImages.Add(caseImage);
             }
@@ -663,12 +664,8 @@ namespace CaseMaker
                     {
                         writer.WriteStartElement("pacs-image");
                         writer.WriteAttributeString("src", caseImage.imageURL);
-                        writer.WriteEndElement();
-                    }
-                    if (caseImage.studyURL != "")
-                    {
-                        writer.WriteStartElement("pacs-study");
-                        writer.WriteAttributeString("src", caseImage.studyURL);
+                        writer.WriteAttributeString("studyUID", caseImage.studyUID);
+                        writer.WriteAttributeString("imageUID", caseImage.imageUID);
                         writer.WriteEndElement();
                     }
 
@@ -823,8 +820,52 @@ namespace CaseMaker
 
         private void pb_DoubleClick(object sender, EventArgs e)
         {
-            string url = caseImages[currentImage - 1].studyURL;
-            if (url != "")
+            string imageURL = caseImages[currentImage - 1].imageURL;
+            if (imageURL == "") return;
+
+            string studyUID = caseImages[currentImage - 1].studyUID;
+            string url = "";
+            switch (mapToLocation(imageURL))
+            {
+                case "UH/Norris":
+                    try
+                    {
+                        Dns.GetHostEntry("synapse.uscuh.com");
+                        url = "http://synapse.uscuh.com/explore.asp?path=//commandclassname=Synapse%26datasource=http%253A%252F%252Fsynapse.uscuh.com";
+
+                    }
+                    catch
+                    {
+                        url = "https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fexternal.synapse.uscuh.com";
+
+                    }
+                    url += "%26/commandclassname=StudyListTemplateFolder%26folderuid=33%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
+                    break;
+                case "HCC2":
+                    try
+                    {
+                        Dns.GetHostEntry("synapse.uscuh.com");
+                        url = "http://synapse.uscuh.com/explore.asp?path=//commandclassname=Synapse%26datasource=http%253A%252F%252Fhcc2synvweb";
+                    }
+                    catch
+                    {
+                        url = "https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu";
+                    }
+                    url += "%26/commandclassname=StudyListTemplateFolder%26folderuid=1000002%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
+                    break;
+                case "LACUSC":
+                    try
+                    {
+                        Dns.GetHostEntry("lacsynapse");
+                        url = "http://lacsynapse/synapse.asp?path=//commandclassname=Synapse%26datasource=http%253A%252F%252Flacsynapse%26/commandclassname=StudyListTemplateFolder%26folderuid=29%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
+                    }
+                    catch
+                    {
+                        url = "";
+                    }
+                    break;
+            }
+            if (url!="")
                 Process.Start("IExplore.exe", url);
         }
 
