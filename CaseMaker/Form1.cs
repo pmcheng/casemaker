@@ -106,6 +106,7 @@ namespace CaseMaker
             clearBoxes(this);
             caseImages.Clear();
             pb.Image = null;
+            currentImage = 0;
             updateImageLabels();
             setDirty(false);
         }
@@ -413,8 +414,9 @@ namespace CaseMaker
             byte[] dob = { 0x10, 0x00, 0x30, 0x00, 0x44, 0x41 };
             byte[] mf = { 0x10, 0x00, 0x40, 0x00, 0x43, 0x53 };
             //byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
-
-            if (getDicomString(readBuffer, mrn, bytesRead) == medrecnum)
+            
+            string dicom_mrn=getDicomString(readBuffer, mrn, bytesRead);
+            if (dicom_mrn == medrecnum)
             {
                 textMRN.Text = medrecnum;
             }
@@ -458,7 +460,7 @@ namespace CaseMaker
                     fieldLength = 255 * readBuffer[i + target.Length + 1] + readBuffer[i + target.Length];
                     byte[] temp = new byte[fieldLength];
                     Array.Copy(readBuffer, i + target.Length + 2, temp, 0, fieldLength);
-                    return enc.GetString(temp).Trim();
+                    return enc.GetString(temp).Trim().TrimEnd('\0');
                 }
             }
             return string.Empty;
@@ -809,13 +811,30 @@ namespace CaseMaker
             caseImages[currentImage - 1].caption = textCaption.Text;
         }
 
-        private void pb_Click(object sender, EventArgs e)
+
+        private void pb_MouseDown(object sender, MouseEventArgs e)
         {
             // this handler is a workaround to allow the picturebox to redirect
             // focus away from the multiline text fields, so that mouse scrollwheel
             // events are captured by the form
             if (pb.Image != null)
+            {
                 btnDelete.Select();
+                if (e.Button == MouseButtons.Left && e.Clicks == 1)
+                {
+                    MemoryStream ms1 = new MemoryStream();
+                    MemoryStream ms2 = new MemoryStream();
+                    pb.Image.Save(ms1, System.Drawing.Imaging.ImageFormat.Bmp);
+                    byte[] b = ms1.GetBuffer();
+                    ms2.Write(b, 14, (int)ms1.Length - 14);
+                    ms1.Position = 0;
+                    DataObject obj = new DataObject();
+                    obj.SetData("DeviceIndependentBitmap", ms2);
+                    obj.SetData(DataFormats.Bitmap, pb.Image);
+                    DoDragDrop(obj, DragDropEffects.All);
+                }
+            }
+
         }
 
         private void pb_DoubleClick(object sender, EventArgs e)
@@ -873,6 +892,7 @@ namespace CaseMaker
         {
             e.Cancel = !(manageDirtyCase());
         }
+
 
 
     }

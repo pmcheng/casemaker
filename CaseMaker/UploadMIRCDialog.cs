@@ -50,8 +50,8 @@ namespace CaseMaker
         public UploadMIRCDialog()
         {
             InitializeComponent();
-            comboBoxURL.Items.Add(@"http://127.0.0.1:8080/storage/submit/doc");
             comboBoxURL.Items.Add(@"http://mirc.usc.edu/USCRadStorage/submit/doc");
+            comboBoxURL.Items.Add(@"http://127.0.0.1:8080/storage/submit/doc");
             comboBoxURL.SelectedIndex = 0;
         }
 

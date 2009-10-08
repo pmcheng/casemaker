@@ -52,6 +52,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.textDebug = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.textDiscussion = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -73,7 +74,6 @@
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.textDebug = new System.Windows.Forms.TextBox();
             this.imagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
@@ -122,7 +122,7 @@
             this.pb.TabIndex = 0;
             this.pb.TabStop = false;
             this.pb.DoubleClick += new System.EventHandler(this.pb_DoubleClick);
-            this.pb.Click += new System.EventHandler(this.pb_Click);
+            this.pb.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_MouseDown);
             // 
             // textName
             // 
@@ -314,6 +314,14 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Extra";
             // 
+            // textDebug
+            // 
+            this.textDebug.Location = new System.Drawing.Point(12, 184);
+            this.textDebug.Multiline = true;
+            this.textDebug.Name = "textDebug";
+            this.textDebug.Size = new System.Drawing.Size(258, 109);
+            this.textDebug.TabIndex = 14;
+            // 
             // label10
             // 
             this.label10.AutoSize = true;
@@ -501,14 +509,6 @@
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             this.toolStripProgressBar1.Visible = false;
-            // 
-            // textDebug
-            // 
-            this.textDebug.Location = new System.Drawing.Point(12, 184);
-            this.textDebug.Multiline = true;
-            this.textDebug.Name = "textDebug";
-            this.textDebug.Size = new System.Drawing.Size(258, 109);
-            this.textDebug.TabIndex = 14;
             // 
             // MainForm
             // 
