@@ -690,6 +690,21 @@ namespace CaseMaker
                 writer.WriteElementString("p", textLoc.Text);
                 writer.WriteEndElement();
 
+                if (uploadDialog.username != "")
+                {
+                    writer.WriteStartElement("authorization");
+                    writer.WriteStartElement("owner");
+                    writer.WriteString(uploadDialog.username);
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("read");
+                    writer.WriteString("department");
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("update");
+                    writer.WriteString("admin");
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
+                }
+
                 writer.WriteEndElement();
             }
         }
