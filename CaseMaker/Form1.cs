@@ -47,8 +47,8 @@ namespace CaseMaker
         {
             InitializeComponent();
             updateImageLabels();
-            saveXMLDialog.InitialDirectory = Application.StartupPath;
-            openXMLDialog.InitialDirectory = Application.StartupPath;
+            saveCaseDialog.InitialDirectory = Application.StartupPath;
+            openCaseDialog.InitialDirectory = Application.StartupPath;
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseWheel);
             assignHandlers(this);
 
@@ -87,6 +87,7 @@ namespace CaseMaker
         void textChanged(object sender, EventArgs e)
         {
             setDirty(true);
+            toolStripStatusLabel.Text = "";
         }
 
         void setDirty(bool isDirty)
@@ -102,6 +103,7 @@ namespace CaseMaker
 
         private void newCaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel.Text = "";
             if (!manageDirtyCase()) return;
             clearBoxes(this);
             caseImages.Clear();
@@ -113,13 +115,14 @@ namespace CaseMaker
 
         private void imagePanel_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
+            toolStripStatusLabel.Text = "";
             if (e.Delta > 0) btnLeft_Click(sender, e);
             if (e.Delta < 0) btnRight_Click(sender, e);
         }
 
         private void imagePanel_DragDrop(object sender, DragEventArgs e)
         {
-
+            toolStripStatusLabel.Text = "";
             if (validData)
             {
                 while (getImageThread.IsAlive)
@@ -202,6 +205,7 @@ namespace CaseMaker
 
         private void btnLeft_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel.Text = "";
             if (currentImage > 1)
             {
                 currentImage--;
@@ -213,6 +217,7 @@ namespace CaseMaker
 
         private void btnRight_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel.Text = "";
             if (currentImage < caseImages.Count)
             {
                 currentImage++;
@@ -224,6 +229,7 @@ namespace CaseMaker
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel.Text = "";
             caseImages.RemoveAt(currentImage - 1);
             if (currentImage > caseImages.Count)
             {
@@ -414,8 +420,8 @@ namespace CaseMaker
             byte[] dob = { 0x10, 0x00, 0x30, 0x00, 0x44, 0x41 };
             byte[] mf = { 0x10, 0x00, 0x40, 0x00, 0x43, 0x53 };
             //byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
-            
-            string dicom_mrn=getDicomString(readBuffer, mrn, bytesRead);
+
+            string dicom_mrn = getDicomString(readBuffer, mrn, bytesRead);
             if (dicom_mrn == medrecnum)
             {
                 textMRN.Text = medrecnum;
@@ -563,12 +569,13 @@ namespace CaseMaker
 
         private void openCaseToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel.Text = "";
             if (!manageDirtyCase()) return;
 
-            DialogResult result = openXMLDialog.ShowDialog();
+            DialogResult result = openCaseDialog.ShowDialog();
             if (result == DialogResult.OK)
             {
-                string fname = openXMLDialog.FileName;
+                string fname = openCaseDialog.FileName;
                 string prefix = Path.GetFileNameWithoutExtension(fname);
                 string sourcedir = Path.GetDirectoryName(fname);
                 XmlDocument doc = new XmlDocument();
@@ -591,7 +598,7 @@ namespace CaseMaker
                 textLoc.Text = getSectionElement(doc, "Location");
 
                 getImages(doc, sourcedir);
-                saveXMLDialog.InitialDirectory = sourcedir;
+                saveCaseDialog.InitialDirectory = sourcedir;
                 setDirty(false);
             }
 
@@ -690,41 +697,36 @@ namespace CaseMaker
                 writer.WriteElementString("p", textLoc.Text);
                 writer.WriteEndElement();
 
-                if (uploadDialog.username != "")
-                {
-                    writer.WriteStartElement("authorization");
-                    writer.WriteStartElement("owner");
-                    writer.WriteString(uploadDialog.username);
-                    writer.WriteEndElement();
-                    writer.WriteStartElement("read");
-                    writer.WriteString("department");
-                    writer.WriteEndElement();
-                    writer.WriteStartElement("update");
-                    writer.WriteString("admin");
-                    writer.WriteEndElement();
-                    writer.WriteEndElement();
-                }
+                writer.WriteStartElement("authorization");
+                writer.WriteStartElement("read");
+                writer.WriteString("department");
+                writer.WriteEndElement();
+                writer.WriteStartElement("update");
+                writer.WriteString("admin");
+                writer.WriteEndElement();
+                writer.WriteEndElement();
 
                 writer.WriteEndElement();
             }
         }
 
-        private void btnXML_Click(object sender, EventArgs e)
+        private void btnSaveDisk_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel.Text = "";
             saveCase();
         }
 
         bool saveCase()
         {
-            DialogResult result = saveXMLDialog.ShowDialog();
+            DialogResult result = saveCaseDialog.ShowDialog();
 
             if (result == DialogResult.OK)
             {
-                string fname = saveXMLDialog.FileName;
+                string fname = saveCaseDialog.FileName;
                 string prefix = Path.GetFileNameWithoutExtension(fname);
                 string targetdir = Path.GetDirectoryName(fname);
                 saveAll(prefix, targetdir, false);
-                openXMLDialog.InitialDirectory = targetdir;
+                openCaseDialog.InitialDirectory = targetdir;
                 setDirty(false);
                 return true;
             }
@@ -733,6 +735,7 @@ namespace CaseMaker
 
         private void btnMIRC_Click(object sender, EventArgs e)
         {
+            toolStripStatusLabel.Text = "";
             if (uploadDialog.ShowDialog() == DialogResult.OK)
             {
                 saveAll("case", Path.GetTempPath(), true);
@@ -785,26 +788,36 @@ namespace CaseMaker
                 else
                 {
                     ServicePointManager.Expect100Continue = false;
-                    Uri uri = new Uri(uploadDialog.urlMIRC);
-                    WebRequest webRequest = WebRequest.Create(uri);
-                    CredentialCache myCache = new CredentialCache();
-                    myCache.Add(uri, "Basic", new NetworkCredential(uploadDialog.username, uploadDialog.password));
-                    webRequest.Credentials = myCache;
+                    Uri mircURI = new Uri(uploadDialog.urlMIRC);
+                    WebRequest mircWebRequest = WebRequest.Create(mircURI);
+                    CredentialCache mircCredentialCache = new CredentialCache();
+                    mircCredentialCache.Add(mircURI, "Basic", new NetworkCredential(uploadDialog.username, uploadDialog.password));
+                    mircWebRequest.Credentials = mircCredentialCache;
 
-                    webRequest.ContentType = "application/x-zip-compressed";
-                    webRequest.Method = "POST";
-                    Stream requestStream = webRequest.GetRequestStream();
-                    zip.Save(requestStream);
-                    requestStream.Close();
+                    mircWebRequest.ContentType = "application/x-zip-compressed";
+                    mircWebRequest.Method = "POST";
+                    using (Stream requestStream = mircWebRequest.GetRequestStream())
+                    {
+                        zip.Save(requestStream);
+                    }
                     try
                     {
-                        WebResponse webResponse = webRequest.GetResponse();
+                        WebResponse webResponse = mircWebRequest.GetResponse();
                         StreamReader sr = new StreamReader(webResponse.GetResponseStream());
-                        Debug.Write(sr.ReadToEnd());
+                        string message = (sr.ReadToEnd());
+                        string[] responses = { "The zip file was received and unpacked successfully",
+                                               "There was a problem unpacking the posted file"};
+
+                        foreach (string response in responses)
+                        {
+                            if (message.Contains(response))
+                                toolStripStatusLabel.Text = response+".";
+                            break;
+                        }
                     }
                     catch (Exception e)
                     {
-                        Debug.Write(e.Message);
+                        toolStripStatusLabel.Text = e.Message;
                     }
                 }
             }
@@ -823,6 +836,7 @@ namespace CaseMaker
 
         private void textCaption_TextChanged(object sender, EventArgs e)
         {
+            toolStripStatusLabel.Text = "";
             caseImages[currentImage - 1].caption = textCaption.Text;
         }
 
@@ -844,9 +858,11 @@ namespace CaseMaker
                     ms2.Write(b, 14, (int)ms1.Length - 14);
                     ms1.Position = 0;
                     DataObject obj = new DataObject();
-                    obj.SetData("DeviceIndependentBitmap", ms2);
-                    obj.SetData(DataFormats.Bitmap, pb.Image);
-                    DoDragDrop(obj, DragDropEffects.All);
+                    obj.SetData(DataFormats.Dib, ms2);
+
+                    //obj.SetData(DataFormats.Bitmap, pb.Image);
+
+                    DoDragDrop(obj, DragDropEffects.Copy);
                 }
             }
 
@@ -899,7 +915,7 @@ namespace CaseMaker
                     }
                     break;
             }
-            if (url!="")
+            if (url != "")
                 Process.Start("IExplore.exe", url);
         }
 

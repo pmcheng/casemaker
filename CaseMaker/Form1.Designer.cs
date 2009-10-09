@@ -40,7 +40,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
-            this.btnXML = new System.Windows.Forms.Button();
+            this.btnSaveDisk = new System.Windows.Forms.Button();
             this.btnMIRC = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.textKeywords = new System.Windows.Forms.TextBox();
@@ -60,20 +60,20 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.textLoc = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.saveXMLDialog = new System.Windows.Forms.SaveFileDialog();
+            this.saveCaseDialog = new System.Windows.Forms.SaveFileDialog();
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnRight = new System.Windows.Forms.Button();
             this.countLabel = new System.Windows.Forms.Label();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.openXMLDialog = new System.Windows.Forms.OpenFileDialog();
+            this.openCaseDialog = new System.Windows.Forms.OpenFileDialog();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.newCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textCaption = new System.Windows.Forms.TextBox();
-            this.statusStrip1 = new System.Windows.Forms.StatusStrip();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.imagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
@@ -81,7 +81,7 @@
             this.tabPage2.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
-            this.statusStrip1.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // imagePanel
@@ -189,18 +189,18 @@
             this.label4.TabIndex = 9;
             this.label4.Text = "Gender";
             // 
-            // btnXML
+            // btnSaveDisk
             // 
-            this.btnXML.Image = global::CaseMaker.Properties.Resources.saveHS;
-            this.btnXML.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnXML.Location = new System.Drawing.Point(37, 473);
-            this.btnXML.Name = "btnXML";
-            this.btnXML.Size = new System.Drawing.Size(105, 23);
-            this.btnXML.TabIndex = 10;
-            this.btnXML.Text = "Save to Disk";
-            this.btnXML.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.btnXML.UseVisualStyleBackColor = true;
-            this.btnXML.Click += new System.EventHandler(this.btnXML_Click);
+            this.btnSaveDisk.Image = global::CaseMaker.Properties.Resources.saveHS;
+            this.btnSaveDisk.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.btnSaveDisk.Location = new System.Drawing.Point(37, 473);
+            this.btnSaveDisk.Name = "btnSaveDisk";
+            this.btnSaveDisk.Size = new System.Drawing.Size(105, 23);
+            this.btnSaveDisk.TabIndex = 10;
+            this.btnSaveDisk.Text = "Save to Disk";
+            this.btnSaveDisk.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.btnSaveDisk.UseVisualStyleBackColor = true;
+            this.btnSaveDisk.Click += new System.EventHandler(this.btnSaveDisk_Click);
             // 
             // btnMIRC
             // 
@@ -382,11 +382,11 @@
             this.label8.TabIndex = 20;
             this.label8.Text = "Loc";
             // 
-            // saveXMLDialog
+            // saveCaseDialog
             // 
-            this.saveXMLDialog.DefaultExt = "xml";
-            this.saveXMLDialog.Filter = "XML files (*.xml)|*.xml";
-            this.saveXMLDialog.Title = "Select the file you want to save";
+            this.saveCaseDialog.DefaultExt = "xml";
+            this.saveCaseDialog.Filter = "XML files (*.xml)|*.xml";
+            this.saveCaseDialog.Title = "Select the file you want to save";
             // 
             // btnLeft
             // 
@@ -431,10 +431,10 @@
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // openXMLDialog
+            // openCaseDialog
             // 
-            this.openXMLDialog.DefaultExt = "xml";
-            this.openXMLDialog.Filter = "XML files|*.xml";
+            this.openCaseDialog.DefaultExt = "xml";
+            this.openCaseDialog.Filter = "XML files|*.xml";
             // 
             // menuStrip1
             // 
@@ -486,36 +486,36 @@
             this.textCaption.TabIndex = 27;
             this.textCaption.TextChanged += new System.EventHandler(this.textCaption_TextChanged);
             // 
-            // statusStrip1
+            // statusStrip
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripStatusLabel1,
-            this.toolStripProgressBar1});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 518);
-            this.statusStrip1.Name = "statusStrip1";
-            this.statusStrip1.Size = new System.Drawing.Size(713, 22);
-            this.statusStrip1.TabIndex = 28;
-            this.statusStrip1.Text = "statusStrip1";
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripStatusLabel,
+            this.toolStripProgressBar});
+            this.statusStrip.Location = new System.Drawing.Point(0, 518);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(713, 22);
+            this.statusStrip.TabIndex = 28;
+            this.statusStrip.Text = "statusStrip";
             // 
-            // toolStripStatusLabel1
+            // toolStripStatusLabel
             // 
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(698, 17);
-            this.toolStripStatusLabel1.Spring = true;
-            this.toolStripStatusLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.toolStripStatusLabel.Name = "toolStripStatusLabel";
+            this.toolStripStatusLabel.Size = new System.Drawing.Size(698, 17);
+            this.toolStripStatusLabel.Spring = true;
+            this.toolStripStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // toolStripProgressBar1
+            // toolStripProgressBar
             // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
-            this.toolStripProgressBar1.Visible = false;
+            this.toolStripProgressBar.Name = "toolStripProgressBar";
+            this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
+            this.toolStripProgressBar.Visible = false;
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(713, 540);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.textCaption);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.countLabel);
@@ -524,7 +524,7 @@
             this.Controls.Add(this.label8);
             this.Controls.Add(this.textLoc);
             this.Controls.Add(this.btnMIRC);
-            this.Controls.Add(this.btnXML);
+            this.Controls.Add(this.btnSaveDisk);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -551,8 +551,8 @@
             this.tabControl1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -571,7 +571,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button btnXML;
+        private System.Windows.Forms.Button btnSaveDisk;
         private System.Windows.Forms.Button btnMIRC;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.TextBox textHistory;
@@ -584,7 +584,7 @@
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TextBox textLoc;
         private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.SaveFileDialog saveXMLDialog;
+        private System.Windows.Forms.SaveFileDialog saveCaseDialog;
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Button btnRight;
         private System.Windows.Forms.Label countLabel;
@@ -593,7 +593,7 @@
         private System.Windows.Forms.TextBox textDiscussion;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox textDdx;
-        private System.Windows.Forms.OpenFileDialog openXMLDialog;
+        private System.Windows.Forms.OpenFileDialog openCaseDialog;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem newCaseToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openCaseToolStripMenuItem;
@@ -601,9 +601,9 @@
         private System.Windows.Forms.TextBox textCaption;
         private System.Windows.Forms.TextBox textKeywords;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.StatusStrip statusStrip1;
-        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
         private System.Windows.Forms.TextBox textDebug;
     }
 }
