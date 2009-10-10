@@ -576,31 +576,61 @@ namespace CaseMaker
             if (result == DialogResult.OK)
             {
                 string fname = openCaseDialog.FileName;
-                string prefix = Path.GetFileNameWithoutExtension(fname);
-                string sourcedir = Path.GetDirectoryName(fname);
-                XmlDocument doc = new XmlDocument();
-                doc.Load(fname);
-
-                clearBoxes(this);
-                caseImages.Clear();
-                pb.Image = null;
-
-                textKeywords.Text = getElement(doc, "keywords");
-                textName.Text = getElement(doc, "pt-name");
-                textMRN.Text = getElement(doc, "pt-mrn");
-                textGender.Text = getElement(doc, "pt-sex");
-                textDOB.Text = getElement(doc, "pt-dob");
-                textHistory.Text = getSectionElement(doc, "History");
-                textFindings.Text = getSectionElement(doc, "Findings");
-                textDiagnosis.Text = getSectionElement(doc, "Diagnosis");
-                textDdx.Text = getSectionElement(doc, "Ddx");
-                textDiscussion.Text = getSectionElement(doc, "Discussion");
-                textLoc.Text = getSectionElement(doc, "Location");
-
-                getImages(doc, sourcedir);
-                saveCaseDialog.InitialDirectory = sourcedir;
-                setDirty(false);
+                if (fname.ToLower().EndsWith(".xml"))
+                {
+                    openCase(fname);
+                }
+                else if (fname.ToLower().EndsWith(".zip"))
+                {
+                    string tempfolder, xmlfile = "";
+                    do
+                    {
+                        tempfolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+                    } while (Directory.Exists(tempfolder));
+                    Directory.CreateDirectory(tempfolder);
+                    using (ZipFile zip = ZipFile.Read(fname))
+                    {
+                        foreach (ZipEntry ze in zip)
+                        {
+                            ze.Extract(tempfolder, ExtractExistingFileAction.OverwriteSilently);
+                            if (ze.FileName.ToLower().EndsWith(".xml"))
+                                xmlfile = ze.FileName;
+                        }
+                    }
+                    if (xmlfile != "")
+                        openCase(xmlfile);
+                    Directory.Delete(tempfolder, true);
+                }
             }
+
+        }
+
+        void openCase(string fname)
+        {
+            string prefix = Path.GetFileNameWithoutExtension(fname);
+            string sourcedir = Path.GetDirectoryName(fname);
+            XmlDocument doc = new XmlDocument();
+            doc.Load(fname);
+
+            clearBoxes(this);
+            caseImages.Clear();
+            pb.Image = null;
+
+            textKeywords.Text = getElement(doc, "keywords");
+            textName.Text = getElement(doc, "pt-name");
+            textMRN.Text = getElement(doc, "pt-mrn");
+            textGender.Text = getElement(doc, "pt-sex");
+            textDOB.Text = getElement(doc, "pt-dob");
+            textHistory.Text = getSectionElement(doc, "History");
+            textFindings.Text = getSectionElement(doc, "Findings");
+            textDiagnosis.Text = getSectionElement(doc, "Diagnosis");
+            textDdx.Text = getSectionElement(doc, "Ddx");
+            textDiscussion.Text = getSectionElement(doc, "Discussion");
+            textLoc.Text = getSectionElement(doc, "Location");
+
+            getImages(doc, sourcedir);
+            saveCaseDialog.InitialDirectory = sourcedir;
+            setDirty(false);
 
         }
 
@@ -772,18 +802,21 @@ namespace CaseMaker
                     //Save a nice HTML file too
                     string htmlPath = Path.ChangeExtension(xmlPath, ".htm");
                     XslCompiledTransform transform = new XslCompiledTransform();
+
                     StringReader xsltInput = new StringReader(CaseMaker.Properties.Resources.MIRCdocument);
                     XmlTextReader xsltReader = new XmlTextReader(xsltInput);
                     transform.Load(xsltReader);
+
                     XsltArgumentList xslArg = new XsltArgumentList();
                     xslArg.AddParam("display", "", "mstf");
                     xslArg.AddParam("context-path", "", ".");
                     xslArg.AddParam("user-is-owner", "", "yes");
-                    using (XmlWriter w = XmlWriter.Create(htmlPath, transform.OutputSettings))
+
+                    using (FileStream htmlStream=File.Create(htmlPath))
+                    using (XmlWriter w = XmlWriter.Create(htmlStream, transform.OutputSettings))
                     {
                         transform.Transform(xmlPath, xslArg, w);
                     }
-
                 }
                 else
                 {
@@ -811,7 +844,7 @@ namespace CaseMaker
                         foreach (string response in responses)
                         {
                             if (message.Contains(response))
-                                toolStripStatusLabel.Text = response+".";
+                                toolStripStatusLabel.Text = response + ".";
                             break;
                         }
                     }
@@ -843,12 +876,12 @@ namespace CaseMaker
 
         private void pb_MouseDown(object sender, MouseEventArgs e)
         {
-            // this handler is a workaround to allow the picturebox to redirect
-            // focus away from the multiline text fields, so that mouse scrollwheel
-            // events are captured by the form
             if (pb.Image != null)
             {
+                // allow the picturebox to redirect focus away from the multiline text fields, 
+                // so that mouse scrollwheel events are captured by the form
                 btnDelete.Select();
+
                 if (e.Button == MouseButtons.Left && e.Clicks == 1)
                 {
                     MemoryStream ms1 = new MemoryStream();

@@ -434,7 +434,7 @@
             // openCaseDialog
             // 
             this.openCaseDialog.DefaultExt = "xml";
-            this.openCaseDialog.Filter = "XML files|*.xml";
+            this.openCaseDialog.Filter = "XML files|*.xml|Zip files|*.zip";
             // 
             // menuStrip1
             // 
