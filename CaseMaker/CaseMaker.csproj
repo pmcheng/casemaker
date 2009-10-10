@@ -175,7 +175,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>"C:\bin\ilmerge.exe" /target:winexe /out:"$(ProjectDir)$(TargetFileName)" "$(TargetDir)$(TargetFileName)" "$(TargetDir)Ionic.zip.Reduced.dll"
-copy "$(ProjectDir)$(TargetFileName)" "C:\Documents and Settings\pmcheng\My Documents\Radiology USC\"</PostBuildEvent>
+    <PostBuildEvent>"C:\bin\ilmerge.exe" /target:winexe /out:"$(ProjectDir)bin\$(TargetFileName)" "$(TargetDir)$(TargetFileName)" "$(TargetDir)Ionic.zip.Reduced.dll"
+copy "$(ProjectDir)bin\$(TargetFileName)" "C:\Documents and Settings\pmcheng\My Documents\Radiology USC\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
