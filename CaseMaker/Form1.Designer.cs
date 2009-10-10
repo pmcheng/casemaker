@@ -52,11 +52,22 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.tabPage2 = new System.Windows.Forms.TabPage();
-            this.textDebug = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.textDiscussion = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.textDdx = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.checkBoxNucs = new System.Windows.Forms.CheckBox();
+            this.checkBoxIR = new System.Windows.Forms.CheckBox();
+            this.checkBoxUltrasound = new System.Windows.Forms.CheckBox();
+            this.checkBoxNeuro = new System.Windows.Forms.CheckBox();
+            this.checkBoxMSK = new System.Windows.Forms.CheckBox();
+            this.checkBoxPeds = new System.Windows.Forms.CheckBox();
+            this.checkBoxMammo = new System.Windows.Forms.CheckBox();
+            this.checkBoxGU = new System.Windows.Forms.CheckBox();
+            this.checkBoxGI = new System.Windows.Forms.CheckBox();
+            this.checkBoxCV = new System.Windows.Forms.CheckBox();
+            this.checkBoxPulm = new System.Windows.Forms.CheckBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.textLoc = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
@@ -79,6 +90,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
@@ -302,25 +314,17 @@
             // 
             // tabPage2
             // 
-            this.tabPage2.Controls.Add(this.textDebug);
             this.tabPage2.Controls.Add(this.label10);
             this.tabPage2.Controls.Add(this.textDiscussion);
             this.tabPage2.Controls.Add(this.label9);
             this.tabPage2.Controls.Add(this.textDdx);
+            this.tabPage2.Controls.Add(this.groupBox1);
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(283, 308);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Extra";
-            // 
-            // textDebug
-            // 
-            this.textDebug.Location = new System.Drawing.Point(12, 184);
-            this.textDebug.Multiline = true;
-            this.textDebug.Name = "textDebug";
-            this.textDebug.Size = new System.Drawing.Size(258, 109);
-            this.textDebug.TabIndex = 14;
             // 
             // label10
             // 
@@ -355,6 +359,136 @@
             this.textDdx.Name = "textDdx";
             this.textDdx.Size = new System.Drawing.Size(209, 42);
             this.textDdx.TabIndex = 12;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.checkBoxNucs);
+            this.groupBox1.Controls.Add(this.checkBoxIR);
+            this.groupBox1.Controls.Add(this.checkBoxUltrasound);
+            this.groupBox1.Controls.Add(this.checkBoxNeuro);
+            this.groupBox1.Controls.Add(this.checkBoxMSK);
+            this.groupBox1.Controls.Add(this.checkBoxPeds);
+            this.groupBox1.Controls.Add(this.checkBoxMammo);
+            this.groupBox1.Controls.Add(this.checkBoxGU);
+            this.groupBox1.Controls.Add(this.checkBoxGI);
+            this.groupBox1.Controls.Add(this.checkBoxCV);
+            this.groupBox1.Controls.Add(this.checkBoxPulm);
+            this.groupBox1.Location = new System.Drawing.Point(11, 182);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(258, 109);
+            this.groupBox1.TabIndex = 14;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Categories";
+            // 
+            // checkBoxNucs
+            // 
+            this.checkBoxNucs.AutoSize = true;
+            this.checkBoxNucs.Location = new System.Drawing.Point(97, 39);
+            this.checkBoxNucs.Name = "checkBoxNucs";
+            this.checkBoxNucs.Size = new System.Drawing.Size(51, 17);
+            this.checkBoxNucs.TabIndex = 9;
+            this.checkBoxNucs.Text = "Nucs";
+            this.checkBoxNucs.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxIR
+            // 
+            this.checkBoxIR.AutoSize = true;
+            this.checkBoxIR.Location = new System.Drawing.Point(97, 19);
+            this.checkBoxIR.Name = "checkBoxIR";
+            this.checkBoxIR.Size = new System.Drawing.Size(37, 17);
+            this.checkBoxIR.TabIndex = 8;
+            this.checkBoxIR.Text = "IR";
+            this.checkBoxIR.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxUltrasound
+            // 
+            this.checkBoxUltrasound.AutoSize = true;
+            this.checkBoxUltrasound.Location = new System.Drawing.Point(97, 80);
+            this.checkBoxUltrasound.Name = "checkBoxUltrasound";
+            this.checkBoxUltrasound.Size = new System.Drawing.Size(77, 17);
+            this.checkBoxUltrasound.TabIndex = 10;
+            this.checkBoxUltrasound.Text = "Ultrasound";
+            this.checkBoxUltrasound.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxNeuro
+            // 
+            this.checkBoxNeuro.AutoSize = true;
+            this.checkBoxNeuro.Location = new System.Drawing.Point(179, 59);
+            this.checkBoxNeuro.Name = "checkBoxNeuro";
+            this.checkBoxNeuro.Size = new System.Drawing.Size(55, 17);
+            this.checkBoxNeuro.TabIndex = 6;
+            this.checkBoxNeuro.Text = "Neuro";
+            this.checkBoxNeuro.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxMSK
+            // 
+            this.checkBoxMSK.AutoSize = true;
+            this.checkBoxMSK.Location = new System.Drawing.Point(179, 39);
+            this.checkBoxMSK.Name = "checkBoxMSK";
+            this.checkBoxMSK.Size = new System.Drawing.Size(49, 17);
+            this.checkBoxMSK.TabIndex = 5;
+            this.checkBoxMSK.Text = "MSK";
+            this.checkBoxMSK.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxPeds
+            // 
+            this.checkBoxPeds.AutoSize = true;
+            this.checkBoxPeds.Location = new System.Drawing.Point(97, 59);
+            this.checkBoxPeds.Name = "checkBoxPeds";
+            this.checkBoxPeds.Size = new System.Drawing.Size(50, 17);
+            this.checkBoxPeds.TabIndex = 7;
+            this.checkBoxPeds.Text = "Peds";
+            this.checkBoxPeds.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxMammo
+            // 
+            this.checkBoxMammo.AutoSize = true;
+            this.checkBoxMammo.Location = new System.Drawing.Point(179, 19);
+            this.checkBoxMammo.Name = "checkBoxMammo";
+            this.checkBoxMammo.Size = new System.Drawing.Size(63, 17);
+            this.checkBoxMammo.TabIndex = 4;
+            this.checkBoxMammo.Text = "Mammo";
+            this.checkBoxMammo.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxGU
+            // 
+            this.checkBoxGU.AutoSize = true;
+            this.checkBoxGU.Location = new System.Drawing.Point(14, 80);
+            this.checkBoxGU.Name = "checkBoxGU";
+            this.checkBoxGU.Size = new System.Drawing.Size(42, 17);
+            this.checkBoxGU.TabIndex = 3;
+            this.checkBoxGU.Text = "GU";
+            this.checkBoxGU.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxGI
+            // 
+            this.checkBoxGI.AutoSize = true;
+            this.checkBoxGI.Location = new System.Drawing.Point(14, 59);
+            this.checkBoxGI.Name = "checkBoxGI";
+            this.checkBoxGI.Size = new System.Drawing.Size(37, 17);
+            this.checkBoxGI.TabIndex = 2;
+            this.checkBoxGI.Text = "GI";
+            this.checkBoxGI.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxCV
+            // 
+            this.checkBoxCV.AutoSize = true;
+            this.checkBoxCV.Location = new System.Drawing.Point(14, 39);
+            this.checkBoxCV.Name = "checkBoxCV";
+            this.checkBoxCV.Size = new System.Drawing.Size(40, 17);
+            this.checkBoxCV.TabIndex = 1;
+            this.checkBoxCV.Text = "CV";
+            this.checkBoxCV.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxPulm
+            // 
+            this.checkBoxPulm.AutoSize = true;
+            this.checkBoxPulm.Location = new System.Drawing.Point(14, 19);
+            this.checkBoxPulm.Name = "checkBoxPulm";
+            this.checkBoxPulm.Size = new System.Drawing.Size(75, 17);
+            this.checkBoxPulm.TabIndex = 0;
+            this.checkBoxPulm.Text = "Pulmonary";
+            this.checkBoxPulm.UseVisualStyleBackColor = true;
             // 
             // tabControl1
             // 
@@ -548,6 +682,8 @@
             this.tabPage1.PerformLayout();
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -604,7 +740,18 @@
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
-        private System.Windows.Forms.TextBox textDebug;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.CheckBox checkBoxIR;
+        private System.Windows.Forms.CheckBox checkBoxPeds;
+        private System.Windows.Forms.CheckBox checkBoxNeuro;
+        private System.Windows.Forms.CheckBox checkBoxMSK;
+        private System.Windows.Forms.CheckBox checkBoxMammo;
+        private System.Windows.Forms.CheckBox checkBoxGU;
+        private System.Windows.Forms.CheckBox checkBoxGI;
+        private System.Windows.Forms.CheckBox checkBoxCV;
+        private System.Windows.Forms.CheckBox checkBoxPulm;
+        private System.Windows.Forms.CheckBox checkBoxUltrasound;
+        private System.Windows.Forms.CheckBox checkBoxNucs;
     }
 }
 

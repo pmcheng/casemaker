@@ -34,7 +34,7 @@ namespace CaseMaker
         int lastY = 0;
         bool isDirty = false;
 
-        Dictionary<string, string> locationDict = new Dictionary<string, string>()
+        Dictionary<string, string> dictLocation = new Dictionary<string, string>()
         {
             {"datasource=https%253A%252F%252Fexternal.synapse.uscuh.com", "UH/Norris"},
             {"datasource=http%253A%252F%252Fsynapse.uscuh.com", "UH/Norris"},
@@ -42,6 +42,9 @@ namespace CaseMaker
             {"datasource=http%253A%252F%252Fhcc2synvweb","HCC2"},
             {"datasource=http%253A%252F%252Flacsynapse","LACUSC"}
         };
+
+        Dictionary<CheckBox, string> dictCategory;
+
 
         public MainForm()
         {
@@ -52,6 +55,20 @@ namespace CaseMaker
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseWheel);
             assignHandlers(this);
 
+            dictCategory = new Dictionary<CheckBox, string>()
+            {
+                {checkBoxPulm,"Pulmonary"},
+                {checkBoxCV,"Cardiovascular"},
+                {checkBoxGI,"Gastrointestinal"},
+                {checkBoxGU,"Genitourinary"},
+                {checkBoxIR,"Vascular|Interventional"},
+                {checkBoxMammo,"Breast"},
+                {checkBoxMSK,"Musculoskeletal"},
+                {checkBoxNeuro,"Neuro"},
+                {checkBoxUltrasound,"Ultrasound"},
+                {checkBoxPeds,"Pediatric"},
+                {checkBoxNucs,"Nuclear"}
+            };
         }
 
         void clearBoxes(Control parent)
@@ -75,7 +92,11 @@ namespace CaseMaker
             {
                 if (ctrl is TextBox)
                 {
-                    (ctrl as TextBox).TextChanged += new EventHandler(textChanged);
+                    (ctrl as TextBox).TextChanged += new EventHandler(caseChanged);
+                }
+                if (ctrl is CheckBox)
+                {
+                    (ctrl as CheckBox).CheckedChanged += new EventHandler(caseChanged);
                 }
                 if (ctrl.HasChildren)
                 {
@@ -84,7 +105,7 @@ namespace CaseMaker
             }
         }
 
-        void textChanged(object sender, EventArgs e)
+        void caseChanged(object sender, EventArgs e)
         {
             setDirty(true);
             toolStripStatusLabel.Text = "";
@@ -149,7 +170,6 @@ namespace CaseMaker
                         {
                             sr = new StreamReader(ms);
                             imageURL = sr.ReadToEnd().TrimEnd('\0');
-                            textDebug.Text = imageURL;
 
                             studyUID = Regex.Match(imageURL, @"studyuid=(\d*)").Groups[1].Value;
                             imageUID = Regex.Match(imageURL, @"imageuid=(\d*)").Groups[1].Value;
@@ -176,9 +196,9 @@ namespace CaseMaker
         string mapToLocation(string URL)
         // map URL to physical location
         {
-            foreach (string key in locationDict.Keys)
+            foreach (string key in dictLocation.Keys)
             {
-                if (URL.Contains(key)) return locationDict[key];
+                if (URL.Contains(key)) return dictLocation[key];
             }
             return "";
         }
@@ -628,6 +648,13 @@ namespace CaseMaker
             textDiscussion.Text = getSectionElement(doc, "Discussion");
             textLoc.Text = getSectionElement(doc, "Location");
 
+            string categories = getElement(doc, "category");
+            foreach (CheckBox box in dictCategory.Keys)
+            {
+                if (categories.Contains(dictCategory[box]))
+                    box.Checked = true;
+            }
+
             getImages(doc, sourcedir);
             saveCaseDialog.InitialDirectory = sourcedir;
             setDirty(false);
@@ -727,6 +754,19 @@ namespace CaseMaker
                 writer.WriteElementString("p", textLoc.Text);
                 writer.WriteEndElement();
 
+                writer.WriteStartElement("category");
+                bool categories=false;
+                foreach (CheckBox box in dictCategory.Keys)
+                {
+                    if (box.Checked)
+                    {
+                        if (categories) writer.WriteString(" ");
+                        writer.WriteString(dictCategory[box]);
+                        categories = true;
+                    }
+                }
+                writer.WriteEndElement();
+
                 writer.WriteStartElement("authorization");
                 writer.WriteStartElement("read");
                 writer.WriteString("department");
@@ -812,7 +852,7 @@ namespace CaseMaker
                     xslArg.AddParam("context-path", "", ".");
                     xslArg.AddParam("user-is-owner", "", "yes");
 
-                    using (FileStream htmlStream=File.Create(htmlPath))
+                    using (FileStream htmlStream = File.Create(htmlPath))
                     using (XmlWriter w = XmlWriter.Create(htmlStream, transform.OutputSettings))
                     {
                         transform.Transform(xmlPath, xslArg, w);
@@ -957,7 +997,7 @@ namespace CaseMaker
             e.Cancel = !(manageDirtyCase());
         }
 
-
-
     }
+
+   
 }
