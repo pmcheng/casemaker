@@ -166,10 +166,10 @@ namespace CaseMaker
                         StreamReader sr = new StreamReader(ms, Encoding.Unicode);
                         string mrn = sr.ReadToEnd().TrimEnd('\0');
                         DialogResult result = DialogResult.Yes;
-                        if ((textMRN.Text!="") && (textMRN.Text!=mrn))
+                        if ((textMRN.Text != "") && (textMRN.Text != mrn))
                         {
                             dialogConflict.Owner = this;
-                            result=dialogConflict.ShowDialog();
+                            result = dialogConflict.ShowDialog();
                             if (result == DialogResult.Cancel) return;
 
                         }
@@ -625,7 +625,7 @@ namespace CaseMaker
                         }
                     }
                     if (xmlfile != "")
-                        openCase(xmlfile);
+                        openCase(Path.Combine(tempFolder,xmlfile));
                     Directory.Delete(tempFolder, true);
                 }
             }
@@ -763,7 +763,7 @@ namespace CaseMaker
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("category");
-                bool categories=false;
+                bool categories = false;
                 foreach (CheckBox box in dictCategory.Keys)
                 {
                     if (box.Checked)
@@ -814,7 +814,12 @@ namespace CaseMaker
                 string fname = saveCaseDialog.FileName;
                 string prefix = Path.GetFileNameWithoutExtension(fname);
                 string targetdir = Path.GetDirectoryName(fname);
-                saveAll(prefix, targetdir, false);
+
+                string tempFolder = createTempFolder();
+                //saveAll(prefix, targetdir, false);
+                saveFiles(prefix, tempFolder);
+                saveZip(prefix, tempFolder, targetdir);
+                Directory.Delete(tempFolder, true);
                 openCaseDialog.InitialDirectory = targetdir;
                 setDirty(false);
                 return true;
@@ -828,7 +833,10 @@ namespace CaseMaker
             if (uploadDialog.ShowDialog() == DialogResult.OK)
             {
                 string tempFolder = createTempFolder();
-                saveAll("case", tempFolder, true);
+                //saveAll("case", tempFolder, true);
+                saveFiles("case", tempFolder);
+                sendZip(tempFolder);
+
                 setDirty(false);
                 Directory.Delete(tempFolder, true);
             }
@@ -855,71 +863,77 @@ namespace CaseMaker
             }
         }
 
-        void saveAll(string prefix, string targetdir, bool sendNet)
+        void saveFiles(string prefix, string targetdir)
         {
             string xmlfname = Path.ChangeExtension(prefix, ".xml");
-            string zipname = Path.ChangeExtension(prefix, ".zip");
 
+            for (int i = 0; i < caseImages.Count; i++)
+            {
+                string num = "00" + i;
+                num = num.Substring(num.Length - 3);
+                string fname = Path.ChangeExtension(prefix + "_" + num, ".png");
+                caseImages[i].filename = fname;
+                string imgpath = Path.Combine(targetdir, fname);
+                caseImages[i].image.Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
+            }
+            string xmlPath = Path.Combine(targetdir, xmlfname);
+            saveXML(xmlPath);
+        }
+
+        void saveZip(string prefix, string sourcedir, string targetdir)
+        {
+
+            string zipname = Path.ChangeExtension(prefix, ".zip");
+            string[] files = Directory.GetFiles(sourcedir);
             using (ZipFile zip = new ZipFile())
             {
-                for (int i = 0; i < caseImages.Count; i++)
+                zip.AddFiles(files, "");
+                zip.Save(Path.Combine(targetdir, zipname));
+            }
+        }
+
+        void sendZip(string sourcedir)
+        {
+            string[] files = Directory.GetFiles(sourcedir);
+            using (ZipFile zip = new ZipFile())
+            {
+                zip.AddFiles(files, "");
+
+                ServicePointManager.Expect100Continue = false;
+                Uri mircURI = new Uri(uploadDialog.urlMIRC);
+                WebRequest mircWebRequest = WebRequest.Create(mircURI);
+                CredentialCache mircCredentialCache = new CredentialCache();
+                mircCredentialCache.Add(mircURI, "Basic", new NetworkCredential(uploadDialog.username, uploadDialog.password));
+                mircWebRequest.Credentials = mircCredentialCache;
+
+                mircWebRequest.ContentType = "application/x-zip-compressed";
+                mircWebRequest.Method = "POST";
+                using (Stream requestStream = mircWebRequest.GetRequestStream())
                 {
-                    string num = "00" + i;
-                    num = num.Substring(num.Length - 3);
-                    string fname = Path.ChangeExtension(prefix + "_" + num, ".png");
-                    caseImages[i].filename = fname;
-                    string imgpath = Path.Combine(targetdir, fname);
-                    caseImages[i].image.Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
-                    zip.AddFile(imgpath, "");
+                    zip.Save(requestStream);
                 }
-
-                string xmlPath = Path.Combine(targetdir, xmlfname);
-                saveXML(xmlPath);
-                zip.AddFile(xmlPath, "");
-
-                if (!sendNet)
+                try
                 {
-                    zip.Save(Path.Combine(targetdir, zipname));
-                    string htmlPath = Path.ChangeExtension(xmlPath, ".htm");
-                    transformXML(xmlPath, htmlPath);
-                }
-                else
-                {
-                    ServicePointManager.Expect100Continue = false;
-                    Uri mircURI = new Uri(uploadDialog.urlMIRC);
-                    WebRequest mircWebRequest = WebRequest.Create(mircURI);
-                    CredentialCache mircCredentialCache = new CredentialCache();
-                    mircCredentialCache.Add(mircURI, "Basic", new NetworkCredential(uploadDialog.username, uploadDialog.password));
-                    mircWebRequest.Credentials = mircCredentialCache;
-
-                    mircWebRequest.ContentType = "application/x-zip-compressed";
-                    mircWebRequest.Method = "POST";
-                    using (Stream requestStream = mircWebRequest.GetRequestStream())
-                    {
-                        zip.Save(requestStream);
-                    }
-                    try
-                    {
-                        WebResponse webResponse = mircWebRequest.GetResponse();
-                        StreamReader sr = new StreamReader(webResponse.GetResponseStream());
-                        string message = (sr.ReadToEnd());
-                        string[] responses = { "The zip file was received and unpacked successfully",
+                    WebResponse webResponse = mircWebRequest.GetResponse();
+                    StreamReader sr = new StreamReader(webResponse.GetResponseStream());
+                    string message = (sr.ReadToEnd());
+                    string[] responses = { "The zip file was received and unpacked successfully",
                                                "There was a problem unpacking the posted file"};
 
-                        foreach (string response in responses)
-                        {
-                            if (message.Contains(response))
-                                toolStripStatusLabel.Text = response + ".";
-                            break;
-                        }
-                    }
-                    catch (Exception e)
+                    foreach (string response in responses)
                     {
-                        toolStripStatusLabel.Text = e.Message;
+                        if (message.Contains(response))
+                            toolStripStatusLabel.Text = response + ".";
+                        break;
                     }
+                }
+                catch (Exception e)
+                {
+                    toolStripStatusLabel.Text = e.Message;
                 }
             }
         }
+
 
         private void imagePanel_Resize(object sender, EventArgs e)
         {
@@ -949,22 +963,22 @@ namespace CaseMaker
 
                 if (e.Button == MouseButtons.Left && e.Clicks == 1)
                 {
-                    string tempfile = Path.GetTempFileName() + ".png";
-                    string[] filelist = new string[] { tempfile };
-                    pb.Image.Save(tempfile, System.Drawing.Imaging.ImageFormat.Png);
+                    //string tempfile = Path.GetTempFileName() + ".png";
+                    //string[] filelist = new string[] { tempfile };
+                    //pb.Image.Save(tempfile, System.Drawing.Imaging.ImageFormat.Png);
 
-                    /*
                     MemoryStream ms1 = new MemoryStream();
                     MemoryStream ms2 = new MemoryStream();
                     pb.Image.Save(ms1, System.Drawing.Imaging.ImageFormat.Bmp);
                     byte[] b = ms1.GetBuffer();
                     ms2.Write(b, 14, (int)ms1.Length - 14);
                     ms1.Position = 0;
-                    obj.SetData(DataFormats.Dib, ms2);
-                    obj.SetData(DataFormats.Bitmap, pb.Image);
-                    */
+
                     DataObject obj = new DataObject();
-                    obj.SetData(DataFormats.FileDrop, filelist);                   
+                    obj.SetData(DataFormats.Dib, ms2);
+                    //obj.SetData(DataFormats.Bitmap, pb.Image);
+
+                    //obj.SetData(DataFormats.FileDrop, filelist);
 
                     DoDragDrop(obj, DragDropEffects.Copy);
                 }
@@ -1030,5 +1044,5 @@ namespace CaseMaker
 
     }
 
-   
+
 }
