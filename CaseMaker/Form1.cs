@@ -602,28 +602,25 @@ namespace CaseMaker
                 }
                 else if (fname.ToLower().EndsWith(".zip"))
                 {
-                    string tempfolder, xmlfile = "";
-                    do
-                    {
-                        tempfolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-                    } while (Directory.Exists(tempfolder));
-                    Directory.CreateDirectory(tempfolder);
+                    string tempFolder = createTempFolder();
+                    string xmlfile = "";
                     using (ZipFile zip = ZipFile.Read(fname))
                     {
                         foreach (ZipEntry ze in zip)
                         {
-                            ze.Extract(tempfolder, ExtractExistingFileAction.OverwriteSilently);
+                            ze.Extract(tempFolder, ExtractExistingFileAction.OverwriteSilently);
                             if (ze.FileName.ToLower().EndsWith(".xml"))
                                 xmlfile = ze.FileName;
                         }
                     }
                     if (xmlfile != "")
                         openCase(xmlfile);
-                    Directory.Delete(tempfolder, true);
+                    Directory.Delete(tempFolder, true);
                 }
             }
 
         }
+
 
         void openCase(string fname)
         {
@@ -780,6 +777,17 @@ namespace CaseMaker
             }
         }
 
+        string createTempFolder()
+        {
+            string tempFolder;
+            do
+            {
+                tempFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+            } while (Directory.Exists(tempFolder));
+            Directory.CreateDirectory(tempFolder);
+            return tempFolder;
+        }
+
         private void btnSaveDisk_Click(object sender, EventArgs e)
         {
             toolStripStatusLabel.Text = "";
@@ -808,8 +816,10 @@ namespace CaseMaker
             toolStripStatusLabel.Text = "";
             if (uploadDialog.ShowDialog() == DialogResult.OK)
             {
-                saveAll("case", Path.GetTempPath(), true);
+                string tempFolder = createTempFolder();
+                saveAll("case", tempFolder, true);
                 setDirty(false);
+                Directory.Delete(tempFolder, true);
             }
         }
 

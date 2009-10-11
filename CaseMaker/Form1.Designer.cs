@@ -141,21 +141,21 @@
             this.textName.Location = new System.Drawing.Point(63, 32);
             this.textName.Name = "textName";
             this.textName.Size = new System.Drawing.Size(209, 20);
-            this.textName.TabIndex = 4;
+            this.textName.TabIndex = 0;
             // 
             // textMRN
             // 
             this.textMRN.Location = new System.Drawing.Point(176, 59);
             this.textMRN.Name = "textMRN";
             this.textMRN.Size = new System.Drawing.Size(96, 20);
-            this.textMRN.TabIndex = 6;
+            this.textMRN.TabIndex = 2;
             // 
             // textDOB
             // 
             this.textDOB.Location = new System.Drawing.Point(63, 59);
             this.textDOB.Name = "textDOB";
             this.textDOB.Size = new System.Drawing.Size(69, 20);
-            this.textDOB.TabIndex = 5;
+            this.textDOB.TabIndex = 1;
             // 
             // textGender
             // 
@@ -163,7 +163,7 @@
             this.textGender.MaxLength = 2;
             this.textGender.Name = "textGender";
             this.textGender.Size = new System.Drawing.Size(23, 20);
-            this.textGender.TabIndex = 7;
+            this.textGender.TabIndex = 3;
             // 
             // label1
             // 
@@ -208,7 +208,7 @@
             this.btnSaveDisk.Location = new System.Drawing.Point(37, 473);
             this.btnSaveDisk.Name = "btnSaveDisk";
             this.btnSaveDisk.Size = new System.Drawing.Size(105, 23);
-            this.btnSaveDisk.TabIndex = 10;
+            this.btnSaveDisk.TabIndex = 6;
             this.btnSaveDisk.Text = "Save to Disk";
             this.btnSaveDisk.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSaveDisk.UseVisualStyleBackColor = true;
@@ -221,7 +221,7 @@
             this.btnMIRC.Location = new System.Drawing.Point(165, 473);
             this.btnMIRC.Name = "btnMIRC";
             this.btnMIRC.Size = new System.Drawing.Size(105, 23);
-            this.btnMIRC.TabIndex = 11;
+            this.btnMIRC.TabIndex = 7;
             this.btnMIRC.Text = "Send to MIRC";
             this.btnMIRC.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnMIRC.UseVisualStyleBackColor = true;
@@ -250,7 +250,7 @@
             this.textKeywords.Multiline = true;
             this.textKeywords.Name = "textKeywords";
             this.textKeywords.Size = new System.Drawing.Size(209, 34);
-            this.textKeywords.TabIndex = 17;
+            this.textKeywords.TabIndex = 3;
             // 
             // label11
             // 
@@ -267,7 +267,7 @@
             this.textHistory.Multiline = true;
             this.textHistory.Name = "textHistory";
             this.textHistory.Size = new System.Drawing.Size(209, 55);
-            this.textHistory.TabIndex = 1;
+            this.textHistory.TabIndex = 0;
             // 
             // textDiagnosis
             // 
@@ -275,7 +275,7 @@
             this.textDiagnosis.Multiline = true;
             this.textDiagnosis.Name = "textDiagnosis";
             this.textDiagnosis.Size = new System.Drawing.Size(209, 36);
-            this.textDiagnosis.TabIndex = 3;
+            this.textDiagnosis.TabIndex = 2;
             // 
             // textFindings
             // 
@@ -283,7 +283,7 @@
             this.textFindings.Multiline = true;
             this.textFindings.Name = "textFindings";
             this.textFindings.Size = new System.Drawing.Size(209, 106);
-            this.textFindings.TabIndex = 2;
+            this.textFindings.TabIndex = 1;
             // 
             // label5
             // 
@@ -386,7 +386,7 @@
             this.checkBoxNucs.Location = new System.Drawing.Point(97, 39);
             this.checkBoxNucs.Name = "checkBoxNucs";
             this.checkBoxNucs.Size = new System.Drawing.Size(51, 17);
-            this.checkBoxNucs.TabIndex = 9;
+            this.checkBoxNucs.TabIndex = 5;
             this.checkBoxNucs.Text = "Nucs";
             this.checkBoxNucs.UseVisualStyleBackColor = true;
             // 
@@ -396,7 +396,7 @@
             this.checkBoxIR.Location = new System.Drawing.Point(97, 19);
             this.checkBoxIR.Name = "checkBoxIR";
             this.checkBoxIR.Size = new System.Drawing.Size(37, 17);
-            this.checkBoxIR.TabIndex = 8;
+            this.checkBoxIR.TabIndex = 4;
             this.checkBoxIR.Text = "IR";
             this.checkBoxIR.UseVisualStyleBackColor = true;
             // 
@@ -406,7 +406,7 @@
             this.checkBoxUltrasound.Location = new System.Drawing.Point(97, 80);
             this.checkBoxUltrasound.Name = "checkBoxUltrasound";
             this.checkBoxUltrasound.Size = new System.Drawing.Size(77, 17);
-            this.checkBoxUltrasound.TabIndex = 10;
+            this.checkBoxUltrasound.TabIndex = 7;
             this.checkBoxUltrasound.Text = "Ultrasound";
             this.checkBoxUltrasound.UseVisualStyleBackColor = true;
             // 
@@ -416,7 +416,7 @@
             this.checkBoxNeuro.Location = new System.Drawing.Point(179, 59);
             this.checkBoxNeuro.Name = "checkBoxNeuro";
             this.checkBoxNeuro.Size = new System.Drawing.Size(55, 17);
-            this.checkBoxNeuro.TabIndex = 6;
+            this.checkBoxNeuro.TabIndex = 10;
             this.checkBoxNeuro.Text = "Neuro";
             this.checkBoxNeuro.UseVisualStyleBackColor = true;
             // 
@@ -426,7 +426,7 @@
             this.checkBoxMSK.Location = new System.Drawing.Point(179, 39);
             this.checkBoxMSK.Name = "checkBoxMSK";
             this.checkBoxMSK.Size = new System.Drawing.Size(49, 17);
-            this.checkBoxMSK.TabIndex = 5;
+            this.checkBoxMSK.TabIndex = 9;
             this.checkBoxMSK.Text = "MSK";
             this.checkBoxMSK.UseVisualStyleBackColor = true;
             // 
@@ -436,7 +436,7 @@
             this.checkBoxPeds.Location = new System.Drawing.Point(97, 59);
             this.checkBoxPeds.Name = "checkBoxPeds";
             this.checkBoxPeds.Size = new System.Drawing.Size(50, 17);
-            this.checkBoxPeds.TabIndex = 7;
+            this.checkBoxPeds.TabIndex = 6;
             this.checkBoxPeds.Text = "Peds";
             this.checkBoxPeds.UseVisualStyleBackColor = true;
             // 
@@ -446,7 +446,7 @@
             this.checkBoxMammo.Location = new System.Drawing.Point(179, 19);
             this.checkBoxMammo.Name = "checkBoxMammo";
             this.checkBoxMammo.Size = new System.Drawing.Size(63, 17);
-            this.checkBoxMammo.TabIndex = 4;
+            this.checkBoxMammo.TabIndex = 8;
             this.checkBoxMammo.Text = "Mammo";
             this.checkBoxMammo.UseVisualStyleBackColor = true;
             // 
@@ -498,14 +498,14 @@
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(291, 334);
-            this.tabControl1.TabIndex = 9;
+            this.tabControl1.TabIndex = 5;
             // 
             // textLoc
             // 
             this.textLoc.Location = new System.Drawing.Point(141, 88);
             this.textLoc.Name = "textLoc";
             this.textLoc.Size = new System.Drawing.Size(131, 20);
-            this.textLoc.TabIndex = 8;
+            this.textLoc.TabIndex = 4;
             // 
             // label8
             // 
@@ -518,8 +518,8 @@
             // 
             // saveCaseDialog
             // 
-            this.saveCaseDialog.DefaultExt = "xml";
-            this.saveCaseDialog.Filter = "XML files (*.xml)|*.xml";
+            this.saveCaseDialog.DefaultExt = "zip";
+            this.saveCaseDialog.Filter = "ZIP files (*.zip)|*.zip";
             this.saveCaseDialog.Title = "Select the file you want to save";
             // 
             // btnLeft
@@ -567,8 +567,8 @@
             // 
             // openCaseDialog
             // 
-            this.openCaseDialog.DefaultExt = "xml";
-            this.openCaseDialog.Filter = "XML files|*.xml|Zip files|*.zip";
+            this.openCaseDialog.DefaultExt = "zip";
+            this.openCaseDialog.Filter = "ZIP files|*.zip|XML files|*.xml";
             // 
             // menuStrip1
             // 
@@ -617,7 +617,7 @@
             this.textCaption.Multiline = true;
             this.textCaption.Name = "textCaption";
             this.textCaption.Size = new System.Drawing.Size(384, 24);
-            this.textCaption.TabIndex = 27;
+            this.textCaption.TabIndex = 8;
             this.textCaption.TextChanged += new System.EventHandler(this.textCaption_TextChanged);
             // 
             // statusStrip
