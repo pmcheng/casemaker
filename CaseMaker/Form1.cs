@@ -817,16 +817,16 @@ namespace CaseMaker
         {
             string xmlfname = Path.ChangeExtension(prefix, ".xml");
             string zipname = Path.ChangeExtension(prefix, ".zip");
-            string fname, imgpath;
-            List<string> imgNames = new List<string>();
 
             using (ZipFile zip = new ZipFile())
             {
                 for (int i = 0; i < caseImages.Count; i++)
                 {
-                    fname = Path.ChangeExtension(prefix + "_" + i, ".png");
+                    string num = "00" + i;
+                    num = num.Substring(num.Length - 3);
+                    string fname = Path.ChangeExtension(prefix + "_" + num, ".png");
                     caseImages[i].filename = fname;
-                    imgpath = Path.Combine(targetdir, fname);
+                    string imgpath = Path.Combine(targetdir, fname);
                     caseImages[i].image.Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
                     zip.AddFile(imgpath, "");
                 }
