@@ -934,16 +934,22 @@ namespace CaseMaker
 
                 if (e.Button == MouseButtons.Left && e.Clicks == 1)
                 {
+                    string tempfile = Path.GetTempFileName() + ".png";
+                    string[] filelist = new string[] { tempfile };
+                    pb.Image.Save(tempfile, System.Drawing.Imaging.ImageFormat.Png);
+
+                    /*
                     MemoryStream ms1 = new MemoryStream();
                     MemoryStream ms2 = new MemoryStream();
                     pb.Image.Save(ms1, System.Drawing.Imaging.ImageFormat.Bmp);
                     byte[] b = ms1.GetBuffer();
                     ms2.Write(b, 14, (int)ms1.Length - 14);
                     ms1.Position = 0;
-                    DataObject obj = new DataObject();
                     obj.SetData(DataFormats.Dib, ms2);
-
-                    //obj.SetData(DataFormats.Bitmap, pb.Image);
+                    obj.SetData(DataFormats.Bitmap, pb.Image);
+                    */
+                    DataObject obj = new DataObject();
+                    obj.SetData(DataFormats.FileDrop, filelist);                   
 
                     DoDragDrop(obj, DragDropEffects.Copy);
                 }
