@@ -25,6 +25,7 @@ namespace CaseMaker
         bool validData;
         Thread getImageThread;
         UploadMIRCDialog uploadDialog = new UploadMIRCDialog();
+        DialogConflict dialogConflict = new DialogConflict();
 
         string lastFilename = String.Empty;
         List<CaseImage> caseImages = new List<CaseImage>();
@@ -164,20 +165,30 @@ namespace CaseMaker
                     {
                         StreamReader sr = new StreamReader(ms, Encoding.Unicode);
                         string mrn = sr.ReadToEnd().TrimEnd('\0');
-
-                        ms = e.Data.GetData("UniformResourceLocator") as MemoryStream;
-                        if (ms != null)
+                        DialogResult result = DialogResult.Yes;
+                        if ((textMRN.Text!="") && (textMRN.Text!=mrn))
                         {
-                            sr = new StreamReader(ms);
-                            imageURL = sr.ReadToEnd().TrimEnd('\0');
-
-                            studyUID = Regex.Match(imageURL, @"studyuid=(\d*)").Groups[1].Value;
-                            imageUID = Regex.Match(imageURL, @"imageuid=(\d*)").Groups[1].Value;
-
-                            textLoc.Text = mapToLocation(imageURL);
+                            dialogConflict.Owner = this;
+                            result=dialogConflict.ShowDialog();
+                            if (result == DialogResult.Cancel) return;
 
                         }
-                        getCacheDemographics(mrn);
+                        if (result != DialogResult.No)
+                        {
+                            ms = e.Data.GetData("UniformResourceLocator") as MemoryStream;
+                            if (ms != null)
+                            {
+                                sr = new StreamReader(ms);
+                                imageURL = sr.ReadToEnd().TrimEnd('\0');
+
+                                studyUID = Regex.Match(imageURL, @"studyuid=(\d*)").Groups[1].Value;
+                                imageUID = Regex.Match(imageURL, @"imageuid=(\d*)").Groups[1].Value;
+
+                                textLoc.Text = mapToLocation(imageURL);
+
+                            }
+                            getCacheDemographics(mrn);
+                        }
                     }
                     CaseImage caseImage = new CaseImage(nextImage);
                     caseImage.imageURL = imageURL;
