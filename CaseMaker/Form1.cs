@@ -834,6 +834,27 @@ namespace CaseMaker
             }
         }
 
+        void transformXML(string xmlPath, string htmlPath)
+        {
+            //Save an HTML in the format of MIRC teaching file           
+            XslCompiledTransform transform = new XslCompiledTransform();
+
+            StringReader xsltInput = new StringReader(CaseMaker.Properties.Resources.MIRCdocument);
+            XmlTextReader xsltReader = new XmlTextReader(xsltInput);
+            transform.Load(xsltReader);
+
+            XsltArgumentList xslArg = new XsltArgumentList();
+            xslArg.AddParam("display", "", "mstf");
+            xslArg.AddParam("context-path", "", ".");
+            xslArg.AddParam("user-is-owner", "", "yes");
+
+            using (FileStream htmlStream = File.Create(htmlPath))
+            using (XmlWriter w = XmlWriter.Create(htmlStream, transform.OutputSettings))
+            {
+                transform.Transform(xmlPath, xslArg, w);
+            }
+        }
+
         void saveAll(string prefix, string targetdir, bool sendNet)
         {
             string xmlfname = Path.ChangeExtension(prefix, ".xml");
@@ -859,25 +880,8 @@ namespace CaseMaker
                 if (!sendNet)
                 {
                     zip.Save(Path.Combine(targetdir, zipname));
-
-                    //Save a nice HTML file too
                     string htmlPath = Path.ChangeExtension(xmlPath, ".htm");
-                    XslCompiledTransform transform = new XslCompiledTransform();
-
-                    StringReader xsltInput = new StringReader(CaseMaker.Properties.Resources.MIRCdocument);
-                    XmlTextReader xsltReader = new XmlTextReader(xsltInput);
-                    transform.Load(xsltReader);
-
-                    XsltArgumentList xslArg = new XsltArgumentList();
-                    xslArg.AddParam("display", "", "mstf");
-                    xslArg.AddParam("context-path", "", ".");
-                    xslArg.AddParam("user-is-owner", "", "yes");
-
-                    using (FileStream htmlStream = File.Create(htmlPath))
-                    using (XmlWriter w = XmlWriter.Create(htmlStream, transform.OutputSettings))
-                    {
-                        transform.Transform(xmlPath, xslArg, w);
-                    }
+                    transformXML(xmlPath, htmlPath);
                 }
                 else
                 {
