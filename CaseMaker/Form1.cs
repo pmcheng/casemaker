@@ -863,6 +863,17 @@ namespace CaseMaker
             }
         }
 
+        private void previewToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string tempFolder = createTempFolder();
+            saveFiles("case", tempFolder);
+            string xmlPath=Path.Combine(tempFolder,"case.xml");
+            string htmlPath=Path.Combine(tempFolder,"case.html");
+            transformXML(xmlPath, htmlPath);
+            Process.Start("IExplore.exe", htmlPath);
+            
+        }
+
         void saveFiles(string prefix, string targetdir)
         {
             string xmlfname = Path.ChangeExtension(prefix, ".xml");
@@ -1041,6 +1052,7 @@ namespace CaseMaker
         {
             e.Cancel = !(manageDirtyCase());
         }
+
 
     }
 

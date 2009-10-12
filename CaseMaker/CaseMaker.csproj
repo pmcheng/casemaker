@@ -173,6 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="check.ico" />
+    <None Include="Resources\PrintPreviewHS.png" />
     <None Include="Resources\casemaker.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -118,6 +118,13 @@ namespace CaseMaker.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap PrintPreviewHS {
+            get {
+                object obj = ResourceManager.GetObject("PrintPreviewHS", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap PublishToWebHS {
             get {
                 object obj = ResourceManager.GetObject("PublishToWebHS", resourceCulture);

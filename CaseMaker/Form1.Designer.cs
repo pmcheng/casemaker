@@ -81,6 +81,7 @@
             this.newCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openCaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.previewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.textCaption = new System.Windows.Forms.TextBox();
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
@@ -576,7 +577,8 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newCaseToolStripMenuItem,
             this.openCaseToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.aboutToolStripMenuItem,
+            this.previewToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(713, 24);
@@ -607,6 +609,14 @@
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            // 
+            // previewToolStripMenuItem
+            // 
+            this.previewToolStripMenuItem.Image = global::CaseMaker.Properties.Resources.PrintPreviewHS;
+            this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
+            this.previewToolStripMenuItem.Text = "Preview";
+            this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
             // 
             // textCaption
             // 
@@ -752,6 +762,7 @@
         private System.Windows.Forms.CheckBox checkBoxPulm;
         private System.Windows.Forms.CheckBox checkBoxUltrasound;
         private System.Windows.Forms.CheckBox checkBoxNucs;
+        private System.Windows.Forms.ToolStripMenuItem previewToolStripMenuItem;
     }
 }
 
