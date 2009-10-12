@@ -26,6 +26,7 @@ namespace CaseMaker
         Thread getImageThread;
         UploadMIRCDialog uploadDialog = new UploadMIRCDialog();
         DialogConflict dialogConflict = new DialogConflict();
+        BrowserPreview browserPreview = new BrowserPreview();
 
         string lastFilename = String.Empty;
         List<CaseImage> caseImages = new List<CaseImage>();
@@ -869,9 +870,10 @@ namespace CaseMaker
             saveFiles("case", tempFolder);
             string xmlPath=Path.Combine(tempFolder,"case.xml");
             string htmlPath=Path.Combine(tempFolder,"case.html");
-            transformXML(xmlPath, htmlPath);
-            Process.Start("IExplore.exe", htmlPath);
-            
+            transformXML(xmlPath, htmlPath);          
+            browserPreview.Navigate(htmlPath);
+            browserPreview.ShowDialog();
+            Directory.Delete(tempFolder, true);
         }
 
         void saveFiles(string prefix, string targetdir)

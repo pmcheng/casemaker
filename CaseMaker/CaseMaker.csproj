@@ -67,6 +67,12 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="BrowserPreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BrowserPreview.Designer.cs">
+      <DependentUpon>BrowserPreview.cs</DependentUpon>
+    </Compile>
     <Compile Include="CaseImage.cs" />
     <Compile Include="DialogConflict.cs">
       <SubType>Form</SubType>
@@ -84,6 +90,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BrowserPreview.resx">
+      <DependentUpon>BrowserPreview.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DialogConflict.resx">
       <DependentUpon>DialogConflict.cs</DependentUpon>
