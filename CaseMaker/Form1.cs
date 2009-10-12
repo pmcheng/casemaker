@@ -1001,6 +1001,7 @@ namespace CaseMaker
 
         private void pb_DoubleClick(object sender, EventArgs e)
         {
+            if (currentImage == 0) return;
             string imageURL = caseImages[currentImage - 1].imageURL;
             if (imageURL == "") return;
 
