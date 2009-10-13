@@ -870,9 +870,11 @@ namespace CaseMaker
             saveFiles("case", tempFolder);
             string xmlPath=Path.Combine(tempFolder,"case.xml");
             string htmlPath=Path.Combine(tempFolder,"case.html");
-            transformXML(xmlPath, htmlPath);          
+            transformXML(xmlPath, htmlPath);
+            
             browserPreview.Navigate(htmlPath);
             browserPreview.ShowDialog();
+            browserPreview.Navigate("about:blank");
             Directory.Delete(tempFolder, true);
         }
 
