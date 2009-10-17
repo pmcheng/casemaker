@@ -52,6 +52,7 @@
             this.Controls.Add(this.flp);
             this.Name = "DialogReorder";
             this.Text = "Image Gallery";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.DialogReorder_FormClosing);
             this.ResumeLayout(false);
 
         }

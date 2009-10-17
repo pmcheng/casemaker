@@ -10,13 +10,12 @@ namespace CaseMaker
 {
     public partial class DialogReorder : Form
     {
-        int minSquareSize = 100;
+        private int minSquareSize = 100;
+        private int scrollBarWidth = SystemInformation.VerticalScrollBarWidth;
 
-        int scrollBarWidth = SystemInformation.VerticalScrollBarWidth;
-        public List<PictureBox> pbs = new List<PictureBox>();
-
+        public List<PictureBox> pbList = new List<PictureBox>();
         public List<CaseImage> caseImages = new List<CaseImage>();
-        public List<CaseImage> newList;
+
 
         public DialogReorder()
         {
@@ -25,37 +24,39 @@ namespace CaseMaker
 
         public void updateOrder()
         {
-            newList = new List<CaseImage>();
+            List<CaseImage> newList = new List<CaseImage>();
             foreach (Control c in flp.Controls)
             {
-                for (int i = 0; i < pbs.Count; i++)
+                for (int i = 0; i < pbList.Count; i++)
                 {
-                    if (pbs[i] == c)
+                    if (pbList[i] == c)
                     {
                         newList.Add(caseImages[i]);
                         break;
                     }
                 }
             }
+            caseImages = newList;
         }
 
 
         public void populate(List<CaseImage> caseImages)
         {
             this.caseImages = caseImages;
-            this.newList = caseImages;
             int squareSize=maxSquareSize(caseImages.Count,minSquareSize,flp.Width-scrollBarWidth,flp.Height-scrollBarWidth);
 
             foreach (CaseImage caseImage in caseImages)
             {
                 PictureBox pb = new PictureBox();
-                pbs.Add(pb);
+                pbList.Add(pb);
+
                 pb.SizeMode = PictureBoxSizeMode.Zoom;
-               
-                pb.Size = new Size(squareSize - flp.Margin.Left - flp.Margin.Right, squareSize - flp.Margin.Top - flp.Margin.Bottom);
+                               
+                pb.Size = new Size(squareSize, squareSize);
                 pb.Image = caseImage.image;
-                pb.MouseDown += new MouseEventHandler(pbox_MouseDown);
-                pb.DragEnter += new DragEventHandler(pbox_DragEnter);
+                
+                pb.MouseDown += new MouseEventHandler(pb_MouseDown);
+                pb.DragEnter += new DragEventHandler(pb_DragEnter);
                 pb.AllowDrop = true;
                 flp.Controls.Add(pb);
 
@@ -81,42 +82,41 @@ namespace CaseMaker
             return size;
         }
 
-        void pbox_DragEnter(object sender, DragEventArgs e)
+        void pb_DragEnter(object sender, DragEventArgs e)
         {
-            base.OnDragEnter(e);
-            
             if (e.Data.GetData(typeof(PictureBox)) != null)
             {
-                FlowLayoutPanel flp = (FlowLayoutPanel)(sender as PictureBox).Parent;
-                //Current Position             
                 int myIndex = flp.Controls.GetChildIndex((sender as PictureBox));
 
                 //Dragged to control to location of next picturebox
                 PictureBox q = (PictureBox)e.Data.GetData(typeof(PictureBox));
                 flp.Controls.SetChildIndex(q, myIndex);
-                updateOrder();
                 e.Effect = DragDropEffects.Move;
             }
         }
 
-
-        void pbox_MouseDown(object sender, MouseEventArgs e)
+        void pb_MouseDown(object sender, MouseEventArgs e)
         {
-            base.OnMouseDown(e);
-            //(sender as PictureBox).BorderStyle = BorderStyle.Fixed3D;
+            //pbSelected = (sender as PictureBox);
+            //pbSelected.BorderStyle = BorderStyle.Fixed3D;
             DoDragDrop(sender, DragDropEffects.All);
         }
+
 
         private void flowLayoutPanel_Resize(object sender, EventArgs e)
         {
             int squareSize = maxSquareSize(caseImages.Count, minSquareSize, flp.Width - scrollBarWidth, flp.Height - scrollBarWidth);
             
-            foreach (PictureBox pb in pbs)
+            foreach (PictureBox pb in pbList)
             {
-                pb.Size = new Size(squareSize - flp.Margin.Left - flp.Margin.Right, squareSize - flp.Margin.Top - flp.Margin.Bottom);
+                pb.Size = new Size(squareSize,squareSize);
             }
 
         }
 
+        private void DialogReorder_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            updateOrder();
+        }
     }
 }

@@ -1064,15 +1064,11 @@ namespace CaseMaker
             DialogReorder dr = new DialogReorder();
             dr.populate(caseImages);
             dr.ShowDialog();
-            caseImages = dr.newList;
+            caseImages = dr.caseImages;
 
             pb.Image = caseImages[currentImage - 1].image;
             AdjustView();
             updateImageLabels();
         }
-
-
     }
-
-
 }
