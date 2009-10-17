@@ -86,6 +86,7 @@
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
+            this.buttonReorder = new System.Windows.Forms.Button();
             this.imagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
@@ -653,11 +654,23 @@
             this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
             this.toolStripProgressBar.Visible = false;
             // 
+            // buttonReorder
+            // 
+            this.buttonReorder.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonReorder.Image = global::CaseMaker.Properties.Resources.ThumbnailView;
+            this.buttonReorder.Location = new System.Drawing.Point(669, 458);
+            this.buttonReorder.Name = "buttonReorder";
+            this.buttonReorder.Size = new System.Drawing.Size(32, 31);
+            this.buttonReorder.TabIndex = 29;
+            this.buttonReorder.UseVisualStyleBackColor = true;
+            this.buttonReorder.Click += new System.EventHandler(this.buttonReorder_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(713, 540);
+            this.Controls.Add(this.buttonReorder);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.textCaption);
             this.Controls.Add(this.btnDelete);
@@ -762,6 +775,7 @@
         private System.Windows.Forms.CheckBox checkBoxPulm;
         private System.Windows.Forms.TextBox textKeywords;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button buttonReorder;
     }
 }
 

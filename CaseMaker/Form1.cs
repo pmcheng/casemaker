@@ -222,6 +222,7 @@ namespace CaseMaker
             btnDelete.Enabled = (currentImage > 0);
             btnLeft.Enabled = (currentImage > 1);
             btnRight.Enabled = (currentImage < caseImages.Count);
+            buttonReorder.Enabled = (currentImage > 0);
             if (pb.Image == null)
             {
                 textCaption.Text = "";
@@ -1056,6 +1057,18 @@ namespace CaseMaker
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = !(manageDirtyCase());
+        }
+
+        private void buttonReorder_Click(object sender, EventArgs e)
+        {
+            DialogReorder dr = new DialogReorder();
+            dr.populate(caseImages);
+            dr.ShowDialog();
+            caseImages = dr.newList;
+
+            pb.Image = caseImages[currentImage - 1].image;
+            AdjustView();
+            updateImageLabels();
         }
 
 
