@@ -12,10 +12,12 @@ namespace CaseMaker
     {
         private int minSquareSize = 100;
         private int scrollBarWidth = SystemInformation.VerticalScrollBarWidth;
+        private int scrollBarHeight = SystemInformation.HorizontalScrollBarHeight;
 
         public List<PictureBox> pbList = new List<PictureBox>();
         public List<CaseImage> caseImages = new List<CaseImage>();
 
+        private PictureBox pbSelected;
 
         public DialogReorder()
         {
@@ -43,12 +45,15 @@ namespace CaseMaker
         public void populate(List<CaseImage> caseImages)
         {
             this.caseImages = caseImages;
-            int squareSize=maxSquareSize(caseImages.Count,minSquareSize,flp.Width-scrollBarWidth,flp.Height-scrollBarWidth);
+            int squareSize=maxSquareSize(caseImages.Count,minSquareSize,flp.Width-scrollBarWidth,flp.Height-scrollBarHeight);
 
             foreach (CaseImage caseImage in caseImages)
             {
                 PictureBox pb = new PictureBox();
                 pbList.Add(pb);
+
+                ToolTip tt = new ToolTip();
+                tt.SetToolTip(pb, caseImage.caption);
 
                 pb.SizeMode = PictureBoxSizeMode.Zoom;
                                
@@ -57,6 +62,7 @@ namespace CaseMaker
                 
                 pb.MouseDown += new MouseEventHandler(pb_MouseDown);
                 pb.DragEnter += new DragEventHandler(pb_DragEnter);
+                pb.DragDrop += new DragEventHandler(pb_DragDrop);
                 pb.AllowDrop = true;
                 flp.Controls.Add(pb);
 
@@ -82,6 +88,11 @@ namespace CaseMaker
             return size;
         }
 
+        void pb_DragDrop(object sender, DragEventArgs e)
+        {
+            pbSelected.BorderStyle = BorderStyle.None;
+        }
+
         void pb_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetData(typeof(PictureBox)) != null)
@@ -97,15 +108,18 @@ namespace CaseMaker
 
         void pb_MouseDown(object sender, MouseEventArgs e)
         {
-            //pbSelected = (sender as PictureBox);
-            //pbSelected.BorderStyle = BorderStyle.Fixed3D;
+            PictureBox newSelect = sender as PictureBox;
+            if ((pbSelected!=null) && (newSelect!=pbSelected))
+                pbSelected.BorderStyle = BorderStyle.None;
+            pbSelected = (sender as PictureBox);
+            pbSelected.BorderStyle = BorderStyle.Fixed3D;
             DoDragDrop(sender, DragDropEffects.All);
         }
 
 
         private void flowLayoutPanel_Resize(object sender, EventArgs e)
         {
-            int squareSize = maxSquareSize(caseImages.Count, minSquareSize, flp.Width - scrollBarWidth, flp.Height - scrollBarWidth);
+            int squareSize = maxSquareSize(caseImages.Count, minSquareSize, flp.Width - scrollBarWidth, flp.Height - scrollBarHeight);
             
             foreach (PictureBox pb in pbList)
             {
@@ -119,4 +133,6 @@ namespace CaseMaker
             updateOrder();
         }
     }
+
+
 }
