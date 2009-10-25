@@ -11,6 +11,7 @@ using System.IO;
 using System.Threading;
 using System.Runtime.Remoting;
 using System.Diagnostics;
+using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Xml;
 using System.Xml.Xsl;
@@ -28,7 +29,7 @@ namespace CaseMaker
         DialogConflict dialogConflict = new DialogConflict();
         BrowserPreview browserPreview = new BrowserPreview();
 
-        string lastFilename = String.Empty;
+        string lastFilename = "";
         List<CaseImage> caseImages = new List<CaseImage>();
         int currentImage = 0;
         Image nextImage;
@@ -71,6 +72,11 @@ namespace CaseMaker
                 {checkBoxPeds,"Pediatric"},
                 {checkBoxNucs,"Nuclear"}
             };
+
+            ServicePointManager.Expect100Continue = false;
+
+            // Ignore Certificate validation failures (aka untrusted certificate + certificate chains)
+            ServicePointManager.ServerCertificateValidationCallback = ((sender, certificate, chain, sslPolicyErrors) => true); 
         }
 
         void clearBoxes(Control parent)
@@ -671,7 +677,7 @@ namespace CaseMaker
 
         }
 
-        private void saveXML(string fname)
+        private void saveXML(string fname, string authorName)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
@@ -680,6 +686,20 @@ namespace CaseMaker
             {
                 writer.WriteStartElement("MIRCdocument");
                 writer.WriteAttributeString("display", "mstf");
+
+                writer.WriteStartElement("creator");
+                writer.WriteString("CaseMaker - version " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                writer.WriteEndElement();
+
+                if (authorName != "")
+                {
+                    writer.WriteStartElement("author");
+                    writer.WriteStartElement("name");
+                    writer.WriteString(authorName);
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
+                }
+
 
                 writer.WriteElementString("title", DateTime.Now.ToString());
 
@@ -819,7 +839,7 @@ namespace CaseMaker
 
                 string tempFolder = createTempFolder();
                 //saveAll(prefix, targetdir, false);
-                saveFiles(prefix, tempFolder);
+                saveFiles(prefix, tempFolder, "");
                 saveZip(prefix, tempFolder, targetdir);
                 Directory.Delete(tempFolder, true);
                 openCaseDialog.InitialDirectory = targetdir;
@@ -835,8 +855,8 @@ namespace CaseMaker
             if (uploadDialog.ShowDialog() == DialogResult.OK)
             {
                 string tempFolder = createTempFolder();
-
-                saveFiles("case", tempFolder);
+                string authorName=getAuthor();
+                saveFiles("case", tempFolder,authorName);
                 sendZip(tempFolder);
 
                 setDirty(false);
@@ -868,7 +888,7 @@ namespace CaseMaker
         private void previewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string tempFolder = createTempFolder();
-            saveFiles("case", tempFolder);
+            saveFiles("case", tempFolder, "");
             string xmlPath=Path.Combine(tempFolder,"case.xml");
             string htmlPath=Path.Combine(tempFolder,"case.html");
             transformXML(xmlPath, htmlPath);
@@ -879,7 +899,7 @@ namespace CaseMaker
             Directory.Delete(tempFolder, true);
         }
 
-        void saveFiles(string prefix, string targetdir)
+        void saveFiles(string prefix, string targetdir, string authorName)
         {
             string xmlfname = Path.ChangeExtension(prefix, ".xml");
 
@@ -893,7 +913,7 @@ namespace CaseMaker
                 caseImages[i].image.Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
             }
             string xmlPath = Path.Combine(targetdir, xmlfname);
-            saveXML(xmlPath);
+            saveXML(xmlPath,authorName);
         }
 
         void saveZip(string prefix, string sourcedir, string targetdir)
@@ -908,17 +928,35 @@ namespace CaseMaker
             }
         }
 
+        string getAuthor()
+        {
+            string authorName = "";
+            Uri mircURI = new Uri(uploadDialog.urlMIRC);
+            Uri authorURI = new Uri(mircURI, "../authors.xml");
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(authorURI.ToString());
+                XmlNode node = doc.SelectSingleNode(@"//author[@user='" + uploadDialog.username + @"']");
+                XmlNode nameNode = node.SelectSingleNode("./name");
+                if (nameNode != null)
+                {
+                    authorName=nameNode.InnerText;
+                }
+            }
+            catch (Exception e)
+            {
+                toolStripStatusLabel.Text = e.Message;
+            }
+            return authorName;
+        }
+
         void sendZip(string sourcedir)
         {
             string[] files = Directory.GetFiles(sourcedir);
             using (ZipFile zip = new ZipFile())
             {
                 zip.AddFiles(files, "");
-
-                ServicePointManager.Expect100Continue = false;
-                
-                // Ignore Certificate validation failures (aka untrusted certificate + certificate chains)
-                ServicePointManager.ServerCertificateValidationCallback = ((sender, certificate, chain, sslPolicyErrors) => true); 
 
                 Uri mircURI = new Uri(uploadDialog.urlMIRC);
                 WebRequest mircWebRequest = WebRequest.Create(mircURI);
