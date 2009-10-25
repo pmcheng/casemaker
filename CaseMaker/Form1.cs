@@ -835,7 +835,7 @@ namespace CaseMaker
             if (uploadDialog.ShowDialog() == DialogResult.OK)
             {
                 string tempFolder = createTempFolder();
-                //saveAll("case", tempFolder, true);
+
                 saveFiles("case", tempFolder);
                 sendZip(tempFolder);
 
@@ -916,6 +916,10 @@ namespace CaseMaker
                 zip.AddFiles(files, "");
 
                 ServicePointManager.Expect100Continue = false;
+                
+                // Ignore Certificate validation failures (aka untrusted certificate + certificate chains)
+                ServicePointManager.ServerCertificateValidationCallback = ((sender, certificate, chain, sslPolicyErrors) => true); 
+
                 Uri mircURI = new Uri(uploadDialog.urlMIRC);
                 WebRequest mircWebRequest = WebRequest.Create(mircURI);
                 CredentialCache mircCredentialCache = new CredentialCache();
