@@ -76,7 +76,7 @@ namespace CaseMaker
             ServicePointManager.Expect100Continue = false;
 
             // Ignore Certificate validation failures (aka untrusted certificate + certificate chains)
-            ServicePointManager.ServerCertificateValidationCallback = ((sender, certificate, chain, sslPolicyErrors) => true); 
+            ServicePointManager.ServerCertificateValidationCallback = ((sender, certificate, chain, sslPolicyErrors) => true);
         }
 
         void clearBoxes(Control parent)
@@ -633,7 +633,7 @@ namespace CaseMaker
                         }
                     }
                     if (xmlfile != "")
-                        openCase(Path.Combine(tempFolder,xmlfile));
+                        openCase(Path.Combine(tempFolder, xmlfile));
                     Directory.Delete(tempFolder, true);
                 }
             }
@@ -700,8 +700,18 @@ namespace CaseMaker
                     writer.WriteEndElement();
                 }
 
+                string categories = "";
 
-                writer.WriteElementString("title", DateTime.Now.ToString());
+                foreach (CheckBox box in dictCategory.Keys)
+                {
+                    if (box.Checked)
+                    {
+                        if (categories != "") categories += " ";
+                        categories += dictCategory[box];
+                    }
+                }
+
+                writer.WriteElementString("title", categories + " " + DateTime.Now.ToString());
 
                 writer.WriteStartElement("abstract");
                 writer.WriteElementString("p", textHistory.Text);
@@ -785,16 +795,7 @@ namespace CaseMaker
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("category");
-                bool categories = false;
-                foreach (CheckBox box in dictCategory.Keys)
-                {
-                    if (box.Checked)
-                    {
-                        if (categories) writer.WriteString(" ");
-                        writer.WriteString(dictCategory[box]);
-                        categories = true;
-                    }
-                }
+                writer.WriteString(categories);
                 writer.WriteEndElement();
 
                 writer.WriteStartElement("authorization");
@@ -855,8 +856,8 @@ namespace CaseMaker
             if (uploadDialog.ShowDialog() == DialogResult.OK)
             {
                 string tempFolder = createTempFolder();
-                string authorName=getAuthor();
-                saveFiles("case", tempFolder,authorName);
+                string authorName = getAuthor();
+                saveFiles("case", tempFolder, authorName);
                 sendZip(tempFolder);
 
                 setDirty(false);
@@ -889,10 +890,10 @@ namespace CaseMaker
         {
             string tempFolder = createTempFolder();
             saveFiles("case", tempFolder, "");
-            string xmlPath=Path.Combine(tempFolder,"case.xml");
-            string htmlPath=Path.Combine(tempFolder,"case.html");
+            string xmlPath = Path.Combine(tempFolder, "case.xml");
+            string htmlPath = Path.Combine(tempFolder, "case.html");
             transformXML(xmlPath, htmlPath);
-            
+
             browserPreview.Navigate(htmlPath);
             browserPreview.ShowDialog();
             browserPreview.Navigate("about:blank");
@@ -913,7 +914,7 @@ namespace CaseMaker
                 caseImages[i].image.Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
             }
             string xmlPath = Path.Combine(targetdir, xmlfname);
-            saveXML(xmlPath,authorName);
+            saveXML(xmlPath, authorName);
         }
 
         void saveZip(string prefix, string sourcedir, string targetdir)
@@ -941,7 +942,7 @@ namespace CaseMaker
                 XmlNode nameNode = node.SelectSingleNode("./name");
                 if (nameNode != null)
                 {
-                    authorName=nameNode.InnerText;
+                    authorName = nameNode.InnerText;
                 }
             }
             catch (Exception e)
