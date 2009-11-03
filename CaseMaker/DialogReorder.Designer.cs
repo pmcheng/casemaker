@@ -40,7 +40,7 @@
             this.flp.AutoScroll = true;
             this.flp.Location = new System.Drawing.Point(12, 12);
             this.flp.Name = "flp";
-            this.flp.Size = new System.Drawing.Size(561, 206);
+            this.flp.Size = new System.Drawing.Size(581, 255);
             this.flp.TabIndex = 0;
             this.flp.Resize += new System.EventHandler(this.flowLayoutPanel_Resize);
             // 
@@ -48,7 +48,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(585, 231);
+            this.ClientSize = new System.Drawing.Size(605, 280);
             this.Controls.Add(this.flp);
             this.Name = "DialogReorder";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

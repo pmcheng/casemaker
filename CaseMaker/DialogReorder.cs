@@ -11,8 +11,9 @@ namespace CaseMaker
     public partial class DialogReorder : Form
     {
         private int minSquareSize = 100;
-        private int scrollBarWidth = SystemInformation.VerticalScrollBarWidth;
-        private int scrollBarHeight = SystemInformation.HorizontalScrollBarHeight;
+        
+        private int scrollBarWidth = SystemInformation.VerticalScrollBarWidth*2;
+        private int scrollBarHeight = SystemInformation.HorizontalScrollBarHeight*2;
 
         public List<PictureBox> pbList = new List<PictureBox>();
         public List<CaseImage> caseImages = new List<CaseImage>();
@@ -22,6 +23,7 @@ namespace CaseMaker
         public DialogReorder()
         {
             InitializeComponent();
+            Console.WriteLine(scrollBarWidth + " " + scrollBarHeight);
         }
 
         public void updateOrder()
