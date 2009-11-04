@@ -875,7 +875,7 @@ namespace CaseMaker
             string authorName = getAuthor();
             bw.ReportProgress(25, "Creating zip payload...");
             saveFiles("case", tempFolder, authorName);
-            string result=sendZip(tempFolder);
+            string result = sendZip(tempFolder);
             bw.ReportProgress(100, result);
             Directory.Delete(tempFolder, true);
         }
@@ -961,25 +961,19 @@ namespace CaseMaker
             }
         }
 
+        [DebuggerNonUserCode]
         string getAuthor()
         {
             string authorName = "";
             Uri mircURI = new Uri(uploadDialog.urlMIRC);
             Uri authorURI = new Uri(mircURI, "../authors.xml");
-            try
+            XmlDocument doc = new XmlDocument();
+            doc.Load(authorURI.ToString());
+            XmlNode node = doc.SelectSingleNode(@"//author[@user='" + uploadDialog.username + @"']");
+            XmlNode nameNode = node.SelectSingleNode("./name");
+            if (nameNode != null)
             {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(authorURI.ToString());
-                XmlNode node = doc.SelectSingleNode(@"//author[@user='" + uploadDialog.username + @"']");
-                XmlNode nameNode = node.SelectSingleNode("./name");
-                if (nameNode != null)
-                {
-                    authorName = nameNode.InnerText;
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message);
+                authorName = nameNode.InnerText;
             }
             return authorName;
         }
@@ -991,7 +985,7 @@ namespace CaseMaker
             {
                 if (e.TotalBytesToTransfer > 0)
                 {
-                    bw.ReportProgress((int)(e.BytesTransferred / (0.01 * e.TotalBytesToTransfer)),"Packing and uploading "+e.CurrentEntry.FileName+" ...");
+                    bw.ReportProgress((int)(e.BytesTransferred / (0.01 * e.TotalBytesToTransfer)), "Packing and uploading " + e.CurrentEntry.FileName + " ...");
                 }
             }
             if (e.EventType == ZipProgressEventType.Saving_Completed)
@@ -1011,7 +1005,7 @@ namespace CaseMaker
                 zip.AddFiles(files, "");
 
                 Uri mircURI = new Uri(uploadDialog.urlMIRC);
-                HttpWebRequest mircWebRequest = (HttpWebRequest) WebRequest.Create(mircURI);
+                HttpWebRequest mircWebRequest = (HttpWebRequest)WebRequest.Create(mircURI);
                 mircWebRequest.SendChunked = true;
 
                 CredentialCache mircCredentialCache = new CredentialCache();
@@ -1024,7 +1018,7 @@ namespace CaseMaker
                 {
                     zip.Save(requestStream);
                 }
-                
+
                 WebResponse webResponse = mircWebRequest.GetResponse();
                 StreamReader sr = new StreamReader(webResponse.GetResponseStream());
                 string message = (sr.ReadToEnd());
