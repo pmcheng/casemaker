@@ -25,6 +25,9 @@ namespace CaseMaker
     {
         bool validData;
         Thread getImageThread;
+
+        BackgroundWorker bw = new BackgroundWorker();
+
         UploadMIRCDialog uploadDialog = new UploadMIRCDialog();
         DialogConflict dialogConflict = new DialogConflict();
         BrowserPreview browserPreview = new BrowserPreview();
@@ -77,6 +80,11 @@ namespace CaseMaker
 
             // Ignore Certificate validation failures (aka untrusted certificate + certificate chains)
             ServicePointManager.ServerCertificateValidationCallback = ((sender, certificate, chain, sslPolicyErrors) => true);
+
+            bw.WorkerReportsProgress = true;
+            bw.DoWork += sendMIRC;
+            bw.ProgressChanged += sendMIRC_Progress;
+            bw.RunWorkerCompleted += sendMIRC_Completed;
         }
 
         void clearBoxes(Control parent)
@@ -855,14 +863,38 @@ namespace CaseMaker
             toolStripStatusLabel.Text = "";
             if (uploadDialog.ShowDialog() == DialogResult.OK)
             {
-                string tempFolder = createTempFolder();
-                string authorName = getAuthor();
-                saveFiles("case", tempFolder, authorName);
-                sendZip(tempFolder);
-
-                setDirty(false);
-                Directory.Delete(tempFolder, true);
+                bw.RunWorkerAsync();
             }
+        }
+
+        [DebuggerNonUserCode]
+        private void sendMIRC(object sender, DoWorkEventArgs e)
+        {
+            string tempFolder = createTempFolder();
+            bw.ReportProgress(0, "Acquiring author names...");
+            string authorName = getAuthor();
+            bw.ReportProgress(25, "Creating zip payload...");
+            saveFiles("case", tempFolder, authorName);
+            string result=sendZip(tempFolder);
+            bw.ReportProgress(100, result);
+            Directory.Delete(tempFolder, true);
+        }
+
+        private void sendMIRC_Progress(object sender, ProgressChangedEventArgs e)
+        {
+            toolStripProgressBar.Visible = true;
+            toolStripProgressBar.Value = e.ProgressPercentage;
+            toolStripStatusLabel.Text = e.UserState as string;
+        }
+
+        private void sendMIRC_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                toolStripStatusLabel.Text = e.Error.Message;
+            }
+            toolStripProgressBar.Visible = false;
+            setDirty(false);
         }
 
         void transformXML(string xmlPath, string htmlPath)
@@ -947,20 +979,41 @@ namespace CaseMaker
             }
             catch (Exception e)
             {
-                toolStripStatusLabel.Text = e.Message;
+                Debug.WriteLine(e.Message);
             }
             return authorName;
         }
 
-        void sendZip(string sourcedir)
+
+        void sendZip_Progress(object sender, SaveProgressEventArgs e)
         {
+            if (e.EventType == ZipProgressEventType.Saving_EntryBytesRead)
+            {
+                if (e.TotalBytesToTransfer > 0)
+                {
+                    bw.ReportProgress((int)(e.BytesTransferred / (0.01 * e.TotalBytesToTransfer)),"Packing and uploading "+e.CurrentEntry.FileName+" ...");
+                }
+            }
+            if (e.EventType == ZipProgressEventType.Saving_Completed)
+            {
+                bw.ReportProgress(100, "Finished upload, awaiting confirmation from MIRC server...");
+            }
+        }
+
+        [DebuggerNonUserCode]
+        string sendZip(string sourcedir)
+        {
+            string return_message = "";
             string[] files = Directory.GetFiles(sourcedir);
             using (ZipFile zip = new ZipFile())
             {
+                zip.SaveProgress += sendZip_Progress;
                 zip.AddFiles(files, "");
 
                 Uri mircURI = new Uri(uploadDialog.urlMIRC);
-                WebRequest mircWebRequest = WebRequest.Create(mircURI);
+                HttpWebRequest mircWebRequest = (HttpWebRequest) WebRequest.Create(mircURI);
+                mircWebRequest.SendChunked = true;
+
                 CredentialCache mircCredentialCache = new CredentialCache();
                 mircCredentialCache.Add(mircURI, "Basic", new NetworkCredential(uploadDialog.username, uploadDialog.password));
                 mircWebRequest.Credentials = mircCredentialCache;
@@ -971,28 +1024,22 @@ namespace CaseMaker
                 {
                     zip.Save(requestStream);
                 }
-                try
-                {
-                    WebResponse webResponse = mircWebRequest.GetResponse();
-                    StreamReader sr = new StreamReader(webResponse.GetResponseStream());
-                    string message = (sr.ReadToEnd());
-                    string[] responses = { "The zip file was received and unpacked successfully",
+                
+                WebResponse webResponse = mircWebRequest.GetResponse();
+                StreamReader sr = new StreamReader(webResponse.GetResponseStream());
+                string message = (sr.ReadToEnd());
+                string[] responses = { "The zip file was received and unpacked successfully",
                                                "There was a problem unpacking the posted file"};
 
-                    foreach (string response in responses)
-                    {
-                        if (message.Contains(response))
-                            toolStripStatusLabel.Text = response + ".";
-                        break;
-                    }
-                }
-                catch (Exception e)
+                foreach (string response in responses)
                 {
-                    toolStripStatusLabel.Text = e.Message;
+                    if (message.Contains(response))
+                        return_message = response + ".";
+                    break;
                 }
             }
+            return return_message;
         }
-
 
         private void imagePanel_Resize(object sender, EventArgs e)
         {
