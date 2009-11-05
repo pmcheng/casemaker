@@ -898,7 +898,7 @@ namespace CaseMaker
                 toolStripStatusLabel.Text = e.Error.Message;
             }
             toolStripProgressBar.Visible = false;
-            setDirty(false);
+            //setDirty(false);
         }
 
         void transformXML(string xmlPath, string htmlPath)
@@ -942,7 +942,7 @@ namespace CaseMaker
 
             for (int i = 0; i < caseImages.Count; i++)
             {
-                string num = "00" + i;
+                string num = "00" + (i+1);
                 num = num.Substring(num.Length - 3);
                 string fname = Path.ChangeExtension(prefix + "_" + num, ".png");
                 caseImages[i].filename = fname;
