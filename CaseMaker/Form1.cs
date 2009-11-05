@@ -95,6 +95,8 @@ namespace CaseMaker
                 {
                     ((TextBox)(ctrl)).Text = "";
                 }
+                if (ctrl is CheckBox)
+                    ((CheckBox)(ctrl)).Checked = false;
                 if (ctrl.HasChildren)
                 {
                     clearBoxes(ctrl);
@@ -677,6 +679,8 @@ namespace CaseMaker
             {
                 if (categories.Contains(dictCategory[box]))
                     box.Checked = true;
+                else
+                    box.Checked = false;
             }
 
             getImages(doc, sourcedir);
