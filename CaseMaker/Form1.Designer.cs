@@ -30,7 +30,6 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.imagePanel = new System.Windows.Forms.Panel();
-            this.thumbnail = new System.Windows.Forms.PictureBox();
             this.pb = new System.Windows.Forms.PictureBox();
             this.textName = new System.Windows.Forms.TextBox();
             this.textMRN = new System.Windows.Forms.TextBox();
@@ -87,8 +86,8 @@
             this.toolStripStatusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.buttonReorder = new System.Windows.Forms.Button();
+            this.thumbnail = new System.Windows.Forms.PictureBox();
             this.imagePanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.groupBox1.SuspendLayout();
@@ -96,6 +95,7 @@
             this.tabControl1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             this.SuspendLayout();
             // 
             // imagePanel
@@ -113,26 +113,19 @@
             this.imagePanel.TabIndex = 0;
             this.imagePanel.DragOver += new System.Windows.Forms.DragEventHandler(this.imagePanel_DragOver);
             this.imagePanel.DragDrop += new System.Windows.Forms.DragEventHandler(this.imagePanel_DragDrop);
-            this.imagePanel.Resize += new System.EventHandler(this.imagePanel_Resize);
             this.imagePanel.DragLeave += new System.EventHandler(this.imagePanel_DragLeave);
             this.imagePanel.DragEnter += new System.Windows.Forms.DragEventHandler(this.imagePanel_DragEnter);
             // 
-            // thumbnail
-            // 
-            this.thumbnail.Location = new System.Drawing.Point(13, 12);
-            this.thumbnail.Name = "thumbnail";
-            this.thumbnail.Size = new System.Drawing.Size(100, 50);
-            this.thumbnail.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.thumbnail.TabIndex = 1;
-            this.thumbnail.TabStop = false;
-            this.thumbnail.Visible = false;
-            // 
             // pb
             // 
+            this.pb.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.pb.Location = new System.Drawing.Point(-2, -2);
+            this.pb.Margin = new System.Windows.Forms.Padding(0);
             this.pb.Name = "pb";
-            this.pb.Size = new System.Drawing.Size(304, 316);
-            this.pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pb.Size = new System.Drawing.Size(384, 384);
+            this.pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pb.TabIndex = 0;
             this.pb.TabStop = false;
             this.pb.DoubleClick += new System.EventHandler(this.pb_DoubleClick);
@@ -665,6 +658,15 @@
             this.buttonReorder.UseVisualStyleBackColor = true;
             this.buttonReorder.Click += new System.EventHandler(this.buttonReorder_Click);
             // 
+            // thumbnail
+            // 
+            this.thumbnail.Location = new System.Drawing.Point(37, 29);
+            this.thumbnail.Name = "thumbnail";
+            this.thumbnail.Size = new System.Drawing.Size(100, 50);
+            this.thumbnail.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.thumbnail.TabIndex = 1;
+            this.thumbnail.TabStop = false;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -698,7 +700,6 @@
             this.Text = "CaseMaker";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.imagePanel.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).EndInit();
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -711,6 +712,7 @@
             this.menuStrip1.PerformLayout();
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -720,7 +722,6 @@
 
         private System.Windows.Forms.Panel imagePanel;
         private System.Windows.Forms.PictureBox pb;
-        private System.Windows.Forms.PictureBox thumbnail;
         private System.Windows.Forms.TextBox textName;
         private System.Windows.Forms.TextBox textMRN;
         private System.Windows.Forms.TextBox textDOB;
@@ -776,6 +777,7 @@
         private System.Windows.Forms.TextBox textKeywords;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button buttonReorder;
+        private System.Windows.Forms.PictureBox thumbnail;
     }
 }
 

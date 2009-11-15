@@ -24,6 +24,7 @@ namespace CaseMaker
     public partial class MainForm : Form
     {
         bool validData;
+        
         Thread getImageThread;
 
         BackgroundWorker bw = new BackgroundWorker();
@@ -32,7 +33,7 @@ namespace CaseMaker
         DialogConflict dialogConflict = new DialogConflict();
         BrowserPreview browserPreview = new BrowserPreview();
 
-        string lastFilename = "";
+        string dragFilename = "";
         List<CaseImage> caseImages = new List<CaseImage>();
         int currentImage = 0;
         Image nextImage;
@@ -213,7 +214,6 @@ namespace CaseMaker
                     caseImage.imageUID = imageUID;
                     caseImages.Add(caseImage);
                     pb.Image = nextImage;
-                    AdjustView();
                     currentImage = caseImages.Count;
                     updateImageLabels();
                     setDirty(true);
@@ -259,7 +259,6 @@ namespace CaseMaker
             {
                 currentImage--;
                 pb.Image = caseImages[currentImage - 1].image;
-                AdjustView();
                 updateImageLabels();
             }
         }
@@ -271,7 +270,6 @@ namespace CaseMaker
             {
                 currentImage++;
                 pb.Image = caseImages[currentImage - 1].image;
-                AdjustView();
                 updateImageLabels();
             }
         }
@@ -287,7 +285,6 @@ namespace CaseMaker
             if (caseImages.Count > 0)
             {
                 pb.Image = caseImages[currentImage - 1].image;
-                AdjustView();
             }
             else
             {
@@ -299,22 +296,15 @@ namespace CaseMaker
 
         private void imagePanel_DragEnter(object sender, DragEventArgs e)
         {
-            string filename;
-            validData = GetFilename(out filename, e);
+            validData = GetFilename(out dragFilename, e);
             if (validData)
             {
-                if (lastFilename != filename)
-                {
-                    thumbnail.Image = null;
-                    thumbnail.Visible = false;
-                    lastFilename = filename;
-                    getImageThread = new Thread(new ThreadStart(LoadImage));
-                    getImageThread.Start();
-                }
-                else
-                {
-                    thumbnail.Visible = true;
-                }
+                thumbnail.Image = null;
+                thumbnail.Visible = false;
+                
+                getImageThread = new Thread(new ThreadStart(LoadImage));
+                getImageThread.Start();
+
                 e.Effect = DragDropEffects.Copy;
             }
             else
@@ -367,7 +357,7 @@ namespace CaseMaker
 
         void LoadImage()
         {
-            nextImage = LoadUnlockImage(lastFilename);
+            nextImage = LoadUnlockImage(dragFilename);
             this.Invoke(new AssignImageDlgt(AssignImage));
         }
 
@@ -391,38 +381,6 @@ namespace CaseMaker
                 p.Y -= thumbnail.Height / 2;
                 thumbnail.Location = p;
                 thumbnail.Visible = true;
-            }
-        }
-
-        void AdjustView()
-        {
-            if (pb.Image != null)
-            {
-
-                float fw = imagePanel.Width;
-                float fh = imagePanel.Height;
-                float iw = pb.Image.Width;
-                float ih = pb.Image.Height;
-
-                // iw/fw > ih/fh, then iw/fw controls ih
-
-                float rw = fw / iw;			// ratio of width
-                float rh = fh / ih;			// ratio of height
-
-                if (rw < rh)
-                {
-                    pb.Width = (int)fw;
-                    pb.Height = (int)(ih * rw);
-                    pb.Left = 0;
-                    pb.Top = (int)((fh - pb.Height) / 2);
-                }
-                else
-                {
-                    pb.Width = (int)(iw * rh);
-                    pb.Height = (int)fh;
-                    pb.Left = (int)((fw - pb.Width) / 2);
-                    pb.Top = 0;
-                }
             }
         }
 
@@ -589,7 +547,6 @@ namespace CaseMaker
             {
                 pb.Image = caseImages[0].image;
                 currentImage = 1;
-                AdjustView();
             }
             else
             {
@@ -898,7 +855,6 @@ namespace CaseMaker
                 toolStripStatusLabel.Text = e.Error.Message;
             }
             toolStripProgressBar.Visible = false;
-            //setDirty(false);
         }
 
         void transformXML(string xmlPath, string htmlPath)
@@ -942,7 +898,7 @@ namespace CaseMaker
 
             for (int i = 0; i < caseImages.Count; i++)
             {
-                string num = "00" + (i+1);
+                string num = "00" + (i + 1);
                 num = num.Substring(num.Length - 3);
                 string fname = Path.ChangeExtension(prefix + "_" + num, ".png");
                 caseImages[i].filename = fname;
@@ -1037,11 +993,6 @@ namespace CaseMaker
                 }
             }
             return return_message;
-        }
-
-        private void imagePanel_Resize(object sender, EventArgs e)
-        {
-            AdjustView();
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1155,7 +1106,6 @@ namespace CaseMaker
             caseImages = dr.caseImages;
 
             pb.Image = caseImages[currentImage - 1].image;
-            AdjustView();
             updateImageLabels();
         }
     }
