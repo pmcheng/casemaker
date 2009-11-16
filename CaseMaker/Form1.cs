@@ -296,7 +296,11 @@ namespace CaseMaker
 
         private void imagePanel_DragEnter(object sender, DragEventArgs e)
         {
+            
             validData = GetFilename(out dragFilename, e);
+            if (e.Data.GetData("CaseMaker") == this)
+                validData = false;
+
             if (validData)
             {
                 thumbnail.Image = null;
@@ -1018,24 +1022,28 @@ namespace CaseMaker
 
                 if (e.Button == MouseButtons.Left && e.Clicks == 1)
                 {
-                    //string tempfile = Path.GetTempFileName() + ".png";
-                    //string[] filelist = new string[] { tempfile };
-                    //pb.Image.Save(tempfile, System.Drawing.Imaging.ImageFormat.Png);
+                    string num = "00" + currentImage;
+                    num = num.Substring(num.Length - 3);
+                    string tempfile = Path.Combine(Path.GetTempPath(), "case_"+num+".png");
+                    string[] filelist = new string[] { tempfile };
+                    pb.Image.Save(tempfile, System.Drawing.Imaging.ImageFormat.Png);
 
-                    MemoryStream ms1 = new MemoryStream();
-                    MemoryStream ms2 = new MemoryStream();
-                    pb.Image.Save(ms1, System.Drawing.Imaging.ImageFormat.Bmp);
-                    byte[] b = ms1.GetBuffer();
-                    ms2.Write(b, 14, (int)ms1.Length - 14);
-                    ms1.Position = 0;
+                    //MemoryStream ms1 = new MemoryStream();
+                    //MemoryStream ms2 = new MemoryStream();
+                    //pb.Image.Save(ms1, System.Drawing.Imaging.ImageFormat.Bmp);
+                    //byte[] b = ms1.GetBuffer();
+                    //ms2.Write(b, 14, (int)ms1.Length - 14);
+                    //ms1.Position = 0;
 
                     DataObject obj = new DataObject();
-                    obj.SetData(DataFormats.Dib, ms2);
+                    obj.SetData("CaseMaker", this);
+
+                    //obj.SetData(DataFormats.Dib, ms2);
                     //obj.SetData(DataFormats.Bitmap, pb.Image);
+                    
+                    obj.SetData(DataFormats.FileDrop, filelist);
 
-                    //obj.SetData(DataFormats.FileDrop, filelist);
-
-                    DoDragDrop(obj, DragDropEffects.Copy);
+                    DoDragDrop(obj, DragDropEffects.Copy|DragDropEffects.Move);
                 }
             }
 
