@@ -433,7 +433,7 @@ namespace CaseMaker
             //byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
 
             string dicom_mrn = getDicomString(readBuffer, mrn, bytesRead);
-            if (dicom_mrn == medrecnum)
+            if ((dicom_mrn == medrecnum) || (dicom_mrn==""))
             {
                 textMRN.Text = medrecnum;
             }
