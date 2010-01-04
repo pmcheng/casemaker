@@ -124,6 +124,7 @@
             this.thumbnail.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.thumbnail.TabIndex = 1;
             this.thumbnail.TabStop = false;
+            this.thumbnail.Visible = false;
             // 
             // pb
             // 

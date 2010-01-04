@@ -85,7 +85,7 @@
             this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.Size = new System.Drawing.Size(327, 17);
             this.labelCopyright.TabIndex = 21;
-            this.labelCopyright.Text = "© 2009";
+            this.labelCopyright.Text = "© 2009-2010";
             this.labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelVersion
