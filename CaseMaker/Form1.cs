@@ -253,19 +253,24 @@ namespace CaseMaker
         {
             bool tempDirty = isDirty;
             countLabel.Text = currentImage + " / " + caseImages.Count;
-            btnDelete.Enabled = (currentImage > 0);
+
             btnLeft.Enabled = (currentImage > 1);
             btnRight.Enabled = (currentImage < caseImages.Count);
-            buttonReorder.Enabled = (currentImage > 0);
+
+            btnDelete.Enabled = (currentImage>0);
+            buttonReorder.Enabled = (currentImage>0);
+
             if (pb.Image == null)
             {
                 textCaption.Text = "";
                 textCaption.Enabled = false;
+                pb.ContextMenuStrip = null;
             }
             else
             {
                 textCaption.Text = caseImages[currentImage - 1].caption;
                 textCaption.Enabled = true;
+                pb.ContextMenuStrip = pbContextMenuStrip;
             }
             isDirty = tempDirty; // updating labels should not change the dirty bit
         }
@@ -1157,6 +1162,26 @@ namespace CaseMaker
 
             pb.Image = caseImages[currentImage - 1].image;
             updateImageLabels();
+        }
+
+        private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            PictureBoxProperties pbp = new PictureBoxProperties();
+            CaseImage cs=caseImages[currentImage-1];
+            pbp.AddProp("Width", cs.image.Width.ToString());
+            pbp.AddProp("Height", cs.image.Height.ToString());
+            pbp.AddProp("Image URL",cs.imageURL);
+            pbp.AddProp("Study URL",cs.studyURL);
+            pbp.AddProp("Study Accession",cs.studyAccession);
+
+            pbp.ShowDialog();
+
+        }
+
+        private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CaseImage cs=caseImages[currentImage-1];
+            Clipboard.SetImage(cs.image);
         }
     }
 }
