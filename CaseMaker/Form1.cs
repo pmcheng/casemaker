@@ -24,7 +24,7 @@ namespace CaseMaker
     public partial class MainForm : Form
     {
         bool validData;
-        
+
         Thread getImageThread;
 
         BackgroundWorker bw = new BackgroundWorker();
@@ -178,6 +178,8 @@ namespace CaseMaker
                     string imageURL = "";
                     string imageUID = "";
                     string studyUID = "";
+                    string studyURL = "";
+                    string accession = "";
                     MemoryStream ms = e.Data.GetData("Synapse.FujiOffset") as MemoryStream;
                     if (ms != null)
                     {
@@ -193,6 +195,20 @@ namespace CaseMaker
                         }
                         if (result != DialogResult.No)
                         {
+                            ms = e.Data.GetData("Synapse.TC") as MemoryStream;
+                            if (ms != null)
+                            {
+                                sr = new StreamReader(ms, Encoding.Unicode);
+                                string[] tcString = sr.ReadToEnd().Trim('\0').Split(',');
+                                foreach (string s in tcString)
+                                {
+                                    if (s.StartsWith("U="))
+                                        studyURL = s.Substring(2);
+                                    if (s.StartsWith("A="))
+                                        accession = s.Substring(2);
+                                }
+
+                            }
                             ms = e.Data.GetData("UniformResourceLocator") as MemoryStream;
                             if (ms != null)
                             {
@@ -205,11 +221,13 @@ namespace CaseMaker
                                 textLoc.Text = mapToLocation(imageURL);
 
                             }
-                            getCacheDemographics(mrn);
+                            getCacheDemographics(mrn, accession);
                         }
                     }
                     CaseImage caseImage = new CaseImage(nextImage);
                     caseImage.imageURL = imageURL;
+                    caseImage.studyURL = studyURL;
+                    caseImage.studyAccession = accession;
                     caseImage.studyUID = studyUID;
                     caseImage.imageUID = imageUID;
                     caseImages.Add(caseImage);
@@ -296,7 +314,7 @@ namespace CaseMaker
 
         private void imagePanel_DragEnter(object sender, DragEventArgs e)
         {
-            
+
             validData = GetFilename(out dragFilename, e);
             if (e.Data.GetData("CaseMaker") == this)
                 validData = false;
@@ -305,7 +323,7 @@ namespace CaseMaker
             {
                 thumbnail.Image = null;
                 thumbnail.Visible = false;
-                
+
                 getImageThread = new Thread(new ThreadStart(LoadImage));
                 getImageThread.Start();
 
@@ -402,7 +420,19 @@ namespace CaseMaker
 
         }
 
-        void getCacheDemographics(string medrecnum)
+        string convertDate(string strDate)
+        {
+            if (strDate.Length == 8)
+            {
+                //reformat to MM-DD-YYYY
+                strDate = strDate.Substring(4, 2) + "/" +
+                    strDate.Substring(6, 2) + "/" +
+                    strDate.Substring(0, 4);
+            }
+            return strDate;
+        }
+
+        void getCacheDemographics(string medrecnum, string accession)
         {
             // search for file patterns of "/1.2...)"
             ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d\..*\)$");
@@ -430,10 +460,12 @@ namespace CaseMaker
             byte[] pn = { 0x10, 0x00, 0x10, 0x00, 0x50, 0x4e };
             byte[] dob = { 0x10, 0x00, 0x30, 0x00, 0x44, 0x41 };
             byte[] mf = { 0x10, 0x00, 0x40, 0x00, 0x43, 0x53 };
+            //byte[] acc = { 0x08, 0x00, 0x50, 0x00, 0x53, 0x48 };
+            //byte[] date = { 0x08, 0x00, 0x20, 0x00, 0x44, 0x41 };
             //byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
 
             string dicom_mrn = getDicomString(readBuffer, mrn, bytesRead);
-            if ((dicom_mrn == medrecnum) || (dicom_mrn==""))
+            if ((dicom_mrn == medrecnum) || (dicom_mrn == ""))
             {
                 textMRN.Text = medrecnum;
             }
@@ -446,15 +478,15 @@ namespace CaseMaker
             textName.Text = rawText.Replace("^", " ");
 
             rawText = getDicomString(readBuffer, dob, bytesRead);
-            if (rawText.Length == 8)
-            {
-                //reformat to MM-DD-YYYY
-                rawText = rawText.Substring(4, 2) + "/" +
-                    rawText.Substring(6, 2) + "/" +
-                    rawText.Substring(0, 4);
-            }
-            textDOB.Text = rawText;
+            textDOB.Text = convertDate(rawText);
             textGender.Text = getDicomString(readBuffer, mf, bytesRead);
+
+            //string dicom_acc = getDicomString(readBuffer, acc, bytesRead);
+            //if (dicom_acc == accession)
+            //{
+            //    string strDate = getDicomString(readBuffer, date, bytesRead);
+            //}
+
             //textLoc.Text = getDicomString(readBuffer, loc, bytesRead);
         }
 
@@ -529,7 +561,7 @@ namespace CaseMaker
             XmlNodeList nodelist = doc.SelectNodes("//image");
             foreach (XmlNode node in nodelist)
             {
-                string src = node.Attributes.GetNamedItem("src").Value;
+                string src = node.Attributes["src"].Value;
                 string imgsource = Path.Combine(sourcedir, src);
                 nextImage = LoadUnlockImage(imgsource);
                 CaseImage caseImage = new CaseImage(nextImage);
@@ -541,9 +573,15 @@ namespace CaseMaker
                 XmlNode urlNode = node.SelectSingleNode("./pacs-image");
                 if (urlNode != null)
                 {
-                    caseImage.imageURL = urlNode.Attributes.GetNamedItem("src").Value;
-                    caseImage.studyUID = urlNode.Attributes.GetNamedItem("studyUID").Value;
-                    caseImage.imageUID = urlNode.Attributes.GetNamedItem("imageUID").Value;
+                    caseImage.imageURL = urlNode.Attributes["src"].Value;
+                    caseImage.studyUID = urlNode.Attributes["studyUID"].Value;
+                    caseImage.imageUID = urlNode.Attributes["imageUID"].Value;
+                    XmlNode testNode = urlNode.Attributes["studyURL"];
+                    if (testNode != null)
+                        caseImage.studyURL = testNode.Value;
+                    testNode = urlNode.Attributes["studyAccession"];
+                    if (testNode != null)
+                        caseImage.studyAccession = testNode.Value;
                 }
                 caseImages.Add(caseImage);
             }
@@ -745,6 +783,10 @@ namespace CaseMaker
                         writer.WriteAttributeString("src", caseImage.imageURL);
                         writer.WriteAttributeString("studyUID", caseImage.studyUID);
                         writer.WriteAttributeString("imageUID", caseImage.imageUID);
+                        if (caseImage.studyAccession != "")
+                            writer.WriteAttributeString("studyAccession", caseImage.studyAccession);
+                        if (caseImage.studyURL != "")
+                            writer.WriteAttributeString("studyURL", caseImage.studyURL);
                         writer.WriteEndElement();
                     }
 
@@ -1024,7 +1066,7 @@ namespace CaseMaker
                 {
                     string num = "00" + currentImage;
                     num = num.Substring(num.Length - 3);
-                    string tempfile = Path.Combine(Path.GetTempPath(), "case_"+num+".png");
+                    string tempfile = Path.Combine(Path.GetTempPath(), "case_" + num + ".png");
                     string[] filelist = new string[] { tempfile };
                     pb.Image.Save(tempfile, System.Drawing.Imaging.ImageFormat.Png);
 
@@ -1040,10 +1082,10 @@ namespace CaseMaker
 
                     //obj.SetData(DataFormats.Dib, ms2);
                     //obj.SetData(DataFormats.Bitmap, pb.Image);
-                    
+
                     obj.SetData(DataFormats.FileDrop, filelist);
 
-                    DoDragDrop(obj, DragDropEffects.Copy|DragDropEffects.Move);
+                    DoDragDrop(obj, DragDropEffects.Copy | DragDropEffects.Move);
                 }
             }
 
