@@ -440,7 +440,7 @@ namespace CaseMaker
         void getCacheDemographics(string medrecnum, string accession)
         {
             // search for file patterns of "/1.2...)"
-            ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d\..*\)$");
+            ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d.*\)$");
             DateTime latest = DateTime.MinValue;
             DateTime current = DateTime.MinValue;
             string fname = string.Empty;
