@@ -820,7 +820,14 @@ namespace CaseMaker
 
                 writer.WriteStartElement("authorization");
                 writer.WriteStartElement("read");
-                writer.WriteString("department");
+                if (uploadDialog.privateCase)
+                {
+                    writer.WriteString("admin");
+                }
+                else
+                {
+                    writer.WriteString("department");
+                }
                 writer.WriteEndElement();
                 writer.WriteStartElement("update");
                 writer.WriteString("admin");
@@ -873,6 +880,7 @@ namespace CaseMaker
         private void btnMIRC_Click(object sender, EventArgs e)
         {
             toolStripStatusLabel.Text = "";
+            uploadDialog.privateCase = false;
             if (uploadDialog.ShowDialog() == DialogResult.OK)
             {
                 bw.RunWorkerAsync();

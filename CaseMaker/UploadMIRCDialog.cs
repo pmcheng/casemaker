@@ -10,6 +10,18 @@ namespace CaseMaker
 {
     public partial class UploadMIRCDialog : Form
     {
+        private bool boolPrivateCase;
+        public bool privateCase
+        {
+            get
+            { return boolPrivateCase; }
+            set
+            {
+                boolPrivateCase = value;
+                checkBoxAccess.Checked = value;
+            }
+        }
+
         private string strURLMIRC;
         public string urlMIRC
         {
@@ -23,7 +35,8 @@ namespace CaseMaker
         }
 
         private string strUsername;
-        public string username {
+        public string username
+        {
             get
             { return strUsername; }
             set
@@ -60,6 +73,7 @@ namespace CaseMaker
             urlMIRC = comboBoxURL.Text;
             username = textBoxUsername.Text;
             password = textBoxPassword.Text;
+            privateCase = checkBoxAccess.Checked;
             this.DialogResult = DialogResult.OK;
         }
 

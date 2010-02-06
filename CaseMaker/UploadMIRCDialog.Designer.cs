@@ -36,6 +36,7 @@
             this.buttonOK = new System.Windows.Forms.Button();
             this.buttonCancel = new System.Windows.Forms.Button();
             this.comboBoxURL = new System.Windows.Forms.ComboBox();
+            this.checkBoxAccess = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // label1
@@ -50,7 +51,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(78, 71);
+            this.label2.Location = new System.Drawing.Point(20, 73);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 13);
             this.label2.TabIndex = 2;
@@ -58,7 +59,7 @@
             // 
             // textBoxUsername
             // 
-            this.textBoxUsername.Location = new System.Drawing.Point(81, 87);
+            this.textBoxUsername.Location = new System.Drawing.Point(81, 70);
             this.textBoxUsername.Name = "textBoxUsername";
             this.textBoxUsername.Size = new System.Drawing.Size(100, 20);
             this.textBoxUsername.TabIndex = 0;
@@ -66,7 +67,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(78, 130);
+            this.label3.Location = new System.Drawing.Point(22, 107);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 13);
             this.label3.TabIndex = 4;
@@ -74,7 +75,7 @@
             // 
             // textBoxPassword
             // 
-            this.textBoxPassword.Location = new System.Drawing.Point(81, 146);
+            this.textBoxPassword.Location = new System.Drawing.Point(81, 104);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.PasswordChar = '*';
             this.textBoxPassword.Size = new System.Drawing.Size(100, 20);
@@ -109,6 +110,16 @@
             this.comboBoxURL.Size = new System.Drawing.Size(264, 21);
             this.comboBoxURL.TabIndex = 5;
             // 
+            // checkBoxAccess
+            // 
+            this.checkBoxAccess.AutoSize = true;
+            this.checkBoxAccess.Location = new System.Drawing.Point(81, 148);
+            this.checkBoxAccess.Name = "checkBoxAccess";
+            this.checkBoxAccess.Size = new System.Drawing.Size(116, 17);
+            this.checkBoxAccess.TabIndex = 6;
+            this.checkBoxAccess.Text = "Author access only";
+            this.checkBoxAccess.UseVisualStyleBackColor = true;
+            // 
             // UploadMIRCDialog
             // 
             this.AcceptButton = this.buttonOK;
@@ -117,6 +128,7 @@
             this.CancelButton = this.buttonCancel;
             this.ClientSize = new System.Drawing.Size(292, 230);
             this.ControlBox = false;
+            this.Controls.Add(this.checkBoxAccess);
             this.Controls.Add(this.comboBoxURL);
             this.Controls.Add(this.buttonCancel);
             this.Controls.Add(this.buttonOK);
@@ -148,5 +160,6 @@
         private System.Windows.Forms.Button buttonOK;
         private System.Windows.Forms.Button buttonCancel;
         private System.Windows.Forms.ComboBox comboBoxURL;
+        private System.Windows.Forms.CheckBox checkBoxAccess;
     }
 }
