@@ -25,7 +25,7 @@ namespace CaseMaker
     {
         bool validData;
 
-        Thread getImageThread;
+        //Thread getImageThread;
 
         BackgroundWorker bw = new BackgroundWorker();
 
@@ -165,11 +165,11 @@ namespace CaseMaker
             toolStripStatusLabel.Text = "";
             if (validData)
             {
-                while (getImageThread.IsAlive)
-                {
-                    Application.DoEvents();
-                    Thread.Sleep(0);
-                }
+                //while (getImageThread.IsAlive)
+                //{
+                //    Application.DoEvents();
+                //    Thread.Sleep(0);
+                //}
                 thumbnail.Visible = false;
 
 
@@ -257,8 +257,8 @@ namespace CaseMaker
             btnLeft.Enabled = (currentImage > 1);
             btnRight.Enabled = (currentImage < caseImages.Count);
 
-            btnDelete.Enabled = (currentImage>0);
-            buttonReorder.Enabled = (currentImage>0);
+            btnDelete.Enabled = (currentImage > 0);
+            buttonReorder.Enabled = (currentImage > 0);
 
             if (pb.Image == null)
             {
@@ -324,19 +324,22 @@ namespace CaseMaker
             if (e.Data.GetData("CaseMaker") == this)
                 validData = false;
 
+            e.Effect = DragDropEffects.None;
             if (validData)
             {
                 thumbnail.Image = null;
                 thumbnail.Visible = false;
 
-                getImageThread = new Thread(new ThreadStart(LoadImage));
-                getImageThread.Start();
+                nextImage = LoadUnlockImage(dragFilename);
+                if (nextImage != null)
+                {
+                    AssignImage();
+                    //getImageThread = new Thread(new ThreadStart(LoadImage));
+                    //getImageThread.Start();
+                    e.Effect = DragDropEffects.Copy;
 
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
+                }
+
             }
         }
 
@@ -353,11 +356,12 @@ namespace CaseMaker
                     if ((data.Length == 1) && (data.GetValue(0) is String))
                     {
                         filename = ((string[])data)[0];
-                        string ext = Path.GetExtension(filename).ToLower();
-                        if ((ext == ".jpg") || (ext == ".png") || (ext == ".bmp"))
-                        {
-                            ret = true;
-                        }
+                        ret = true;
+                        //string ext = Path.GetExtension(filename).ToLower();
+                        //if ((ext == ".jpg") || (ext == ".png") || (ext == ".bmp") || (ext==".gif") || (ext==".tif"))
+                        //{
+                        //    ret = true;
+                        //}
                     }
                 }
             }
@@ -375,11 +379,20 @@ namespace CaseMaker
         {
             // This is necessary because Image constructor ordinarily
             // keeps file locked after opening
-            Stream BitmapStream = File.Open(asFile, FileMode.Open);
-            Image img = Image.FromStream(BitmapStream);
-            BitmapStream.Close();
-
-            return new Bitmap(img);
+            Stream BitmapStream= File.Open(asFile, FileMode.Open);
+            try
+            {
+                Image img = Image.FromStream(BitmapStream);
+                return new Bitmap(img);
+            }
+            catch
+            {
+                return null;
+            }
+            finally
+            {
+                BitmapStream.Close();
+            }
         }
 
         void LoadImage()
@@ -1175,12 +1188,12 @@ namespace CaseMaker
         private void propertiesToolStripMenuItem_Click(object sender, EventArgs e)
         {
             PictureBoxProperties pbp = new PictureBoxProperties();
-            CaseImage cs=caseImages[currentImage-1];
+            CaseImage cs = caseImages[currentImage - 1];
             pbp.AddProp("Width", cs.image.Width.ToString());
             pbp.AddProp("Height", cs.image.Height.ToString());
-            pbp.AddProp("Image URL",cs.imageURL);
-            pbp.AddProp("Study URL",cs.studyURL);
-            pbp.AddProp("Study Accession",cs.studyAccession);
+            pbp.AddProp("Image URL", cs.imageURL);
+            pbp.AddProp("Study URL", cs.studyURL);
+            pbp.AddProp("Study Accession", cs.studyAccession);
 
             pbp.ShowDialog();
 
@@ -1188,7 +1201,7 @@ namespace CaseMaker
 
         private void copyToClipboardToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CaseImage cs=caseImages[currentImage-1];
+            CaseImage cs = caseImages[currentImage - 1];
             Clipboard.SetImage(cs.image);
         }
     }
