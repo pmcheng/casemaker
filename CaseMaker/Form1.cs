@@ -524,7 +524,7 @@ namespace CaseMaker
                     }
                 if (match)
                 {
-                    fieldLength = 255 * readBuffer[i + target.Length + 1] + readBuffer[i + target.Length];
+                    fieldLength = 256 * readBuffer[i + target.Length + 1] + readBuffer[i + target.Length];
                     byte[] temp = new byte[fieldLength];
                     Array.Copy(readBuffer, i + target.Length + 2, temp, 0, fieldLength);
                     return enc.GetString(temp).Trim().TrimEnd('\0');
