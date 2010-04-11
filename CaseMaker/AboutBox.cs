@@ -16,7 +16,17 @@ namespace CaseMaker
             InitializeComponent();
             //this.Text = String.Format("About {0} {0}", AssemblyTitle);
             //this.labelProductName.Text = AssemblyProduct;
+
+            Assembly asm = Assembly.GetExecutingAssembly();
+            Version v = Assembly.GetExecutingAssembly().GetName().Version;
+            DateTime compileDate = new DateTime((v.Build - 1) * TimeSpan.TicksPerDay + v.Revision * TimeSpan.TicksPerSecond * 2).AddYears(1999);
+            if (TimeZone.IsDaylightSavingTime(compileDate, TimeZone.CurrentTimeZone.GetDaylightChanges(compileDate.Year)))
+            {
+                compileDate = compileDate.AddHours(1);
+            }
+
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
+            this.labelBuild.Text = String.Format("Build {0}", compileDate);
             //this.labelCopyright.Text = AssemblyCopyright;
             //this.labelCompanyName.Text = AssemblyCompany;
         }
