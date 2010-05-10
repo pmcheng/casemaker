@@ -998,14 +998,21 @@ namespace CaseMaker
         {
             string authorName = "";
             Uri mircURI = new Uri(uploadDialog.urlMIRC);
-            Uri authorURI = new Uri(mircURI, "../authors.xml");
-            XmlDocument doc = new XmlDocument();
-            doc.Load(authorURI.ToString());
-            XmlNode node = doc.SelectSingleNode(@"//author[@user='" + uploadDialog.username + @"']");
-            XmlNode nameNode = node.SelectSingleNode("./name");
-            if (nameNode != null)
+            try
             {
-                authorName = nameNode.InnerText;
+                Uri authorURI = new Uri(mircURI, "../authors.xml");
+                XmlDocument doc = new XmlDocument();
+                doc.Load(authorURI.ToString());
+                XmlNode node = doc.SelectSingleNode(@"//author[@user='" + uploadDialog.username + @"']");
+                XmlNode nameNode = node.SelectSingleNode("./name");
+                if (nameNode != null)
+                {
+                    authorName = nameNode.InnerText;
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e.Message.ToString());
             }
             return authorName;
         }
