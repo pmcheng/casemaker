@@ -215,6 +215,17 @@ namespace CaseMaker
                                 sr = new StreamReader(ms);
                                 imageURL = sr.ReadToEnd().TrimEnd('\0');
 
+                                int epath_loc = imageURL.IndexOf("epath=");
+                                if (epath_loc != -1)
+                                {
+                                    string epath = DecodeFrom64(imageURL.Substring(epath_loc + 6));
+                                    epath = epath.Substring(0, epath.LastIndexOf("&") + 1);
+                                    epath = epath.Replace("&", "%26");
+                                    epath = epath.Replace("%3A", "%253A");
+                                    epath = epath.Replace("%2F", "%252F");
+                                    imageURL = imageURL.Substring(0, epath_loc) + "path=" + epath;
+                                }
+
                                 studyUID = Regex.Match(imageURL, @"studyuid=(\d*)").Groups[1].Value;
                                 imageUID = Regex.Match(imageURL, @"imageuid=(\d*)").Groups[1].Value;
 
@@ -237,6 +248,15 @@ namespace CaseMaker
                     setDirty(true);
                 }
             }
+        }
+
+        private string DecodeFrom64(string base64)
+        {
+            base64 = base64.PadRight(base64.Length + (4 - base64.Length % 4) % 4, '=');
+
+            byte[] encodedDataAsBytes = System.Convert.FromBase64String(base64);
+            string returnValue = System.Text.ASCIIEncoding.ASCII.GetString(encodedDataAsBytes);
+            return returnValue;
         }
 
         string mapToLocation(string URL)
