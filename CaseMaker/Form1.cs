@@ -252,6 +252,7 @@ namespace CaseMaker
 
         private string DecodeFrom64(string base64)
         {
+            if (base64.Length % 4 == 1) base64 = base64.Substring(0, base64.Length - 1);
             base64 = base64.PadRight(base64.Length + (4 - base64.Length % 4) % 4, '=');
 
             byte[] encodedDataAsBytes = System.Convert.FromBase64String(base64);
