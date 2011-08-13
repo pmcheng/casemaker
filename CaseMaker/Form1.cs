@@ -478,23 +478,45 @@ namespace CaseMaker
             DateTime latest = DateTime.MinValue;
             DateTime current = DateTime.MinValue;
             string fname = string.Empty;
-            foreach (WebCacheTool.WinInetAPI.INTERNET_CACHE_ENTRY_INFO entry in results)
+
+            byte[] readBuffer = new byte[4096];
+            int bytesRead;
+            if (accession != "")
             {
-                current = WebCacheTool.Win32API.FromFileTime(entry.LastAccessTime);
-                if (latest < current)
+
+                byte[] acc = { 0x08, 0x00, 0x50, 0x00, 0x53, 0x48 };
+                string accnum = "";
+                foreach (WebCacheTool.WinInetAPI.INTERNET_CACHE_ENTRY_INFO entry in results)
                 {
                     fname = entry.lpszLocalFileName;
-                    latest = current;
+                    using (Stream s = new FileStream(fname, FileMode.Open, FileAccess.Read))
+                    {
+                        bytesRead = s.Read(readBuffer, 0, readBuffer.Length);
+                        accnum = getDicomString(readBuffer, acc, bytesRead);
+                        if (accnum == accession) break;
+                    }
                 }
+                if (accnum != accession) fname = "";
+            }
+            else
+            {
+                foreach (WebCacheTool.WinInetAPI.INTERNET_CACHE_ENTRY_INFO entry in results)
+                {
+                    current = WebCacheTool.Win32API.FromFileTime(entry.LastAccessTime);
+                    if (latest < current)
+                    {
+                        fname = entry.lpszLocalFileName;
+                        latest = current;
+                    }
 
+                }
             }
             if (fname == string.Empty)
                 return;
 
-            Stream s = new FileStream(fname, FileMode.Open, FileAccess.Read);
+            Stream fstream = new FileStream(fname, FileMode.Open, FileAccess.Read);
 
-            byte[] readBuffer = new byte[4096];
-            int bytesRead = s.Read(readBuffer, 0, readBuffer.Length);
+            bytesRead = fstream.Read(readBuffer, 0, readBuffer.Length);
             byte[] mrn = { 0x10, 0x00, 0x20, 0x00, 0x4c, 0x4f };
             byte[] pn = { 0x10, 0x00, 0x10, 0x00, 0x50, 0x4e };
             byte[] dob = { 0x10, 0x00, 0x30, 0x00, 0x44, 0x41 };
