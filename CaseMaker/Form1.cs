@@ -475,17 +475,18 @@ namespace CaseMaker
         {
             // search for file patterns of "/1.2...)"
             ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d.*\)$");
-            DateTime latest = DateTime.MinValue;
-            DateTime current = DateTime.MinValue;
             string fname = "";
 
             byte[] readBuffer = new byte[4096];
             int bytesRead;
+
+            byte[] mrn = { 0x10, 0x00, 0x20, 0x00, 0x4c, 0x4f };
+            byte[] acc = { 0x08, 0x00, 0x50, 0x00, 0x53, 0x48 };
+            string accnum = "";
+            string dicom_mrn = "";
+
             if (accession != "")
             {
-
-                byte[] acc = { 0x08, 0x00, 0x50, 0x00, 0x53, 0x48 };
-                string accnum = "";
                 foreach (WebCacheTool.WinInetAPI.INTERNET_CACHE_ENTRY_INFO entry in results)
                 {
                     fname = entry.lpszLocalFileName;
@@ -506,22 +507,23 @@ namespace CaseMaker
             {
                 foreach (WebCacheTool.WinInetAPI.INTERNET_CACHE_ENTRY_INFO entry in results)
                 {
-                    current = WebCacheTool.Win32API.FromFileTime(entry.LastAccessTime);
-                    if (latest < current)
+                    fname = entry.lpszLocalFileName;
+                    using (Stream s = new FileStream(fname, FileMode.Open, FileAccess.Read))
                     {
-                        fname = entry.lpszLocalFileName;
-                        latest = current;
+                        bytesRead = s.Read(readBuffer, 0, readBuffer.Length);
+                        dicom_mrn = getDicomString(readBuffer, mrn, bytesRead);
+                        if (dicom_mrn == medrecnum) break;
                     }
-
                 }
+                if (dicom_mrn != medrecnum)
+                {
+                    return;
+                }                
             }
-            if (fname == "")
-                return;
 
             Stream fstream = new FileStream(fname, FileMode.Open, FileAccess.Read);
 
             bytesRead = fstream.Read(readBuffer, 0, readBuffer.Length);
-            byte[] mrn = { 0x10, 0x00, 0x20, 0x00, 0x4c, 0x4f };
             byte[] pn = { 0x10, 0x00, 0x10, 0x00, 0x50, 0x4e };
             byte[] dob = { 0x10, 0x00, 0x30, 0x00, 0x44, 0x41 };
             byte[] mf = { 0x10, 0x00, 0x40, 0x00, 0x43, 0x53 };
@@ -529,7 +531,7 @@ namespace CaseMaker
             //byte[] date = { 0x08, 0x00, 0x20, 0x00, 0x44, 0x41 };
             //byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
 
-            string dicom_mrn = getDicomString(readBuffer, mrn, bytesRead);
+            dicom_mrn = getDicomString(readBuffer, mrn, bytesRead);
             if ((dicom_mrn == medrecnum) || (dicom_mrn == ""))
             {
                 textMRN.Text = medrecnum;
