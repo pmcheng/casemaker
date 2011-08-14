@@ -477,7 +477,7 @@ namespace CaseMaker
             ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d.*\)$");
             DateTime latest = DateTime.MinValue;
             DateTime current = DateTime.MinValue;
-            string fname = string.Empty;
+            string fname = "";
 
             byte[] readBuffer = new byte[4096];
             int bytesRead;
@@ -496,9 +496,13 @@ namespace CaseMaker
                         if (accnum == accession) break;
                     }
                 }
-                if (accnum != accession) fname = "";
+                if (accnum != accession)
+                {
+                    fname = "";
+                    accession = "";
+                }
             }
-            else
+            if (fname == "") 
             {
                 foreach (WebCacheTool.WinInetAPI.INTERNET_CACHE_ENTRY_INFO entry in results)
                 {
@@ -511,7 +515,7 @@ namespace CaseMaker
 
                 }
             }
-            if (fname == string.Empty)
+            if (fname == "")
                 return;
 
             Stream fstream = new FileStream(fname, FileMode.Open, FileAccess.Read);
