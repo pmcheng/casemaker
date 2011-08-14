@@ -400,7 +400,7 @@ namespace CaseMaker
         {
             // This is necessary because Image constructor ordinarily
             // keeps file locked after opening
-            Stream BitmapStream= File.Open(asFile, FileMode.Open);
+            Stream BitmapStream = File.Open(asFile, FileMode.Open);
             try
             {
                 Image img = Image.FromStream(BitmapStream);
@@ -950,7 +950,7 @@ namespace CaseMaker
             bw.ReportProgress(0, "Acquiring author names...");
             string authorName = getAuthor();
             bw.ReportProgress(25, "Creating zip payload...");
-            saveFiles("case", tempFolder, authorName);
+            saveFiles("template", tempFolder, authorName);
             string result = sendZip(tempFolder);
             bw.ReportProgress(100, result);
             Directory.Delete(tempFolder, true);
@@ -1081,14 +1081,15 @@ namespace CaseMaker
         {
             string return_message = "";
             string[] files = Directory.GetFiles(sourcedir);
+            
             using (ZipFile zip = new ZipFile())
             {
                 zip.SaveProgress += sendZip_Progress;
                 zip.AddFiles(files, "");
-
+                //zip.Save(Path.Combine(targetdir, zipname));
                 Uri mircURI = new Uri(uploadDialog.urlMIRC);
                 HttpWebRequest mircWebRequest = (HttpWebRequest)WebRequest.Create(mircURI);
-                mircWebRequest.SendChunked = true;
+                //mircWebRequest.SendChunked = true;  // new MIRC does not accept chunked data 
 
                 CredentialCache mircCredentialCache = new CredentialCache();
                 mircCredentialCache.Add(mircURI, "Basic", new NetworkCredential(uploadDialog.username, uploadDialog.password));
@@ -1096,25 +1097,27 @@ namespace CaseMaker
 
                 mircWebRequest.ContentType = "application/x-zip-compressed";
                 mircWebRequest.Method = "POST";
+                
+
                 using (Stream requestStream = mircWebRequest.GetRequestStream())
                 {
                     zip.Save(requestStream);
                 }
-
                 WebResponse webResponse = mircWebRequest.GetResponse();
                 StreamReader sr = new StreamReader(webResponse.GetResponseStream());
                 string message = (sr.ReadToEnd());
-                string[] responses = { "The zip file was received and unpacked successfully",
-                                               "There was a problem unpacking the posted file"};
+                string[] responses = { "The file was received and queued for processing.",
+                                               "Unable to create the processing thread for the submission."};
 
                 foreach (string response in responses)
                 {
                     if (message.Contains(response))
-                        return_message = response + ".";
+                        return_message = response;
                     break;
                 }
             }
             return return_message;
+
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
