@@ -19,7 +19,7 @@ namespace CaseMaker
 
             Assembly asm = Assembly.GetExecutingAssembly();
             Version v = Assembly.GetExecutingAssembly().GetName().Version;
-            DateTime compileDate = new DateTime((v.Build - 1) * TimeSpan.TicksPerDay + v.Revision * TimeSpan.TicksPerSecond * 2).AddYears(1999);
+            DateTime compileDate = new DateTime(v.Build * TimeSpan.TicksPerDay + v.Revision * TimeSpan.TicksPerSecond * 2).AddYears(1999);
             if (TimeZone.IsDaylightSavingTime(compileDate, TimeZone.CurrentTimeZone.GetDaylightChanges(compileDate.Year)))
             {
                 compileDate = compileDate.AddHours(1);
