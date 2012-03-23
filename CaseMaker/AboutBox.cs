@@ -17,9 +17,8 @@ namespace CaseMaker
             //this.Text = String.Format("About {0} {0}", AssemblyTitle);
             //this.labelProductName.Text = AssemblyProduct;
 
-            Assembly asm = Assembly.GetExecutingAssembly();
             Version v = Assembly.GetExecutingAssembly().GetName().Version;
-            DateTime compileDate = new DateTime(v.Build * TimeSpan.TicksPerDay + v.Revision * TimeSpan.TicksPerSecond * 2).AddYears(1999);
+            DateTime compileDate = new DateTime(2000, 1, 1).Add(new TimeSpan(v.Build * TimeSpan.TicksPerDay + v.Revision * TimeSpan.TicksPerSecond * 2));
             if (TimeZone.IsDaylightSavingTime(compileDate, TimeZone.CurrentTimeZone.GetDaylightChanges(compileDate.Year)))
             {
                 compileDate = compileDate.AddHours(1);

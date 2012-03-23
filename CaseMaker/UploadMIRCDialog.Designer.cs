@@ -51,7 +51,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 73);
+            this.label2.Location = new System.Drawing.Point(20, 69);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(55, 13);
             this.label2.TabIndex = 2;
@@ -59,15 +59,15 @@
             // 
             // textBoxUsername
             // 
-            this.textBoxUsername.Location = new System.Drawing.Point(81, 70);
+            this.textBoxUsername.Location = new System.Drawing.Point(81, 66);
             this.textBoxUsername.Name = "textBoxUsername";
-            this.textBoxUsername.Size = new System.Drawing.Size(100, 20);
+            this.textBoxUsername.Size = new System.Drawing.Size(146, 20);
             this.textBoxUsername.TabIndex = 0;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(22, 107);
+            this.label3.Location = new System.Drawing.Point(22, 103);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(53, 13);
             this.label3.TabIndex = 4;
@@ -75,15 +75,15 @@
             // 
             // textBoxPassword
             // 
-            this.textBoxPassword.Location = new System.Drawing.Point(81, 104);
+            this.textBoxPassword.Location = new System.Drawing.Point(81, 100);
             this.textBoxPassword.Name = "textBoxPassword";
             this.textBoxPassword.PasswordChar = '*';
-            this.textBoxPassword.Size = new System.Drawing.Size(100, 20);
+            this.textBoxPassword.Size = new System.Drawing.Size(146, 20);
             this.textBoxPassword.TabIndex = 1;
             // 
             // buttonOK
             // 
-            this.buttonOK.Location = new System.Drawing.Point(56, 188);
+            this.buttonOK.Location = new System.Drawing.Point(62, 172);
             this.buttonOK.Name = "buttonOK";
             this.buttonOK.Size = new System.Drawing.Size(75, 23);
             this.buttonOK.TabIndex = 2;
@@ -94,7 +94,7 @@
             // buttonCancel
             // 
             this.buttonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.buttonCancel.Location = new System.Drawing.Point(150, 188);
+            this.buttonCancel.Location = new System.Drawing.Point(152, 172);
             this.buttonCancel.Name = "buttonCancel";
             this.buttonCancel.Size = new System.Drawing.Size(75, 23);
             this.buttonCancel.TabIndex = 3;
@@ -113,7 +113,7 @@
             // checkBoxAccess
             // 
             this.checkBoxAccess.AutoSize = true;
-            this.checkBoxAccess.Location = new System.Drawing.Point(81, 148);
+            this.checkBoxAccess.Location = new System.Drawing.Point(96, 139);
             this.checkBoxAccess.Name = "checkBoxAccess";
             this.checkBoxAccess.Size = new System.Drawing.Size(116, 17);
             this.checkBoxAccess.TabIndex = 6;
@@ -126,7 +126,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.buttonCancel;
-            this.ClientSize = new System.Drawing.Size(292, 230);
+            this.ClientSize = new System.Drawing.Size(292, 208);
             this.ControlBox = false;
             this.Controls.Add(this.checkBoxAccess);
             this.Controls.Add(this.comboBoxURL);

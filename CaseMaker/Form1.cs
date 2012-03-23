@@ -755,7 +755,7 @@ namespace CaseMaker
 
         }
 
-        private void saveXML(string fname, string authorName)
+        private void saveXML(string fname)
         {
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
@@ -769,14 +769,14 @@ namespace CaseMaker
                 writer.WriteString("CaseMaker - version " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
                 writer.WriteEndElement();
 
-                if (authorName != "")
-                {
+                //if (authorName != "")
+                //{
                     writer.WriteStartElement("author");
                     writer.WriteStartElement("name");
-                    writer.WriteString(authorName);
+                    //writer.WriteString(authorName);
                     writer.WriteEndElement();
                     writer.WriteEndElement();
-                }
+                //}
 
                 string categories = "";
 
@@ -894,6 +894,11 @@ namespace CaseMaker
                 writer.WriteStartElement("update");
                 writer.WriteString("admin");
                 writer.WriteEndElement();
+
+                writer.WriteStartElement("owner");
+                //writer.WriteString(authorName);
+                writer.WriteEndElement();
+
                 writer.WriteEndElement();
 
                 writer.WriteEndElement();
@@ -929,7 +934,7 @@ namespace CaseMaker
 
                 string tempFolder = createTempFolder();
                 //saveAll(prefix, targetdir, false);
-                saveFiles(prefix, tempFolder, "");
+                saveFiles(prefix, tempFolder);
                 saveZip(prefix, tempFolder, targetdir);
                 Directory.Delete(tempFolder, true);
                 openCaseDialog.InitialDirectory = targetdir;
@@ -945,18 +950,16 @@ namespace CaseMaker
             uploadDialog.privateCase = false;
             if (uploadDialog.ShowDialog() == DialogResult.OK)
             {
-                bw.RunWorkerAsync();
+                string tempFolder = createTempFolder();
+                saveFiles("case", tempFolder);
+                bw.RunWorkerAsync(tempFolder);
+
             }
         }
 
-        [DebuggerNonUserCode]
         private void sendMIRC(object sender, DoWorkEventArgs e)
         {
-            string tempFolder = createTempFolder();
-            bw.ReportProgress(0, "Acquiring author names...");
-            string authorName = getAuthor();
-            bw.ReportProgress(25, "Creating zip payload...");
-            saveFiles("template", tempFolder, authorName);
+            string tempFolder= e.Argument as string;
             string result = sendZip(tempFolder);
             bw.ReportProgress(100, result);
             Directory.Delete(tempFolder, true);
@@ -1002,7 +1005,7 @@ namespace CaseMaker
         private void previewToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string tempFolder = createTempFolder();
-            saveFiles("case", tempFolder, "");
+            saveFiles("case", tempFolder);
             string xmlPath = Path.Combine(tempFolder, "case.xml");
             string htmlPath = Path.Combine(tempFolder, "case.html");
             transformXML(xmlPath, htmlPath);
@@ -1013,10 +1016,8 @@ namespace CaseMaker
             Directory.Delete(tempFolder, true);
         }
 
-        void saveFiles(string prefix, string targetdir, string authorName)
+        void saveFiles(string prefix, string targetdir)
         {
-            string xmlfname = Path.ChangeExtension(prefix, ".xml");
-
             for (int i = 0; i < caseImages.Count; i++)
             {
                 string num = "00" + (i + 1);
@@ -1026,8 +1027,9 @@ namespace CaseMaker
                 string imgpath = Path.Combine(targetdir, fname);
                 caseImages[i].image.Save(imgpath, System.Drawing.Imaging.ImageFormat.Png);
             }
+            string xmlfname = Path.ChangeExtension(prefix, ".xml");
             string xmlPath = Path.Combine(targetdir, xmlfname);
-            saveXML(xmlPath, authorName);
+            saveXML(xmlPath);
         }
 
         void saveZip(string prefix, string sourcedir, string targetdir)
@@ -1040,30 +1042,6 @@ namespace CaseMaker
                 zip.AddFiles(files, "");
                 zip.Save(Path.Combine(targetdir, zipname));
             }
-        }
-
-        [DebuggerNonUserCode]
-        string getAuthor()
-        {
-            string authorName = "";
-            Uri mircURI = new Uri(uploadDialog.urlMIRC);
-            try
-            {
-                Uri authorURI = new Uri(mircURI, "../authors.xml");
-                XmlDocument doc = new XmlDocument();
-                doc.Load(authorURI.ToString());
-                XmlNode node = doc.SelectSingleNode(@"//author[@user='" + uploadDialog.username + @"']");
-                XmlNode nameNode = node.SelectSingleNode("./name");
-                if (nameNode != null)
-                {
-                    authorName = nameNode.InnerText;
-                }
-            }
-            catch (Exception e)
-            {
-                Debug.WriteLine(e.Message.ToString());
-            }
-            return authorName;
         }
 
 
@@ -1082,7 +1060,6 @@ namespace CaseMaker
             }
         }
 
-        [DebuggerNonUserCode]
         string sendZip(string sourcedir)
         {
             string return_message = "";
@@ -1104,7 +1081,6 @@ namespace CaseMaker
                 mircWebRequest.ContentType = "application/x-zip-compressed";
                 mircWebRequest.Method = "POST";
                 
-
                 using (Stream requestStream = mircWebRequest.GetRequestStream())
                 {
                     zip.Save(requestStream);
@@ -1123,7 +1099,6 @@ namespace CaseMaker
                 }
             }
             return return_message;
-
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
