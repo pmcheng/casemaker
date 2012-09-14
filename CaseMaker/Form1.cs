@@ -476,20 +476,20 @@ namespace CaseMaker
             // search for file patterns of "/1.2...)"
             ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d.*\)$");
             ArrayList prefixes=new ArrayList();
-            SortedDictionary<DateTime,String> dict=new SortedDictionary<DateTime,String>();
+            SortedList<DateTime,String> slist=new SortedList<DateTime,String>();
 
             foreach (WebCacheTool.WinInetAPI.INTERNET_CACHE_ENTRY_INFO entry in results)
             {
                 DateTime dt = WebCacheTool.Win32API.FromFileTime(entry.LastAccessTime);
-                if ((DateTime.Now-dt)>TimeSpan.FromHours(6)) continue;
+                if ((DateTime.Now-dt)>TimeSpan.FromHours(24)) continue;
                 string fname=entry.lpszLocalFileName;
                 int index = fname.IndexOf('(');
                 if (index > 0)
                 {
                     string prefix = fname.Substring(0, index);
-                    if (prefixes.Contains(prefix) || dict.ContainsKey(dt)) continue;
+                    if (prefixes.Contains(prefix) || slist.ContainsKey(dt)) continue;
                     prefixes.Add(prefix);
-                    dict.Add(dt,fname);
+                    slist.Add(dt,fname);
                 }
             }
 
@@ -504,9 +504,8 @@ namespace CaseMaker
 
             if (accession != "")
             {
-                foreach (KeyValuePair<DateTime,string> p in dict)
-                {
-                    fname_match = p.Value;
+                for (int i = slist.Count-1; i >=0; i--) {
+                    fname_match = slist.Values[i];
                     using (Stream s = new FileStream(fname_match, FileMode.Open, FileAccess.Read))
                     {
                         bytesRead = s.Read(readBuffer, 0, readBuffer.Length);
@@ -522,9 +521,9 @@ namespace CaseMaker
             }
             if (fname_match == "") 
             {
-                foreach (KeyValuePair<DateTime,string> p in dict)
+                for (int i = slist.Count - 1; i >= 0; i--)
                 {
-                    fname_match = p.Value;
+                    fname_match = slist.Values[i];
                     using (Stream s = new FileStream(fname_match, FileMode.Open, FileAccess.Read))
                     {
                         bytesRead = s.Read(readBuffer, 0, readBuffer.Length);
