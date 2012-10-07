@@ -29,7 +29,7 @@ namespace CaseMaker
 
         BackgroundWorker bw = new BackgroundWorker();
 
-        UploadMIRCDialog uploadDialog = new UploadMIRCDialog();
+        UploadMIRCDialog uploadDialog;
         DialogConflict dialogConflict = new DialogConflict();
         BrowserPreview browserPreview = new BrowserPreview();
 
@@ -41,15 +41,7 @@ namespace CaseMaker
         int lastY = 0;
         bool isDirty = false;
 
-        Dictionary<string, string> dictLocation = new Dictionary<string, string>()
-        {
-            {"datasource=https%253A%252F%252Fexternal.synapse.uscuh.com", "UH/Norris"},
-            {"datasource=http%253A%252F%252Fsynapse.uscuh.com", "UH/Norris"},
-            {"datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu","HCC2"},
-            {"datasource=http%253A%252F%252Fhcc2synvweb","HCC2"},
-            {"datasource=http%253A%252F%252Flacsynapse","LACUSC"}
-        };
-
+        Dictionary<string, string> dictLocation;
         Dictionary<CheckBox, string> dictCategory;
 
 
@@ -61,6 +53,50 @@ namespace CaseMaker
             openCaseDialog.InitialDirectory = Application.StartupPath;
             this.MouseWheel += new System.Windows.Forms.MouseEventHandler(this.imagePanel_MouseWheel);
             assignHandlers(this);
+
+            string config_file= Path.Combine(Application.StartupPath, "casemaker_config.xml");
+
+            List<string> urlList = new List<string>();
+            try
+            {
+                XmlDocument doc = new XmlDocument();
+                doc.Load(config_file);
+                XmlNodeList nodelist = doc.SelectNodes("//location");
+                dictLocation = new Dictionary<string, string>();
+                Debug.WriteLine("Reading locations");
+                foreach (XmlNode node in nodelist)
+                {
+                    string matchstring = node.Attributes["matchstring"].Value;
+                    string site = node.Attributes["site"].Value;
+                    dictLocation.Add(matchstring, site);
+                }
+                Debug.WriteLine("Reading upload URLs");
+                nodelist = doc.SelectNodes("//site");
+                foreach (XmlNode node in nodelist)
+                {
+                    string url = node.Attributes["url"].Value;
+                    urlList.Add(url);
+                }
+
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("Config XML error: "+e.Message);
+                dictLocation = new Dictionary<string, string>() {
+                    {"datasource=https%253A%252F%252Fexternal.synapse.uscuh.com", "UH/Norris"},
+                    {"datasource=http%253A%252F%252Fsynapse.uscuh.com", "UH/Norris"},
+                    {"datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu","HCC2"},
+                    {"datasource=http%253A%252F%252Fhcc2synvweb","HCC2"},
+                    {"datasource=http%253A%252F%252Flacsynapse","LACUSC"}
+                };
+                urlList = new List<string>()
+                {
+                    "http://10.131.12.41:8080/submit/ss1",
+                    "http://192.168.0.101:8080/submit/ss1",
+                    "http://mirc.usc.edu/submit/ss1"
+                };
+            }
+            uploadDialog = new UploadMIRCDialog(urlList);
 
             dictCategory = new Dictionary<CheckBox, string>()
             {
@@ -165,13 +201,7 @@ namespace CaseMaker
             toolStripStatusLabel.Text = "";
             if (validData)
             {
-                //while (getImageThread.IsAlive)
-                //{
-                //    Application.DoEvents();
-                //    Thread.Sleep(0);
-                //}
                 thumbnail.Visible = false;
-
 
                 if (pb.Image != nextImage)
                 {
@@ -210,6 +240,7 @@ namespace CaseMaker
 
                             }
                             ms = e.Data.GetData("UniformResourceLocator") as MemoryStream;
+                            textLoc.Text = "";
                             if (ms != null)
                             {
                                 sr = new StreamReader(ms);
@@ -355,8 +386,6 @@ namespace CaseMaker
                 if (nextImage != null)
                 {
                     AssignImage();
-                    //getImageThread = new Thread(new ThreadStart(LoadImage));
-                    //getImageThread.Start();
                     e.Effect = DragDropEffects.Copy;
 
                 }
@@ -378,11 +407,6 @@ namespace CaseMaker
                     {
                         filename = ((string[])data)[0];
                         ret = true;
-                        //string ext = Path.GetExtension(filename).ToLower();
-                        //if ((ext == ".jpg") || (ext == ".png") || (ext == ".bmp") || (ext==".gif") || (ext==".tif"))
-                        //{
-                        //    ret = true;
-                        //}
                     }
                 }
             }
@@ -475,21 +499,21 @@ namespace CaseMaker
         {
             // search for file patterns of "/1.2...)"
             ArrayList results = WebCacheTool.WinInetAPI.FindUrlCacheEntries(@"/\d\.\d.*\)$");
-            ArrayList prefixes=new ArrayList();
-            SortedList<DateTime,String> slist=new SortedList<DateTime,String>();
+            ArrayList prefixes = new ArrayList();
+            SortedList<DateTime, String> slist = new SortedList<DateTime, String>();
 
             foreach (WebCacheTool.WinInetAPI.INTERNET_CACHE_ENTRY_INFO entry in results)
             {
                 DateTime dt = WebCacheTool.Win32API.FromFileTime(entry.LastAccessTime);
-                if ((DateTime.Now-dt)>TimeSpan.FromHours(24)) continue;
-                string fname=entry.lpszLocalFileName;
+                if ((DateTime.Now - dt) > TimeSpan.FromHours(24)) continue;
+                string fname = entry.lpszLocalFileName;
                 int index = fname.IndexOf('(');
                 if (index > 0)
                 {
                     string prefix = fname.Substring(0, index);
                     if (prefixes.Contains(prefix) || slist.ContainsKey(dt)) continue;
                     prefixes.Add(prefix);
-                    slist.Add(dt,fname);
+                    slist.Add(dt, fname);
                 }
             }
 
@@ -504,7 +528,8 @@ namespace CaseMaker
 
             if (accession != "")
             {
-                for (int i = slist.Count-1; i >=0; i--) {
+                for (int i = slist.Count - 1; i >= 0; i--)
+                {
                     fname_match = slist.Values[i];
                     using (Stream s = new FileStream(fname_match, FileMode.Open, FileAccess.Read))
                     {
@@ -519,7 +544,7 @@ namespace CaseMaker
                     accession = "";
                 }
             }
-            if (fname_match == "") 
+            if (fname_match == "")
             {
                 for (int i = slist.Count - 1; i >= 0; i--)
                 {
@@ -534,7 +559,7 @@ namespace CaseMaker
                 if (dicom_mrn != medrecnum)
                 {
                     return;
-                }                
+                }
             }
 
             Stream fstream = new FileStream(fname_match, FileMode.Open, FileAccess.Read);
@@ -545,7 +570,7 @@ namespace CaseMaker
             byte[] mf = { 0x10, 0x00, 0x40, 0x00, 0x43, 0x53 };
             //byte[] acc = { 0x08, 0x00, 0x50, 0x00, 0x53, 0x48 };
             //byte[] date = { 0x08, 0x00, 0x20, 0x00, 0x44, 0x41 };
-            //byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
+            byte[] loc = { 0x08, 0x00, 0x80, 0x00, 0x4c, 0x4f };
 
             dicom_mrn = getDicomString(readBuffer, mrn, bytesRead);
             if ((dicom_mrn == medrecnum) || (dicom_mrn == ""))
@@ -569,8 +594,10 @@ namespace CaseMaker
             //{
             //    string strDate = getDicomString(readBuffer, date, bytesRead);
             //}
-
-            //textLoc.Text = getDicomString(readBuffer, loc, bytesRead);
+            if (textLoc.Text == "")
+            {
+                textLoc.Text = getDicomString(readBuffer, loc, bytesRead);
+            }
         }
 
         string getDicomString(byte[] readBuffer, byte[] target, int bytes)
@@ -787,11 +814,11 @@ namespace CaseMaker
 
                 //if (authorName != "")
                 //{
-                    writer.WriteStartElement("author");
-                    writer.WriteStartElement("name");
-                    //writer.WriteString(authorName);
-                    writer.WriteEndElement();
-                    writer.WriteEndElement();
+                writer.WriteStartElement("author");
+                writer.WriteStartElement("name");
+                //writer.WriteString(authorName);
+                writer.WriteEndElement();
+                writer.WriteEndElement();
                 //}
 
                 string categories = "";
@@ -975,7 +1002,7 @@ namespace CaseMaker
 
         private void sendMIRC(object sender, DoWorkEventArgs e)
         {
-            string tempFolder= e.Argument as string;
+            string tempFolder = e.Argument as string;
             string result = sendZip(tempFolder);
             bw.ReportProgress(100, result);
             Directory.Delete(tempFolder, true);
@@ -1080,7 +1107,7 @@ namespace CaseMaker
         {
             string return_message = "";
             string[] files = Directory.GetFiles(sourcedir);
-            
+
             using (ZipFile zip = new ZipFile())
             {
                 zip.SaveProgress += sendZip_Progress;
@@ -1096,7 +1123,7 @@ namespace CaseMaker
 
                 mircWebRequest.ContentType = "application/x-zip-compressed";
                 mircWebRequest.Method = "POST";
-                
+
                 using (Stream requestStream = mircWebRequest.GetRequestStream())
                 {
                     zip.Save(requestStream);
@@ -1169,6 +1196,9 @@ namespace CaseMaker
 
         private void pb_DoubleClick(object sender, EventArgs e)
         {
+            // This is a local feature to allow double-clicking on an image to launch
+            // Synapse in an IE window
+
             if (currentImage == 0) return;
             string imageURL = caseImages[currentImage - 1].imageURL;
             if (imageURL == "") return;

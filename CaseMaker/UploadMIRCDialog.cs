@@ -6,6 +6,8 @@ using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
 
+using System.Collections;
+
 namespace CaseMaker
 {
     public partial class UploadMIRCDialog : Form
@@ -62,9 +64,17 @@ namespace CaseMaker
 
         public UploadMIRCDialog()
         {
+        }
+
+        public UploadMIRCDialog(List<string> urlList)
+        {
             InitializeComponent();
-            comboBoxURL.Items.Add(@"http://10.131.12.41:8080/submit/ss1");
-            comboBoxURL.Items.Add(@"http://192.168.0.101:8080/submit/ss1");
+            foreach (string url in urlList)
+            {
+                comboBoxURL.Items.Add(url);
+            }
+            //comboBoxURL.Items.Add(@"http://10.131.12.41:8080/submit/ss1");
+            //comboBoxURL.Items.Add(@"http://192.168.0.101:8080/submit/ss1");
             //comboBoxURL.Items.Add(@"http://mirc.usc.edu/USCRadStorage/submit/doc");
             comboBoxURL.SelectedIndex = 0;
         }
