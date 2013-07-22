@@ -83,6 +83,7 @@ namespace CaseMaker
             {
                 Debug.WriteLine("Config XML error: "+e.Message);
                 dictLocation = new Dictionary<string, string>() {
+                    {"datasource=https%253A%252F%252Fkeckimaging.usc.edu","Keck/Norris"},
                     {"datasource=https%253A%252F%252Fexternal.synapse.uscuh.com", "UH/Norris"},
                     {"datasource=http%253A%252F%252Fsynapse.uscuh.com", "UH/Norris"},
                     {"datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu","HCC2"},
@@ -1208,30 +1209,10 @@ namespace CaseMaker
             switch (mapToLocation(imageURL))
             {
                 case "UH/Norris":
-                    try
-                    {
-                        Dns.GetHostEntry("synapse.uscuh.com");
-                        url = "http://synapse.uscuh.com/explore.asp?path=//commandclassname=Synapse%26datasource=http%253A%252F%252Fsynapse.uscuh.com";
-
-                    }
-                    catch
-                    {
-                        url = "https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fexternal.synapse.uscuh.com";
-
-                    }
-                    url += "%26/commandclassname=StudyListTemplateFolder%26folderuid=33%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
-                    break;
+                case "Keck/Norris":
                 case "HCC2":
-                    try
-                    {
-                        Dns.GetHostEntry("synapse.uscuh.com");
-                        url = "http://synapse.uscuh.com/explore.asp?path=//commandclassname=Synapse%26datasource=http%253A%252F%252Fhcc2synvweb";
-                    }
-                    catch
-                    {
-                        url = "https://external.synapse.uscuh.com/synapse.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu";
-                    }
-                    url += "%26/commandclassname=StudyListTemplateFolder%26folderuid=1000002%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
+                    url = "https://keckimaging.usc.edu/explore.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fkeckimaging.usc.edu";
+                    url += "%26/commandclassname=StudyListTemplateFolder%26folderuid=33%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
                     break;
                 case "LACUSC":
                     try
