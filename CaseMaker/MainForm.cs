@@ -264,7 +264,8 @@ namespace CaseMaker
                                 textLoc.Text = mapToLocation(imageURL);
 
                             }
-                            getCacheDemographics(mrn, accession);
+                            textMRN.Text = mrn;
+                            //getCacheDemographics(mrn, accession);
                         }
                     }
                     CaseImage caseImage = new CaseImage(nextImage);
@@ -584,11 +585,11 @@ namespace CaseMaker
             }
 
             string rawText = getDicomString(readBuffer, pn, bytesRead);
-            textName.Text = rawText.Replace("^", " ");
+            //textName.Text = rawText.Replace("^", " ");
 
             rawText = getDicomString(readBuffer, dob, bytesRead);
-            textDOB.Text = convertDate(rawText);
-            textGender.Text = getDicomString(readBuffer, mf, bytesRead);
+            //textDOB.Text = convertDate(rawText);
+            //textGender.Text = getDicomString(readBuffer, mf, bytesRead);
 
             //string dicom_acc = getDicomString(readBuffer, acc, bytesRead);
             //if (dicom_acc == accession)
@@ -773,10 +774,10 @@ namespace CaseMaker
             pb.Image = null;
 
             textKeywords.Text = getElement(doc, "keywords");
-            textName.Text = getElement(doc, "pt-name");
+            //textName.Text = getElement(doc, "pt-name");
             textMRN.Text = getElement(doc, "pt-mrn");
-            textGender.Text = getElement(doc, "pt-sex");
-            textDOB.Text = getElement(doc, "pt-dob");
+            //textGender.Text = getElement(doc, "pt-sex");
+            //textDOB.Text = getElement(doc, "pt-dob");
             textHistory.Text = getSectionElement(doc, "History");
             textFindings.Text = getSectionElement(doc, "Findings");
             textDiagnosis.Text = getSectionElement(doc, "Diagnosis");
@@ -908,10 +909,10 @@ namespace CaseMaker
                 writer.WriteStartElement("section");
                 writer.WriteAttributeString("heading", "Patient");
                 writer.WriteStartElement("patient");
-                writer.WriteElementString("pt-name", textName.Text);
+                //writer.WriteElementString("pt-name", textName.Text);
                 writer.WriteElementString("pt-mrn", textMRN.Text);
-                writer.WriteElementString("pt-sex", textGender.Text);
-                writer.WriteElementString("pt-dob", textDOB.Text);
+                //writer.WriteElementString("pt-sex", textGender.Text);
+                //writer.WriteElementString("pt-dob", textDOB.Text);
                 writer.WriteEndElement();
                 writer.WriteEndElement();
 

@@ -33,14 +33,8 @@
             this.imagePanel = new System.Windows.Forms.Panel();
             this.thumbnail = new System.Windows.Forms.PictureBox();
             this.pb = new System.Windows.Forms.PictureBox();
-            this.textName = new System.Windows.Forms.TextBox();
             this.textMRN = new System.Windows.Forms.TextBox();
-            this.textDOB = new System.Windows.Forms.TextBox();
-            this.textGender = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
             this.btnSaveDisk = new System.Windows.Forms.Button();
             this.btnMIRC = new System.Windows.Forms.Button();
             this.tabPage1 = new System.Windows.Forms.TabPage();
@@ -71,7 +65,6 @@
             this.textDdx = new System.Windows.Forms.TextBox();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.textLoc = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
             this.saveCaseDialog = new System.Windows.Forms.SaveFileDialog();
             this.btnLeft = new System.Windows.Forms.Button();
             this.btnRight = new System.Windows.Forms.Button();
@@ -91,6 +84,7 @@
             this.pbContextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.copyToClipboardToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.propertiesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label8 = new System.Windows.Forms.Label();
             this.imagePanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.thumbnail)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pb)).BeginInit();
@@ -146,70 +140,21 @@
             this.pb.DoubleClick += new System.EventHandler(this.pb_DoubleClick);
             this.pb.MouseDown += new System.Windows.Forms.MouseEventHandler(this.pb_MouseDown);
             // 
-            // textName
-            // 
-            this.textName.Location = new System.Drawing.Point(63, 32);
-            this.textName.Name = "textName";
-            this.textName.Size = new System.Drawing.Size(209, 20);
-            this.textName.TabIndex = 0;
-            // 
             // textMRN
             // 
-            this.textMRN.Location = new System.Drawing.Point(176, 59);
+            this.textMRN.Location = new System.Drawing.Point(52, 40);
             this.textMRN.Name = "textMRN";
-            this.textMRN.Size = new System.Drawing.Size(96, 20);
+            this.textMRN.Size = new System.Drawing.Size(66, 20);
             this.textMRN.TabIndex = 2;
-            // 
-            // textDOB
-            // 
-            this.textDOB.Location = new System.Drawing.Point(63, 59);
-            this.textDOB.Name = "textDOB";
-            this.textDOB.Size = new System.Drawing.Size(69, 20);
-            this.textDOB.TabIndex = 1;
-            // 
-            // textGender
-            // 
-            this.textGender.Location = new System.Drawing.Point(63, 88);
-            this.textGender.MaxLength = 2;
-            this.textGender.Name = "textGender";
-            this.textGender.Size = new System.Drawing.Size(23, 20);
-            this.textGender.TabIndex = 3;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(20, 39);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(35, 13);
-            this.label1.TabIndex = 6;
-            this.label1.Text = "Name";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(138, 62);
+            this.label2.Location = new System.Drawing.Point(14, 43);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(32, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "MRN";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(27, 62);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(30, 13);
-            this.label3.TabIndex = 8;
-            this.label3.Text = "DOB";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(13, 91);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(42, 13);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Gender";
             // 
             // btnSaveDisk
             // 
@@ -249,7 +194,7 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(281, 336);
+            this.tabPage1.Size = new System.Drawing.Size(281, 371);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basic";
             // 
@@ -266,7 +211,7 @@
             this.groupBox1.Controls.Add(this.checkBoxGI);
             this.groupBox1.Controls.Add(this.checkBoxCV);
             this.groupBox1.Controls.Add(this.checkBoxPulm);
-            this.groupBox1.Location = new System.Drawing.Point(11, 220);
+            this.groupBox1.Location = new System.Drawing.Point(11, 253);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(258, 105);
             this.groupBox1.TabIndex = 16;
@@ -387,12 +332,12 @@
             this.textHistory.Location = new System.Drawing.Point(61, 9);
             this.textHistory.Multiline = true;
             this.textHistory.Name = "textHistory";
-            this.textHistory.Size = new System.Drawing.Size(209, 55);
+            this.textHistory.Size = new System.Drawing.Size(209, 49);
             this.textHistory.TabIndex = 0;
             // 
             // textDiagnosis
             // 
-            this.textDiagnosis.Location = new System.Drawing.Point(60, 177);
+            this.textDiagnosis.Location = new System.Drawing.Point(60, 207);
             this.textDiagnosis.Multiline = true;
             this.textDiagnosis.Name = "textDiagnosis";
             this.textDiagnosis.Size = new System.Drawing.Size(209, 36);
@@ -403,7 +348,7 @@
             this.textFindings.Location = new System.Drawing.Point(61, 75);
             this.textFindings.Multiline = true;
             this.textFindings.Name = "textFindings";
-            this.textFindings.Size = new System.Drawing.Size(209, 90);
+            this.textFindings.Size = new System.Drawing.Size(209, 117);
             this.textFindings.TabIndex = 1;
             // 
             // label5
@@ -418,7 +363,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(3, 178);
+            this.label7.Location = new System.Drawing.Point(3, 208);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(53, 13);
             this.label7.TabIndex = 15;
@@ -444,13 +389,13 @@
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(281, 336);
+            this.tabPage2.Size = new System.Drawing.Size(281, 371);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Extra";
             // 
             // textKeywords
             // 
-            this.textKeywords.Location = new System.Drawing.Point(61, 258);
+            this.textKeywords.Location = new System.Drawing.Point(61, 302);
             this.textKeywords.Multiline = true;
             this.textKeywords.Name = "textKeywords";
             this.textKeywords.Size = new System.Drawing.Size(209, 60);
@@ -459,7 +404,7 @@
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(2, 261);
+            this.label11.Location = new System.Drawing.Point(2, 305);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(53, 13);
             this.label11.TabIndex = 18;
@@ -479,7 +424,7 @@
             this.textDiscussion.Location = new System.Drawing.Point(61, 129);
             this.textDiscussion.Multiline = true;
             this.textDiscussion.Name = "textDiscussion";
-            this.textDiscussion.Size = new System.Drawing.Size(209, 109);
+            this.textDiscussion.Size = new System.Drawing.Size(209, 155);
             this.textDiscussion.TabIndex = 13;
             // 
             // label9
@@ -496,34 +441,25 @@
             this.textDdx.Location = new System.Drawing.Point(61, 15);
             this.textDdx.Multiline = true;
             this.textDdx.Name = "textDdx";
-            this.textDdx.Size = new System.Drawing.Size(209, 93);
+            this.textDdx.Size = new System.Drawing.Size(209, 95);
             this.textDdx.TabIndex = 12;
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Location = new System.Drawing.Point(7, 114);
+            this.tabControl1.Location = new System.Drawing.Point(7, 79);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(289, 362);
+            this.tabControl1.Size = new System.Drawing.Size(289, 397);
             this.tabControl1.TabIndex = 5;
             // 
             // textLoc
             // 
-            this.textLoc.Location = new System.Drawing.Point(141, 88);
+            this.textLoc.Location = new System.Drawing.Point(162, 40);
             this.textLoc.Name = "textLoc";
             this.textLoc.Size = new System.Drawing.Size(131, 20);
             this.textLoc.TabIndex = 4;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(110, 91);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(25, 13);
-            this.label8.TabIndex = 20;
-            this.label8.Text = "Loc";
             // 
             // saveCaseDialog
             // 
@@ -695,6 +631,15 @@
             this.propertiesToolStripMenuItem.Text = "Properties";
             this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
             // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(131, 43);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(25, 13);
+            this.label8.TabIndex = 20;
+            this.label8.Text = "Loc";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -707,19 +652,13 @@
             this.Controls.Add(this.countLabel);
             this.Controls.Add(this.btnRight);
             this.Controls.Add(this.btnLeft);
-            this.Controls.Add(this.label8);
-            this.Controls.Add(this.textLoc);
             this.Controls.Add(this.btnMIRC);
             this.Controls.Add(this.btnSaveDisk);
-            this.Controls.Add(this.label4);
-            this.Controls.Add(this.label3);
+            this.Controls.Add(this.textLoc);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.textGender);
-            this.Controls.Add(this.textDOB);
-            this.Controls.Add(this.textMRN);
-            this.Controls.Add(this.textName);
             this.Controls.Add(this.imagePanel);
+            this.Controls.Add(this.textMRN);
             this.Controls.Add(this.tabControl1);
             this.Controls.Add(this.menuStrip1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -751,14 +690,8 @@
 
         private System.Windows.Forms.Panel imagePanel;
         private System.Windows.Forms.PictureBox pb;
-        private System.Windows.Forms.TextBox textName;
         private System.Windows.Forms.TextBox textMRN;
-        private System.Windows.Forms.TextBox textDOB;
-        private System.Windows.Forms.TextBox textGender;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnSaveDisk;
         private System.Windows.Forms.Button btnMIRC;
         private System.Windows.Forms.TabPage tabPage1;
@@ -771,7 +704,6 @@
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TextBox textLoc;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.SaveFileDialog saveCaseDialog;
         private System.Windows.Forms.Button btnLeft;
         private System.Windows.Forms.Button btnRight;
@@ -810,6 +742,7 @@
         private System.Windows.Forms.ContextMenuStrip pbContextMenuStrip;
         private System.Windows.Forms.ToolStripMenuItem propertiesToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem copyToClipboardToolStripMenuItem;
+        private System.Windows.Forms.Label label8;
     }
 }
 
