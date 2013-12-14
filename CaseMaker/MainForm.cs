@@ -92,7 +92,7 @@ namespace CaseMaker
                 };
                 urlList = new List<string>()
                 {
-                    "http://10.131.12.41:8080/submit/ss1",
+                    "http://207.151.11.95:8080/submit/ss1",
                     "http://192.168.0.101:8080/submit/ss1",
                     "http://mirc.usc.edu/submit/ss1"
                 };
