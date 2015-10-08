@@ -88,7 +88,8 @@ namespace CaseMaker
                     {"datasource=http%253A%252F%252Fsynapse.uscuh.com", "UH/Norris"},
                     {"datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu","HCC2"},
                     {"datasource=http%253A%252F%252Fhcc2synvweb","HCC2"},
-                    {"datasource=http%253A%252F%252Flacsynapse","LACUSC"}
+                    {"datasource=http%253A%252F%252Flacsynapse","LACUSC"},
+                    {"datasource=http%253A%252F%252Fdhssynapse","LACUSC"}
                 };
                 urlList = new List<string>()
                 {

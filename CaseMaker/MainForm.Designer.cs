@@ -533,7 +533,7 @@
             // 
             this.newCaseToolStripMenuItem.Image = global::CaseMaker.Properties.Resources.NewDocumentHS;
             this.newCaseToolStripMenuItem.Name = "newCaseToolStripMenuItem";
-            this.newCaseToolStripMenuItem.Size = new System.Drawing.Size(83, 20);
+            this.newCaseToolStripMenuItem.Size = new System.Drawing.Size(87, 20);
             this.newCaseToolStripMenuItem.Text = "New Case";
             this.newCaseToolStripMenuItem.Click += new System.EventHandler(this.newCaseToolStripMenuItem_Click);
             // 
@@ -541,7 +541,7 @@
             // 
             this.openCaseToolStripMenuItem.Image = global::CaseMaker.Properties.Resources.OpenSelectedItemHS;
             this.openCaseToolStripMenuItem.Name = "openCaseToolStripMenuItem";
-            this.openCaseToolStripMenuItem.Size = new System.Drawing.Size(88, 20);
+            this.openCaseToolStripMenuItem.Size = new System.Drawing.Size(92, 20);
             this.openCaseToolStripMenuItem.Text = "Open Case";
             this.openCaseToolStripMenuItem.Click += new System.EventHandler(this.openCaseToolStripMenuItem_Click);
             // 
@@ -550,7 +550,7 @@
             this.aboutToolStripMenuItem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
             this.aboutToolStripMenuItem.Image = global::CaseMaker.Properties.Resources.Help;
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(64, 20);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
             this.aboutToolStripMenuItem.Text = "About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -558,7 +558,7 @@
             // 
             this.previewToolStripMenuItem.Image = global::CaseMaker.Properties.Resources.PrintPreviewHS;
             this.previewToolStripMenuItem.Name = "previewToolStripMenuItem";
-            this.previewToolStripMenuItem.Size = new System.Drawing.Size(73, 20);
+            this.previewToolStripMenuItem.Size = new System.Drawing.Size(76, 20);
             this.previewToolStripMenuItem.Text = "Preview";
             this.previewToolStripMenuItem.Click += new System.EventHandler(this.previewToolStripMenuItem_Click);
             // 
@@ -615,19 +615,19 @@
             this.copyToClipboardToolStripMenuItem,
             this.propertiesToolStripMenuItem});
             this.pbContextMenuStrip.Name = "pbContextMenuStrip";
-            this.pbContextMenuStrip.Size = new System.Drawing.Size(159, 48);
+            this.pbContextMenuStrip.Size = new System.Drawing.Size(170, 48);
             // 
             // copyToClipboardToolStripMenuItem
             // 
             this.copyToClipboardToolStripMenuItem.Name = "copyToClipboardToolStripMenuItem";
-            this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.copyToClipboardToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.copyToClipboardToolStripMenuItem.Text = "Copy to clipboard";
             this.copyToClipboardToolStripMenuItem.Click += new System.EventHandler(this.copyToClipboardToolStripMenuItem_Click);
             // 
             // propertiesToolStripMenuItem
             // 
             this.propertiesToolStripMenuItem.Name = "propertiesToolStripMenuItem";
-            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(158, 22);
+            this.propertiesToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.propertiesToolStripMenuItem.Text = "Properties";
             this.propertiesToolStripMenuItem.Click += new System.EventHandler(this.propertiesToolStripMenuItem_Click);
             // 
