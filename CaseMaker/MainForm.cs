@@ -89,7 +89,8 @@ namespace CaseMaker
                     {"datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu","HCC2"},
                     {"datasource=http%253A%252F%252Fhcc2synvweb","HCC2"},
                     {"datasource=http%253A%252F%252Flacsynapse","LACUSC"},
-                    {"datasource=http%253A%252F%252Fdhssynapse","LACUSC"}
+                    {"datasource=http%253A%252F%252Fdhssynapse","LACUSC"},
+                    {"datasource=http%253A%252F%252F160uscpacdbpw02","LACUSC"}
                 };
                 urlList = new List<string>()
                 {
@@ -114,7 +115,7 @@ namespace CaseMaker
                 {checkBoxPeds,"Pediatric"},
                 {checkBoxNucs,"Nuclear"}
             };
-
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;  // activate TLS 1.2
             ServicePointManager.Expect100Continue = false;
 
             // Ignore Certificate validation failures (aka untrusted certificate + certificate chains)

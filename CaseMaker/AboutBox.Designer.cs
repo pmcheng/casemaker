@@ -59,7 +59,7 @@
             this.linkLabel1.Size = new System.Drawing.Size(329, 20);
             this.linkLabel1.TabIndex = 25;
             this.linkLabel1.TabStop = true;
-            this.linkLabel1.Text = "phillip.cheng@usc.edu";
+            this.linkLabel1.Text = "phillip.cheng@med.usc.edu";
             this.linkLabel1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
             // 
@@ -86,7 +86,7 @@
             this.labelCopyright.Name = "labelCopyright";
             this.labelCopyright.Size = new System.Drawing.Size(326, 17);
             this.labelCopyright.TabIndex = 21;
-            this.labelCopyright.Text = "© 2009-2015";
+            this.labelCopyright.Text = "© 2009-2020";
             this.labelCopyright.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelVersion
