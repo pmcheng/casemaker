@@ -13,6 +13,7 @@ using System.Runtime.Remoting;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.RegularExpressions;
+using System.Web;
 using System.Xml;
 using System.Xml.Xsl;
 using System.Net;
@@ -83,6 +84,7 @@ namespace CaseMaker
             {
                 Debug.WriteLine("Config XML error: "+e.Message);
                 dictLocation = new Dictionary<string, string>() {
+                    {"https://keckimaging.usc.edu","Keck/Norris"},
                     {"datasource=https%253A%252F%252Fkeckimaging.usc.edu","Keck/Norris"},
                     {"datasource=https%253A%252F%252Fexternal.synapse.uscuh.com", "UH/Norris"},
                     {"datasource=http%253A%252F%252Fsynapse.uscuh.com", "UH/Norris"},
@@ -213,11 +215,24 @@ namespace CaseMaker
                     string studyUID = "";
                     string studyURL = "";
                     string accession = "";
+                    string mrn = "";
+
+                    if (e.Data.GetDataPresent("Text"))
+                    {
+                        imageURL = (String)e.Data.GetData("Text");
+                        System.Collections.Specialized.NameValueCollection qscoll = HttpUtility.ParseQueryString(imageURL);
+                        mrn = qscoll.Get("DDsrcPatientMRN");
+                        imageUID = qscoll.Get("objectUID");
+                        studyUID = qscoll.Get("studyUID");
+                    }
                     MemoryStream ms = e.Data.GetData("Synapse.FujiOffset") as MemoryStream;
                     if (ms != null)
                     {
                         StreamReader sr = new StreamReader(ms, Encoding.Unicode);
-                        string mrn = sr.ReadToEnd().TrimEnd('\0');
+                        mrn = sr.ReadToEnd().TrimEnd('\0');
+                    }
+
+                    if (mrn!="") {
                         DialogResult result = DialogResult.Yes;
                         if ((textMRN.Text != "") && (textMRN.Text != mrn))
                         {
@@ -231,7 +246,7 @@ namespace CaseMaker
                             ms = e.Data.GetData("Synapse.TC") as MemoryStream;
                             if (ms != null)
                             {
-                                sr = new StreamReader(ms, Encoding.Unicode);
+                                StreamReader sr = new StreamReader(ms, Encoding.Unicode);
                                 string[] tcString = sr.ReadToEnd().Trim('\0').Split(',');
                                 foreach (string s in tcString)
                                 {
@@ -244,9 +259,9 @@ namespace CaseMaker
                             }
                             ms = e.Data.GetData("UniformResourceLocator") as MemoryStream;
                             textLoc.Text = "";
-                            if (ms != null)
+                            if ((ms != null) && (studyUID == ""))
                             {
-                                sr = new StreamReader(ms);
+                                StreamReader sr = new StreamReader(ms);
                                 imageURL = sr.ReadToEnd().TrimEnd('\0');
 
                                 int epath_loc = imageURL.IndexOf("epath=");
@@ -262,9 +277,10 @@ namespace CaseMaker
 
                                 studyUID = Regex.Match(imageURL, @"studyuid=(\d*)").Groups[1].Value;
                                 imageUID = Regex.Match(imageURL, @"imageuid=(\d*)").Groups[1].Value;
-
+                            }
+                            if (imageURL != "")
+                            {
                                 textLoc.Text = mapToLocation(imageURL);
-
                             }
                             textMRN.Text = mrn;
                             //getCacheDemographics(mrn, accession);
