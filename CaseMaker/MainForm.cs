@@ -85,18 +85,21 @@ namespace CaseMaker
                 Debug.WriteLine("Config XML error: "+e.Message);
                 dictLocation = new Dictionary<string, string>() {
                     {"https://keckimaging.usc.edu","Keck/Norris"},
+                    {"https://keckimaging.med.usc.edu","Keck/Norris"},
                     {"datasource=https%253A%252F%252Fkeckimaging.usc.edu","Keck/Norris"},
+                    {"datasource=https%253A%252F%252Fkeckimaging.med.usc.edu","Keck/Norris"},
                     {"datasource=https%253A%252F%252Fexternal.synapse.uscuh.com", "UH/Norris"},
                     {"datasource=http%253A%252F%252Fsynapse.uscuh.com", "UH/Norris"},
                     {"datasource=https%253A%252F%252Ffujipacs.hsc.usc.edu","HCC2"},
                     {"datasource=http%253A%252F%252Fhcc2synvweb","HCC2"},
                     {"datasource=http%253A%252F%252Flacsynapse","LACUSC"},
+                    {"dhssynapse","LACUSC"},
                     {"datasource=http%253A%252F%252Fdhssynapse","LACUSC"},
                     {"datasource=http%253A%252F%252F160uscpacdbpw02","LACUSC"}
                 };
                 urlList = new List<string>()
                 {
-                    "http://207.151.11.95:8080/submit/ss1",
+                    "http://207.151.6.168:8080/submit/ss1",
                     "http://192.168.0.101:8080/submit/ss1",
                     "http://mirc.usc.edu/submit/ss1"
                 };
@@ -1230,7 +1233,7 @@ namespace CaseMaker
                 case "UH/Norris":
                 case "Keck/Norris":
                 case "HCC2":
-                    url = "https://keckimaging.usc.edu/explore.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fkeckimaging.usc.edu";
+                    url = "https://keckimaging.med.usc.edu/explore.asp?path=//commandclassname=Synapse%26datasource=https%253A%252F%252Fkeckimaging.usc.edu";
                     url += "%26/commandclassname=StudyListTemplateFolder%26folderuid=33%26/commandclassname=StudyTemplateFolder%26studyuid=" + studyUID;
                     break;
                 case "LACUSC":
