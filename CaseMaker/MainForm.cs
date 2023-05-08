@@ -201,6 +201,53 @@ namespace CaseMaker
             if (e.Delta < 0) btnRight_Click(sender, e);
         }
 
+        private void imagePanel_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = DragDropEffects.None;
+            thumbnail.Image = null;
+            thumbnail.Visible = false;
+
+            validData = false;
+
+            if (e.Data.GetData("CaseMaker") == this) return;
+
+            if (GetFilename(out dragFilename, e))
+            {
+                validData = true;
+                nextImage = LoadUnlockImage(dragFilename);
+            } else if (Clipboard.ContainsImage())
+            {
+                validData = true;
+                nextImage = Clipboard.GetImage();
+            }
+            if (validData) { 
+                if (nextImage != null)
+                {
+                    AssignImage();
+                    e.Effect = DragDropEffects.Copy;
+                }
+            }
+        }
+
+        private void imagePanel_DragOver(object sender, DragEventArgs e)
+        {
+            if (validData)
+            {
+                if ((e.X != lastX) || (e.Y != lastY))
+                {
+                    SetThumbnailLocation(imagePanel.PointToClient(new Point(e.X, e.Y)));
+                    lastX = e.X;
+                    lastY = e.Y;
+                }
+            }
+
+        }
+
+        private void imagePanel_DragLeave(object sender, EventArgs e)
+        {
+            thumbnail.Visible = false;
+        }
+
         private void imagePanel_DragDrop(object sender, DragEventArgs e)
         {
             toolStripStatusLabel.Text = "";
@@ -389,29 +436,7 @@ namespace CaseMaker
             setDirty(true);
         }
 
-        private void imagePanel_DragEnter(object sender, DragEventArgs e)
-        {
 
-            validData = GetFilename(out dragFilename, e);
-            if (e.Data.GetData("CaseMaker") == this)
-                validData = false;
-
-            e.Effect = DragDropEffects.None;
-            if (validData)
-            {
-                thumbnail.Image = null;
-                thumbnail.Visible = false;
-
-                nextImage = LoadUnlockImage(dragFilename);
-                if (nextImage != null)
-                {
-                    AssignImage();
-                    e.Effect = DragDropEffects.Copy;
-
-                }
-
-            }
-        }
 
         bool GetFilename(out string filename, DragEventArgs e)
         {
@@ -433,10 +458,7 @@ namespace CaseMaker
             return ret;
         }
 
-        private void imagePanel_DragLeave(object sender, EventArgs e)
-        {
-            thumbnail.Visible = false;
-        }
+
 
         public delegate void AssignImageDlgt();
 
@@ -489,19 +511,7 @@ namespace CaseMaker
             }
         }
 
-        private void imagePanel_DragOver(object sender, DragEventArgs e)
-        {
-            if (validData)
-            {
-                if ((e.X != lastX) || (e.Y != lastY))
-                {
-                    SetThumbnailLocation(imagePanel.PointToClient(new Point(e.X, e.Y)));
-                    lastX = e.X;
-                    lastY = e.Y;
-                }
-            }
 
-        }
 
         string convertDate(string strDate)
         {
