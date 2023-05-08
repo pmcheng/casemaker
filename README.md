@@ -6,6 +6,7 @@
 
 * Accepts **drag-and-drop** of .bmp, .jpg, .gif, .png, and .tif images from other Windows applications (with special support for **Fujifilm Synapse PACS**) or from Windows Explorer.
 * **Automatically populates** patient data from DICOM headers when images are dragged from Fujifilm Synapse PACS.
+  * In Synapse 7, images can no longer be dragged from the viewport; a workaround is to use Ctrl-C on desired image before dragging.
 * Allows drag-and-drop of images from CaseMaker to other applications or to Windows Explorer.
 * Cases in Synapse PACS can be launched by double-clicking images in CaseMaker.
 * Allows drag-and-drop rearrangement of the order of images in a case.
@@ -15,7 +16,7 @@
 
 This project uses the [DotNetZip Library](http://dotnetzip.codeplex.com).
 
-Requires .NET Framework 2.0 or higher.
+Requires .NET Framework 4.7.2 or higher.
 
 
 ----------
